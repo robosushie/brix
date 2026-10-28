@@ -1,0 +1,47 @@
+:root {
+  --eggshell: #fdfcfc;
+  --taupe: #f5f3f1;
+  --stone: #ebe8e4;
+  --ink: #000000;
+  --graphite: #44403b;
+  --smoke: #777169;
+  --ash: #a59f97;
+  --violet-spark: #0447ff;
+  --ember-orange: #ff4704;
+
+  --background: #fdfcfc;
+  --foreground: #000000;
+  --card: #f5f3f1;
+  --card-foreground: #000000;
+  --muted: #f5f3f1;
+  --muted-foreground: #777169;
+  --border: #ebe8e4;
+  --input: #ebe8e4;
+  --ring: #000000;
+  --primary: #000000;
+  --primary-foreground: #fdfcfc;
+  --secondary: #f5f3f1;
+  --secondary-foreground: #000000;
+  --accent: #f5f3f1;
+  --accent-foreground: #000000;
+  --destructive: #44403b;
+
+  --font-display: var(--font-display-face), Inter, ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-sans-face), Inter, ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.display {
+  font-family: var(--font-display);
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  line-height: 1.08;
+}
+
+.mono-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  line-height: 1.69;
+  text-transform: uppercase;
+}

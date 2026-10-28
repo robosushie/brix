@@ -1,0 +1,19 @@
+{
+  "version": "2026.10.1",
+  "rules": [
+    { "id": "R1", "text": "FastAPI requires Python, SQLAlchemy, uv, and pytest." },
+    { "id": "R2", "text": "FastAPI and TypeScript backends disable each other." },
+    { "id": "R3", "text": "Cloudflare Workers disables Express, Fastify, BullMQ, and Prisma." },
+    { "id": "R4", "text": "MongoDB requires Mongoose and disables other ORMs." },
+    { "id": "R5", "text": "SQLite disables Neon and RDS." },
+    { "id": "R6", "text": "Supabase Storage requires the Supabase provider and Postgres." },
+    { "id": "R7", "text": "Better Auth and Auth.js require a database." },
+    { "id": "R8", "text": "Payments require a database." },
+    { "id": "R9", "text": "Clerk requires a JavaScript frontend." },
+    { "id": "R10", "text": "Full-stack single app disables a separate backend." },
+    { "id": "R11", "text": "API only disables frontend and UI kits." },
+    { "id": "R12", "text": "Vercel disables a separate backend other than Next route handlers." },
+    { "id": "R13", "text": "Razorpay skill carries an INR note." },
+    { "id": "R14", "text": "BullMQ requires Node or Bun and disables Workers and Python." }
+  ]
+}

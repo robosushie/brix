@@ -1,0 +1,16 @@
+{
+  "name": "@brix/cli",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "brix": "./bin.js"
+  },
+  "scripts": {
+    "start": "tsx src/bin.ts"
+  },
+  "dependencies": {
+    "@brix/core": "workspace:*",
+    "tsx": "^4.20.5"
+  }
+}

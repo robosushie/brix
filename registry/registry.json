@@ -1,0 +1,225 @@
+{
+  "version": "2026.10.3",
+  "alwaysOnSkills": ["brix-architect", "brix-security", "brix-verify"],
+  "presets": [],
+  "sections": [
+    {
+      "id": "appType",
+      "label": "App type",
+      "options": [
+        { "id": "frontend-backend", "label": "Frontend + Backend", "status": "proven" },
+        { "id": "backend-only", "label": "Backend Only", "status": "proven" },
+        { "id": "frontend-only", "label": "Frontend Only", "status": "proven" }
+      ]
+    },
+    {
+      "id": "frontend",
+      "label": "Frontend",
+      "appliesTo": ["frontend-backend", "frontend-only"],
+      "options": [
+        { "id": "nextjs", "label": "Next.js", "status": "proven", "skill": "nextjs", "license": "MIT" },
+        { "id": "vite-react", "label": "Vite + React", "status": "experimental" },
+        { "id": "sveltekit", "label": "SvelteKit", "status": "experimental" },
+        { "id": "nuxt", "label": "Nuxt", "status": "experimental" }
+      ]
+    },
+    {
+      "id": "ui",
+      "label": "UI",
+      "appliesTo": ["frontend-backend", "frontend-only"],
+      "options": [
+        { "id": "tailwind-shadcn", "label": "Tailwind + shadcn", "status": "proven" },
+        { "id": "tailwind", "label": "Tailwind only", "status": "experimental" },
+        { "id": "mui", "label": "MUI / Mantine", "status": "experimental" },
+        { "id": "plain", "label": "Plain CSS", "status": "experimental" }
+      ]
+    },
+    {
+      "id": "backend",
+      "label": "Backend",
+      "appliesTo": ["frontend-backend", "backend-only"],
+      "options": [
+        { "id": "hono", "label": "Hono", "status": "proven", "skill": "hono", "license": "MIT", "excludes": ["runtime.python", "orm.sqlalchemy", "orm.django"] },
+        { "id": "express", "label": "Express", "status": "experimental", "skill": "express", "license": "MIT", "excludes": ["runtime.python", "runtime.workers", "orm.sqlalchemy", "orm.django"] },
+        { "id": "fastify", "label": "Fastify", "status": "experimental", "excludes": ["runtime.python", "runtime.workers", "orm.sqlalchemy", "orm.django"] },
+        { "id": "fastapi", "label": "FastAPI", "status": "proven", "skill": "fastapi", "license": "MIT", "excludes": ["orm.drizzle", "orm.prisma", "orm.mongoose", "orm.django"] },
+        { "id": "flask", "label": "Flask", "status": "experimental", "skill": "flask", "license": "MIT", "excludes": ["orm.drizzle", "orm.prisma", "orm.mongoose", "orm.django"] },
+        { "id": "django", "label": "Django", "status": "experimental", "skill": "django", "license": "MIT", "excludes": ["orm.drizzle", "orm.prisma", "orm.sqlalchemy", "orm.mongoose"] },
+        { "id": "next-handlers", "label": "Next route handlers", "status": "experimental", "requires": ["frontend.nextjs"], "excludes": ["runtime.python", "orm.sqlalchemy", "orm.django"] }
+      ]
+    },
+    {
+      "id": "package",
+      "label": "Package manager",
+      "options": [
+        { "id": "bun-turbo", "label": "bun + Turborepo", "status": "experimental" },
+        { "id": "pnpm-turbo", "label": "pnpm + Turborepo", "status": "proven" },
+        { "id": "npm", "label": "npm workspaces", "status": "experimental" },
+        { "id": "uv", "label": "uv (Python)", "status": "proven" }
+      ]
+    },
+    {
+      "id": "runtime",
+      "label": "Runtime",
+      "options": [
+        { "id": "node", "label": "Node", "status": "proven" },
+        { "id": "bun", "label": "Bun", "status": "experimental" },
+        { "id": "python", "label": "Python", "status": "proven", "excludes": ["cache.redis-bullmq", "backend.hono", "backend.express", "backend.fastify", "backend.next-handlers"] },
+        {
+          "id": "workers",
+          "label": "Cloudflare Workers",
+          "status": "experimental",
+          "excludes": ["backend.express", "backend.fastify", "backend.fastapi", "backend.flask", "backend.django", "cache.redis-bullmq", "orm.prisma"]
+        }
+      ]
+    },
+    {
+      "id": "database",
+      "label": "Database",
+      "appliesTo": ["frontend-backend", "backend-only"],
+      "options": [
+        { "id": "postgres", "label": "Postgres", "status": "proven", "skill": "postgres", "license": "MIT" },
+        { "id": "mysql", "label": "MySQL", "status": "experimental" },
+        { "id": "sqlite", "label": "SQLite", "status": "experimental", "excludes": ["dbProvider.neon", "dbProvider.rds"] },
+        { "id": "mongo", "label": "MongoDB", "status": "experimental", "excludes": ["orm.drizzle", "orm.prisma", "orm.sqlalchemy", "orm.django"] },
+        {
+          "id": "none",
+          "label": "None",
+          "status": "experimental",
+          "excludes": ["dbProvider.neon", "dbProvider.supabase", "dbProvider.railway", "dbProvider.rds", "dbProvider.local-docker", "orm.drizzle", "orm.prisma", "orm.sqlalchemy", "orm.mongoose", "orm.django", "auth.better-auth", "auth.authjs", "storage.supabase-storage"]
+        }
+      ]
+    },
+    {
+      "id": "dbProvider",
+      "label": "DB provider",
+      "appliesTo": ["frontend-backend", "backend-only"],
+      "appliesWhen": ["database.postgres", "database.mysql", "database.sqlite", "database.mongo"],
+      "options": [
+        { "id": "neon", "label": "Neon", "status": "proven", "excludes": ["database.sqlite", "database.none", "database.mongo"] },
+        { "id": "supabase", "label": "Supabase", "status": "experimental", "requires": ["database.postgres"] },
+        { "id": "railway", "label": "Railway / Render managed", "status": "experimental", "excludes": ["database.none"] },
+        { "id": "rds", "label": "AWS RDS", "status": "experimental", "excludes": ["database.sqlite", "database.none"] },
+        { "id": "local-docker", "label": "Local Docker", "status": "proven", "excludes": ["database.none"] }
+      ]
+    },
+    {
+      "id": "orm",
+      "label": "ORM",
+      "appliesTo": ["frontend-backend", "backend-only"],
+      "appliesWhen": ["database.postgres", "database.mysql", "database.sqlite", "database.mongo"],
+      "options": [
+        { "id": "drizzle", "label": "Drizzle", "status": "proven", "skill": "drizzle", "license": "MIT", "excludes": ["database.mongo", "database.none", "runtime.python", "backend.django"] },
+        { "id": "prisma", "label": "Prisma", "status": "experimental", "skill": "prisma", "license": "MIT", "excludes": ["database.mongo", "database.none", "runtime.workers", "runtime.python", "backend.django"] },
+        { "id": "sqlalchemy", "label": "SQLAlchemy", "status": "proven", "skill": "sqlalchemy", "license": "MIT", "excludes": ["database.mongo", "database.none", "runtime.workers", "backend.django", "backend.hono", "backend.express", "backend.fastify", "backend.next-handlers"] },
+        { "id": "django", "label": "Django ORM", "status": "experimental", "requires": ["backend.django"], "excludes": ["database.mongo", "database.none", "runtime.workers"] },
+        { "id": "mongoose", "label": "Mongoose", "status": "experimental", "requires": ["database.mongo"], "excludes": ["backend.django", "backend.fastapi", "backend.flask"] }
+      ]
+    },
+    {
+      "id": "auth",
+      "label": "Auth",
+      "options": [
+        { "id": "better-auth", "label": "Better Auth", "status": "proven", "skill": "better-auth", "license": "MIT", "excludes": ["database.none"] },
+        { "id": "clerk", "label": "Clerk", "status": "experimental" },
+        { "id": "firebase", "label": "Firebase Auth", "status": "experimental" },
+        { "id": "authjs", "label": "Auth.js", "status": "experimental", "excludes": ["database.none"] },
+        { "id": "none", "label": "None", "status": "proven" }
+      ]
+    },
+    {
+      "id": "payments",
+      "label": "Payments",
+      "options": [
+        { "id": "stripe", "label": "Stripe", "status": "proven", "skill": "stripe", "license": "MIT" },
+        { "id": "razorpay", "label": "Razorpay", "status": "experimental" },
+        { "id": "lemon", "label": "Lemon Squeezy / Paddle", "status": "experimental" },
+        { "id": "none", "label": "None", "status": "proven" }
+      ]
+    },
+    {
+      "id": "cache",
+      "label": "Cache / queues",
+      "appliesTo": ["frontend-backend", "backend-only"],
+      "options": [
+        { "id": "redis-bullmq", "label": "Redis + BullMQ", "status": "experimental", "excludes": ["runtime.workers", "runtime.python"] },
+        { "id": "upstash", "label": "Upstash Redis", "status": "experimental" },
+        { "id": "pgboss", "label": "Postgres jobs (pg-boss)", "status": "experimental", "requires": ["database.postgres"] },
+        { "id": "none", "label": "None", "status": "proven" }
+      ]
+    },
+    {
+      "id": "storage",
+      "label": "File storage",
+      "appliesTo": ["frontend-backend", "backend-only"],
+      "options": [
+        { "id": "s3", "label": "S3", "status": "experimental" },
+        { "id": "r2", "label": "R2", "status": "experimental" },
+        { "id": "supabase-storage", "label": "Supabase Storage", "status": "experimental", "requires": ["dbProvider.supabase", "database.postgres"] },
+        { "id": "none", "label": "None", "status": "proven" }
+      ]
+    },
+    {
+      "id": "email",
+      "label": "Email",
+      "appliesTo": ["frontend-backend", "backend-only"],
+      "options": [
+        { "id": "resend", "label": "Resend", "status": "experimental" },
+        { "id": "ses", "label": "SES", "status": "experimental" },
+        { "id": "postmark", "label": "Postmark", "status": "experimental" },
+        { "id": "none", "label": "None", "status": "proven" }
+      ]
+    },
+    {
+      "id": "monitoring",
+      "label": "Monitoring",
+      "options": [
+        { "id": "sentry", "label": "Sentry", "status": "experimental" },
+        { "id": "sentry-posthog", "label": "Sentry + PostHog", "status": "experimental" },
+        { "id": "otel", "label": "OpenTelemetry", "status": "experimental" },
+        { "id": "none", "label": "None", "status": "proven" }
+      ]
+    },
+    {
+      "id": "testing",
+      "label": "Testing",
+      "options": [
+        { "id": "vitest-playwright", "label": "Vitest + Playwright", "status": "experimental" },
+        { "id": "jest-cypress", "label": "Jest + Cypress", "status": "experimental" },
+        { "id": "pytest", "label": "pytest", "status": "proven" },
+        { "id": "minimal", "label": "Minimal", "status": "experimental" }
+      ]
+    },
+    {
+      "id": "cicd",
+      "label": "CI/CD",
+      "options": [
+        { "id": "github-actions", "label": "GitHub Actions", "status": "proven" },
+        { "id": "gitlab", "label": "GitLab CI", "status": "experimental" },
+        { "id": "none", "label": "None", "status": "experimental" }
+      ]
+    },
+    {
+      "id": "deploy",
+      "label": "Cloud / deploy",
+      "options": [
+        { "id": "railway", "label": "Railway", "status": "proven" },
+        { "id": "render", "label": "Render", "status": "experimental" },
+        { "id": "aws", "label": "AWS", "status": "experimental" },
+        { "id": "azure", "label": "Azure", "status": "experimental" },
+        { "id": "cloudflare", "label": "Cloudflare", "status": "experimental" },
+        { "id": "vercel", "label": "Vercel + separate backend", "status": "experimental" }
+      ]
+    },
+    {
+      "id": "agents",
+      "label": "AI tools",
+      "multi": true,
+      "options": [
+        { "id": "claude-code", "label": "Claude Code", "status": "proven" },
+        { "id": "codex", "label": "Codex", "status": "proven" },
+        { "id": "cursor", "label": "Cursor", "status": "proven" }
+      ]
+    }
+  ]
+}

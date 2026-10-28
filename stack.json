@@ -1,0 +1,28 @@
+{
+  "registryVersion": "2026.10.3",
+  "preset": null,
+  "agents": [
+    "cursor"
+  ],
+  "choices": {
+    "appType": "frontend-backend",
+    "frontend": "vite-react",
+    "ui": "tailwind",
+    "backend": "fastapi",
+    "package": "npm",
+    "runtime": "node",
+    "database": "postgres",
+    "dbProvider": "local-docker",
+    "orm": "sqlalchemy",
+    "auth": "clerk",
+    "payments": "none",
+    "cache": "none",
+    "storage": "none",
+    "email": "none",
+    "monitoring": "none",
+    "testing": "minimal",
+    "cicd": "github-actions",
+    "deploy": "railway"
+  },
+  "notes": ""
+}

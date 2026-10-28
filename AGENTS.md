@@ -1,9 +1,43 @@
-<!-- BEGIN:nextjs-agent-rules -->
+# AGENTS.md
 
-## This is NOT the Next.js you know
+Built with Brix. This file is the source of truth for coding agents.
 
-This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+## Stack
 
-This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+- App type: Frontend + Backend
+- Frontend: Vite + React
+- UI: Tailwind only
+- Backend: FastAPI
+- Package manager: npm workspaces
+- Runtime: Node
+- Database: Postgres
+- DB provider: Local Docker
+- ORM: SQLAlchemy
+- Auth: Clerk
+- Payments: None
+- Cache / queues: None
+- File storage: None
+- Email: None
+- Monitoring: None
+- Testing: Minimal
+- CI/CD: GitHub Actions
+- Cloud / deploy: Railway
+- AI tools: cursor
 
-<!-- END:nextjs-agent-rules -->
+## Build
+
+1. Read `stack.json` and `PROMPT.md`.
+2. Scaffold with official CLIs. Apply every skill under the installed skills directory.
+3. Always keep security, Docker for local deps, lint, `/health`, `.env.example`, and the verification gate.
+4. Run the gate in `brix/verify` and fix failures before stopping.
+
+<!-- CODEGRAPH_START -->
+## CodeGraph
+
+In repositories indexed by CodeGraph (a `.codegraph/` directory exists at the repo root), reach for it BEFORE grep/find or reading files when you need to understand or locate code:
+
+- **MCP tool** (when available): `codegraph_explore` answers most code questions in one call — the relevant symbols' verbatim source plus the call paths between them, including dynamic-dispatch hops grep can't follow. Name a file or symbol in the query to read its current line-numbered source. If it's listed but deferred, load it by name via tool search.
+- **Shell** (always works): `codegraph explore "<symbol names or question>"` prints the same output.
+
+If there is no `.codegraph/` directory, skip CodeGraph entirely — indexing is the user's decision.
+<!-- CODEGRAPH_END -->

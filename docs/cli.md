@@ -16,11 +16,11 @@ pnpm --filter @brix/cli exec brix init --help
 ## `brix init`
 
 ```bash
-brix init [--yes] [--app-type <id>] [--frontend <id>] [--agent <id>] [--tool <id>] ...
+brix init [--yes] [--app-type <id>] [--frontend <id>] [--agent <id>] [--code-index <id>] ...
 brix init --config <stack.json>
 ```
 
-1. Read the section flags. Each selected value is `--<section> <id>`. `--agent` and `--tool` repeat once per selection. None and unanswered questions add no flag. `--config` reads a `stack.json` file. With no flags, read `./stack.json` if it exists.
+1. Read the section flags. Each selected value is `--<section> <id>`. `--agent` repeats once per coding agent. None and unanswered questions add no flag. `--config` reads a `stack.json` file. With no flags, read `./stack.json` if it exists.
 2. Evaluate the selection with `packages/core` (same rules as the site). A partial selection is valid. Exit if a flag conflicts with another flag.
 3. Print the skill list and licenses.
 4. Ask for consent unless `--yes`.

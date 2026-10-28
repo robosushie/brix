@@ -11,7 +11,7 @@ Built with Brix. This file is the source of truth for coding agents.
 - Package manager: npm workspaces
 - Runtime: Node
 - Database: Postgres
-- DB provider: Local Docker
+- DB provider: Postgres Docker
 - ORM: SQLAlchemy
 - Auth: Clerk
 - Payments: None

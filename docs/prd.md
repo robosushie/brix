@@ -28,7 +28,7 @@ Base skills: `brix/architect`, `brix/security`, `brix/verify`.
 ## User flow
 
 1. Open `/` and go to `/stack`, or start from a preset.
-2. Choose App type, then Core, Services, Cloud, and Tools. Incompatible options are disabled with a reason. Every question has None, and None adds no flag.
+2. Choose App type, then Core, Services, Cloud, and Tools. Incompatible options are disabled with a reason. Core has no None. Every other question has None, and None adds no flag.
 3. Optional notes (Advanced).
 4. The summary command updates as pills are selected: `npx brix init --frontend nextjs --agent cursor`.
 5. In an empty folder, run the CLI. It installs skills for the chosen agents and writes `stack.json`, `AGENTS.md`, `CLAUDE.md`, `PROMPT.md`.
@@ -37,7 +37,7 @@ Base skills: `brix/architect`, `brix/security`, `brix/verify`.
 
 The page keeps the selection in the URL hash so a reload restores it. The copied command is the flags, not that hash.
 
-Coding agents and Tools are the multi-select questions. CodeGraph, Graphify, and Security audit install only when those tools are selected. Docker is recorded for local database, cache, files, and email.
+Coding agents are the only multi-select. Security audit installs on every stack. Code index, reply style, implementation, memory, and skill pack install only when chosen. Mem0 is recorded and does not install a skill. Docker, Kubernetes, and Helm are the Containers question under Cloud.
 
 ## Data
 

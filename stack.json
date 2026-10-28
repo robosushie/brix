@@ -12,7 +12,7 @@
     "package": "npm",
     "runtime": "node",
     "database": "postgres",
-    "dbProvider": "local-docker",
+    "dbProvider": "postgres-docker",
     "orm": "sqlalchemy",
     "auth": "clerk",
     "payments": "none",

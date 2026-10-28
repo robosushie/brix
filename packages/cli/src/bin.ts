@@ -53,12 +53,12 @@ function parseArgs(argv: string[]): { command: string; flags: Flags } {
 function help() {
   console.log(`brix — install the skill set for a stack
 
-  brix init [--yes] [--app-type <id>] [--frontend <id>] [--agent <id>] [--tool <id>] ...
+  brix init [--yes] [--app-type <id>] [--frontend <id>] [--agent <id>] [--code-index <id>] ...
   brix init --config <stack.json>
   brix add
   brix doctor
 
-Repeat --agent and --tool once per selection. A missing flag, or None, adds nothing.
+Repeat --agent once per coding agent. A missing flag, or None, adds nothing.
 Inside this repo, npx brix uses the local bin. From an empty folder, npx brix works only after the package is published.
 `);
 }

@@ -4,10 +4,9 @@ import { useEffect, useState } from "react";
 import { ChevronDown } from "lucide-react";
 import {
   choiceLabel,
-  decodeConfig,
-  encodeConfig,
   evaluate,
   initCommand,
+  optionRelations,
   registry,
   emptySelection,
   selectOption,
@@ -16,11 +15,10 @@ import {
 } from "@brix/core";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Textarea } from "@/components/ui/textarea";
+import { Separator } from "@/components/ui/separator";
 
 function chosenValues(section: StackSection, selection: Selection): string[] {
   if (section.id === "agents") return selection.agents;
-  if (section.id === "tools") return selection.tools;
   return [];
 }
 
@@ -57,20 +55,40 @@ function Question({
       ) : (
         <div className="flex flex-wrap gap-2">
           {section.options.map((option) => {
-            const reason = disabled[`${section.id}.${option.id}`];
             const selected = isSelected(section, option.id, selection);
+            const relations = optionRelations(section.id, option.id, selection);
+            const reason = relations.reason;
+            const hasDepends = relations.with.length > 0 || relations.without.length > 0;
             return (
-              <Button
-                key={option.id}
-                type="button"
-                size="sm"
-                title={reason}
-                disabled={Boolean(reason) && !selected}
-                variant={selected ? "pillSelected" : "pill"}
-                onClick={() => onSelect(section.id, option.id)}
-              >
-                {option.label}
-              </Button>
+              <span key={option.id} className="group relative inline-flex">
+                <Button
+                  type="button"
+                  size="sm"
+                  disabled={Boolean(reason) && !selected}
+                  variant={selected ? "pillSelected" : "pill"}
+                  onClick={() => onSelect(section.id, option.id)}
+                >
+                  {option.label}
+                </Button>
+                {option.description || reason || hasDepends ? (
+                  <span
+                    role="tooltip"
+                    className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-2 hidden w-64 -translate-x-1/2 rounded-[4px] border border-stone bg-eggshell px-3 py-2 text-left text-xs leading-relaxed text-ink group-hover:block group-focus-within:block"
+                  >
+                    {reason ? <span className="mb-1 block font-medium">{reason}</span> : null}
+                    {option.description ? <span className="block">{option.description}</span> : null}
+                    {hasDepends ? (
+                      <>
+                        <span className="my-2 block h-px w-full bg-stone" />
+                        {relations.with.length > 0 ? <span className="block">With {relations.with.join(", ")}</span> : null}
+                        {relations.without.length > 0 ? (
+                          <span className="block">Not with {relations.without.join(", ")}</span>
+                        ) : null}
+                      </>
+                    ) : null}
+                  </span>
+                ) : null}
+              </span>
             );
           })}
         </div>
@@ -80,30 +98,19 @@ function Question({
 }
 
 export function StackBuilder() {
-  const [selection, setSelection] = useState<Selection | null>(null);
+  const [selection, setSelection] = useState<Selection>(emptySelection);
   const [copied, setCopied] = useState(false);
   const [open, setOpen] = useState<Record<string, boolean>>({ core: true });
 
   useEffect(() => {
-    const hash = window.location.hash.replace(/^#/, "");
-    const decoded = hash ? decodeConfig(hash) : null;
-    setSelection(decoded ?? emptySelection());
-  }, []);
-
-  useEffect(() => {
-    if (!selection) return;
-    const next = `#${encodeConfig(selection)}`;
-    if (window.location.hash !== next) {
-      window.history.replaceState(null, "", `${window.location.pathname}${next}`);
+    if (window.location.hash) {
+      window.history.replaceState(null, "", window.location.pathname);
     }
-  }, [selection]);
-
-  if (!selection) {
-    return <p className="mx-auto max-w-[1200px] px-6 py-12 text-muted-foreground">Loading stack…</p>;
-  }
+  }, []);
 
   const result = evaluate(selection);
   const command = initCommand(result.selection);
+  const showCommand = Boolean(result.selection.choices.appType);
   const appType = registry.sections.find((section) => section.id === "appType");
   const summary = registry.sections.flatMap((section) => {
     if (section.multi) {
@@ -128,18 +135,19 @@ export function StackBuilder() {
           <p className="mono-label text-muted-foreground">Stack</p>
           <h1 className="display mt-3 text-[48px] text-ink">Build a stack</h1>
           <p className="mt-3 max-w-xl text-base text-smoke">
-            App type sits on top. Core, Services, Cloud, and Tools open on their own. None leaves that flag off the command.
+            App type sets the shape of the app. Core is the frontend, UI, backend, database, and coding agents. Services adds auth, payments, cache, files, email, workflows, and testing. Cloud adds monitoring, delivery, and containers. Tools adds a code index, how the agent writes, memory, and a skill pack.
           </p>
         </div>
 
         {appType ? (
           <Card>
-            <CardHeader>
+            <div className="px-8 pb-6 pt-8">
               <p className="text-lg font-medium text-ink">{appType.label}</p>
-            </CardHeader>
-            <CardContent>
+            </div>
+            <Separator />
+            <div className="px-8 py-6">
               <Question section={appType} selection={selection} disabled={result.disabled} onSelect={choose} hideLabel />
-            </CardContent>
+            </div>
           </Card>
         ) : null}
 
@@ -158,37 +166,26 @@ export function StackBuilder() {
                 <ChevronDown className={`size-4 text-ink transition-transform ${expanded ? "rotate-180" : ""}`} />
               </button>
               {expanded ? (
-                <CardContent className="flex flex-col gap-6 pt-0">
-                  {sections.map((section) => (
-                    <Question
-                      key={section.id}
-                      section={section}
-                      selection={selection}
-                      disabled={result.disabled}
-                      onSelect={choose}
-                    />
+                <div className="pb-2">
+                  <Separator />
+                  {sections.map((section, index) => (
+                    <div key={section.id}>
+                      {index > 0 ? <Separator /> : null}
+                      <div className="px-8 py-6">
+                        <Question
+                          section={section}
+                          selection={selection}
+                          disabled={result.disabled}
+                          onSelect={choose}
+                        />
+                      </div>
+                    </div>
                   ))}
-                </CardContent>
+                </div>
               ) : null}
             </Card>
           );
         })}
-
-        <Card>
-          <CardHeader>
-            <p className="text-lg font-medium text-ink">Advanced</p>
-          </CardHeader>
-          <CardContent>
-            <Textarea
-              value={selection.notes}
-              maxLength={2000}
-              placeholder="Extra requirements — realtime, admin, i18n…"
-              onChange={(event) =>
-                setSelection({ ...selection, notes: event.target.value.slice(0, 2000) })
-              }
-            />
-          </CardContent>
-        </Card>
       </div>
 
       <aside className="h-fit lg:sticky lg:top-6">
@@ -212,19 +209,23 @@ export function StackBuilder() {
                 ))}
               </ul>
             ) : null}
-            <pre className="overflow-x-auto rounded-[4px] border border-stone bg-taupe p-3 font-mono text-[13px] leading-relaxed text-ink">
-              {command}
-            </pre>
-            <Button
-              type="button"
-              className="w-full"
-              onClick={async () => {
-                await navigator.clipboard.writeText(command);
-                setCopied(true);
-              }}
-            >
-              {copied ? "Copied" : "Copy command"}
-            </Button>
+            {showCommand ? (
+              <>
+                <pre className="whitespace-pre-wrap break-words rounded-[4px] border border-stone bg-taupe p-3 font-mono text-[13px] leading-relaxed text-ink">
+                  {command}
+                </pre>
+                <Button
+                  type="button"
+                  className="w-full"
+                  onClick={async () => {
+                    await navigator.clipboard.writeText(command);
+                    setCopied(true);
+                  }}
+                >
+                  {copied ? "Copied" : "Copy command"}
+                </Button>
+              </>
+            ) : null}
           </CardContent>
         </Card>
       </aside>

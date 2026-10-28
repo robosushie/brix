@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ChevronDown } from "lucide-react";
+import { Check, ChevronDown, Copy } from "lucide-react";
 import {
   choiceLabel,
   evaluate,
@@ -11,7 +11,6 @@ import {
   selectOption,
   type Selection,
 } from "@brix/core";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { chosenValues, Question } from "@/components/stack/question";
@@ -35,16 +34,26 @@ export function StackBuilder() {
     if (section.multi) {
       const values = chosenValues(section, result.selection);
       if (values.length === 0) return [];
-      return [{ id: section.id, label: section.label, value: values.map((id) => choiceLabel(section.id, id)).join(", ") }];
+      return [
+        {
+          id: section.id,
+          label: section.label,
+          value: values.map((id) => choiceLabel(section.id, id)).join(", "),
+        },
+      ];
     }
     const value = result.selection.choices[section.id];
     if (!value || value === "none") return [];
-    return [{ id: section.id, label: section.label, value: choiceLabel(section.id, value) }];
+    return [
+      { id: section.id, label: section.label, value: choiceLabel(section.id, value) },
+    ];
   });
 
   function choose(sectionId: string, optionId: string) {
     setCopied(false);
-    setSelection((current) => (current ? selectOption(current, sectionId, optionId) : current));
+    setSelection((current) =>
+      current ? selectOption(current, sectionId, optionId) : current,
+    );
   }
 
   return (
@@ -54,7 +63,11 @@ export function StackBuilder() {
           <p className="mono-label text-muted-foreground">Stack</p>
           <h1 className="display mt-3 text-[48px] text-ink">Build a stack</h1>
           <p className="mt-3 max-w-xl text-base text-smoke">
-            App type sets the shape of the app. Core is the frontend, UI, backend, database, and coding agents. Services adds auth, payments, cache, files, email, workflows, and testing. Cloud adds monitoring, delivery, and containers. Tools adds a code index, how the agent writes, memory, and a skill pack.
+            App type sets the shape of the app. Core is the frontend, UI, backend,
+            database, and coding agents. Services adds auth, payments, cache, files,
+            email, workflows, and testing. Cloud adds monitoring, delivery, and
+            containers. Tools adds a code index, how the agent writes, memory, and a skill
+            pack.
           </p>
         </div>
 
@@ -65,13 +78,21 @@ export function StackBuilder() {
             </div>
             <Separator />
             <div className="px-8 py-6">
-              <Question section={appType} selection={selection} disabled={result.disabled} onSelect={choose} hideLabel />
+              <Question
+                section={appType}
+                selection={selection}
+                disabled={result.disabled}
+                onSelect={choose}
+                hideLabel
+              />
             </div>
           </Card>
         ) : null}
 
         {registry.groups.map((group) => {
-          const sections = registry.sections.filter((section) => section.group === group.id);
+          const sections = registry.sections.filter(
+            (section) => section.group === group.id,
+          );
           const expanded = open[group.id] ?? false;
           return (
             <Card key={group.id}>
@@ -79,10 +100,14 @@ export function StackBuilder() {
                 type="button"
                 className="flex w-full items-center justify-between px-8 py-6 text-left"
                 aria-expanded={expanded}
-                onClick={() => setOpen((current) => ({ ...current, [group.id]: !expanded }))}
+                onClick={() =>
+                  setOpen((current) => ({ ...current, [group.id]: !expanded }))
+                }
               >
                 <span className="text-lg font-medium text-ink">{group.label}</span>
-                <ChevronDown className={`size-4 text-ink transition-transform ${expanded ? "rotate-180" : ""}`} />
+                <ChevronDown
+                  className={`size-4 text-ink transition-transform ${expanded ? "rotate-180" : ""}`}
+                />
               </button>
               {expanded ? (
                 <div className="pb-2">
@@ -113,11 +138,11 @@ export function StackBuilder() {
             <p className="mono-label text-muted-foreground">Summary</p>
           </CardHeader>
           <CardContent className="space-y-4">
-            <ul className="space-y-2 text-sm">
+            <ul className="space-y-1 text-sm leading-5">
               {summary.map((row) => (
                 <li key={row.id}>
-                  <span className="text-muted-foreground">{row.label}</span>
-                  <span className="mt-0.5 block font-medium">{row.value}</span>
+                  <span className="text-muted-foreground">{row.label}: </span>
+                  <span className="font-medium">{row.value}</span>
                 </li>
               ))}
             </ul>
@@ -129,21 +154,27 @@ export function StackBuilder() {
               </ul>
             ) : null}
             {showCommand ? (
-              <>
-                <pre className="whitespace-pre-wrap break-words rounded-[4px] border border-stone bg-taupe p-3 font-mono text-[13px] leading-relaxed text-ink">
-                  {command}
-                </pre>
-                <Button
+              <div className="relative rounded-[4px] border border-stone bg-taupe">
+                <button
                   type="button"
-                  className="w-full"
+                  aria-label={copied ? "Copied" : "Copy command"}
+                  className="absolute top-2 left-2 inline-flex size-6 items-center justify-center rounded-md text-ink hover:bg-eggshell cursor-pointer"
                   onClick={async () => {
                     await navigator.clipboard.writeText(command);
                     setCopied(true);
+                    window.setTimeout(() => setCopied(false), 1500);
                   }}
                 >
-                  {copied ? "Copied" : "Copy command"}
-                </Button>
-              </>
+                  {copied ? (
+                    <Check className="size-3.5" />
+                  ) : (
+                    <Copy className="size-3.5" />
+                  )}
+                </button>
+                <pre className="whitespace-pre-wrap break-words px-3 pt-9 pb-3 font-mono text-[13px] leading-relaxed text-ink">
+                  {command}
+                </pre>
+              </div>
             ) : null}
           </CardContent>
         </Card>

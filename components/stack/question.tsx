@@ -60,7 +60,7 @@ export function Question({
                 {option.description || status || dependencies.length > 0 ? (
                   <span
                     role="tooltip"
-                    className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-2 hidden w-72 -translate-x-1/2 rounded-[4px] border border-stone bg-eggshell px-3 py-2 text-left text-xs leading-relaxed text-ink group-hover:block group-focus-within:block"
+                    className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-2 hidden w-72 -translate-x-1/2 rounded-[4px] border border-stone bg-eggshell px-3 py-2 text-left text-xs leading-relaxed text-ink group-hover:block"
                   >
                     {status ? <span className="mb-1 block font-medium">{status}</span> : null}
                     {option.description ? <span className="block">{option.description}</span> : null}

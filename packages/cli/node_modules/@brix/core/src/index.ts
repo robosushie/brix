@@ -17,10 +17,16 @@ export type StackOption = {
 export type StackSection = {
   id: string;
   label: string;
+  group?: string;
   multi?: boolean;
   appliesTo?: string[];
   appliesWhen?: string[];
   options: StackOption[];
+};
+
+export type StackGroup = {
+  id: string;
+  label: string;
 };
 
 export type Preset = {
@@ -34,6 +40,7 @@ export type Registry = {
   version: string;
   alwaysOnSkills: string[];
   presets: Preset[];
+  groups: StackGroup[];
   sections: StackSection[];
 };
 
@@ -41,6 +48,7 @@ export type Selection = {
   registryVersion: string;
   preset: string | null;
   agents: AgentId[];
+  tools: string[];
   choices: Record<string, string>;
   notes: string;
 };
@@ -119,7 +127,8 @@ function clone(sel: Selection): Selection {
   return {
     registryVersion: registry.version,
     preset: sel.preset,
-    agents: [...sel.agents],
+    agents: [...(sel.agents ?? [])],
+    tools: [...(sel.tools ?? [])],
     choices: { ...sel.choices },
     notes: sel.notes ?? "",
   };
@@ -128,11 +137,12 @@ function clone(sel: Selection): Selection {
 function selectedIds(sel: Selection): string[] {
   const ids: string[] = [];
   for (const section of registry.sections) {
-    if (section.id === "agents") continue;
+    if (section.multi) continue;
     const value = sel.choices[section.id];
     if (value) ids.push(fullId(section.id, value));
   }
   for (const agent of sel.agents) ids.push(fullId("agents", agent));
+  for (const tool of sel.tools) ids.push(fullId("tools", tool));
   return ids;
 }
 
@@ -145,7 +155,7 @@ function sectionById(sectionId: string): StackSection | undefined {
 }
 
 function sectionUse(section: StackSection, sel: Selection): "open" | "unused" {
-  if (section.id === "appType" || section.id === "agents") return "open";
+  if (section.id === "appType" || section.multi) return "open";
   const app = sel.choices.appType;
   if (section.appliesTo && app && !section.appliesTo.includes(app)) return "unused";
   if (section.appliesWhen && app) {
@@ -161,17 +171,6 @@ function sectionUse(section: StackSection, sel: Selection): "open" | "unused" {
     if (decided) return "unused";
   }
   return "open";
-}
-
-function previousApplicable(section: StackSection, sel: Selection): StackSection | null {
-  const index = registry.sections.findIndex((item) => item.id === section.id);
-  for (let i = index - 1; i >= 0; i -= 1) {
-    const prev = registry.sections[i];
-    if (!prev || prev.id === "agents") continue;
-    if (sectionUse(prev, sel) === "unused") continue;
-    return prev;
-  }
-  return null;
 }
 
 function unusedReason(section: StackSection, sel: Selection): string {
@@ -192,6 +191,7 @@ function languageGate(sectionId: string, optionId: string, sel: Selection): stri
   const nodeBackend = Boolean(backend && NODE_BACKENDS.has(backend));
   const pythonOnly = app === "backend-only" && pythonBackend;
   const jsOnly = app === "frontend-only" || (app === "backend-only" && nodeBackend) || (app === "frontend-backend" && nodeBackend);
+  if (optionId === "none") return null;
   if (sectionId === "package") {
     if (app === "frontend-only" && optionId === "uv") return "Not used for Frontend Only";
     if (pythonOnly && optionId !== "uv") return "Not used for a Python stack";
@@ -224,14 +224,13 @@ function languageGate(sectionId: string, optionId: string, sel: Selection): stri
 export function disableReason(sectionId: string, optionId: string, sel: Selection): string | null {
   const opt = optionIndex.get(fullId(sectionId, optionId));
   if (!opt) return "Unknown option";
-  if (sectionId === "appType" || sectionId === "agents") return null;
-
   const section = sectionById(sectionId);
   if (!section) return "Unknown option";
+  if (sectionId === "appType" || section.multi) return null;
   if (sectionUse(section, sel) === "unused") return unusedReason(section, sel);
-
-  const previous = previousApplicable(section, sel);
-  if (previous && !sel.choices[previous.id]) return `Choose ${previous.label} first`;
+  if (sectionId === "frontend" && optionId === "none" && sel.choices.appType === "frontend-only") {
+    return "A frontend is required for Frontend Only";
+  }
 
   const gated = languageGate(sectionId, optionId, sel);
   if (gated) return gated;
@@ -280,26 +279,36 @@ function clearExcluded(sel: Selection, opt: IndexedOption) {
       sel.agents = sel.agents.filter((agent) => agent !== other.id);
       continue;
     }
+    if (other.sectionId === "tools") {
+      sel.tools = sel.tools.filter((tool) => tool !== other.id);
+      continue;
+    }
     if (sel.choices[other.sectionId] === other.id) delete sel.choices[other.sectionId];
   }
+}
+
+function knownTool(id: string): boolean {
+  const section = sectionById("tools");
+  return Boolean(section?.options.some((option) => option.id === id && option.id !== "none"));
 }
 
 export function normalizeSelection(input: Selection): Selection {
   const sel = clone(input);
   sel.agents = sel.agents.filter(isAgent);
+  sel.tools = sel.tools.filter(knownTool);
   sel.notes = sel.notes.slice(0, 2000);
 
   for (let pass = 0; pass < 8; pass += 1) {
     let changed = false;
     for (const section of registry.sections) {
-      if (section.id === "agents") continue;
+      if (section.multi) continue;
       if (sectionUse(section, sel) === "unused" && sel.choices[section.id]) {
         delete sel.choices[section.id];
         changed = true;
       }
     }
     for (const section of registry.sections) {
-      if (section.id === "agents") continue;
+      if (section.multi) continue;
       const value = sel.choices[section.id];
       if (!value) continue;
       const opt = optionIndex.get(fullId(section.id, value));
@@ -319,7 +328,6 @@ export function normalizeSelection(input: Selection): Selection {
     if (!changed) break;
   }
 
-  if (sel.agents.length === 0) sel.agents = ["cursor"];
   return sel;
 }
 
@@ -327,7 +335,8 @@ export function emptySelection(notes = ""): Selection {
   return normalizeSelection({
     registryVersion: registry.version,
     preset: null,
-    agents: ["cursor"],
+    agents: [],
+    tools: [],
     choices: {},
     notes,
   });
@@ -340,6 +349,7 @@ export function selectionFromPreset(presetId: string, notes = ""): Selection {
     registryVersion: registry.version,
     preset: preset.id,
     agents: [...preset.agents],
+    tools: [],
     choices: { ...preset.choices },
     notes,
   });
@@ -348,11 +358,25 @@ export function selectionFromPreset(presetId: string, notes = ""): Selection {
 export function selectOption(sel: Selection, sectionId: string, optionId: string): Selection {
   const next = clone(sel);
   next.preset = null;
-  if (sectionId === "agents") {
-    if (!isAgent(optionId)) return next;
-    const has = next.agents.includes(optionId);
-    next.agents = has ? next.agents.filter((agent) => agent !== optionId) : [...next.agents, optionId];
-    return normalizeSelection(next);
+  const section = sectionById(sectionId);
+  if (section?.multi) {
+    if (optionId === "none") {
+      if (sectionId === "agents") next.agents = [];
+      if (sectionId === "tools") next.tools = [];
+      return normalizeSelection(next);
+    }
+    if (sectionId === "agents") {
+      if (!isAgent(optionId)) return next;
+      const has = next.agents.includes(optionId);
+      next.agents = has ? next.agents.filter((agent) => agent !== optionId) : [...next.agents, optionId];
+      return normalizeSelection(next);
+    }
+    if (sectionId === "tools") {
+      if (!knownTool(optionId)) return next;
+      const has = next.tools.includes(optionId);
+      next.tools = has ? next.tools.filter((tool) => tool !== optionId) : [...next.tools, optionId];
+      return normalizeSelection(next);
+    }
   }
   next.choices[sectionId] = optionId;
   const opt = optionIndex.get(fullId(sectionId, optionId));
@@ -395,16 +419,6 @@ export function evaluate(input: Selection): Evaluation {
     }
   }
   const errors: string[] = [];
-  for (const section of registry.sections) {
-    if (section.id === "agents") {
-      if (selection.agents.length === 0) errors.push("Pick at least one AI tool.");
-      continue;
-    }
-    if (sectionUse(section, selection) === "unused") continue;
-    const previous = previousApplicable(section, selection);
-    if (previous && !selection.choices[previous.id]) continue;
-    if (!selection.choices[section.id]) errors.push(`Pick ${section.label}.`);
-  }
   return {
     selection,
     disabled,
@@ -436,6 +450,7 @@ export function decodeConfig(hash: string): Selection | null {
       registryVersion: registry.version,
       preset: parsed.preset ?? null,
       agents: (parsed.agents ?? []).filter((agent): agent is AgentId => isAgent(String(agent))),
+      tools: (parsed.tools ?? []).filter((tool): tool is string => typeof tool === "string"),
       choices: parsed.choices,
       notes: parsed.notes ?? "",
     });
@@ -444,8 +459,96 @@ export function decodeConfig(hash: string): Selection | null {
   }
 }
 
+export function flagName(sectionId: string): string {
+  if (sectionId === "agents") return "agent";
+  if (sectionId === "tools") return "tool";
+  return sectionId.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`);
+}
+
+const sectionIdByFlag = new Map(registry.sections.map((section) => [flagName(section.id), section.id]));
+
+export function sectionIdForFlag(flag: string): string | undefined {
+  return sectionIdByFlag.get(flag);
+}
+
+function multiValues(sel: Selection, sectionId: string): string[] {
+  if (sectionId === "agents") return sel.agents;
+  if (sectionId === "tools") return sel.tools;
+  return [];
+}
+
 export function initCommand(sel: Selection): string {
-  return `npx brix init --config ${encodeConfig(sel)}`;
+  const normalized = normalizeSelection(sel);
+  const parts = ["npx brix init"];
+  for (const section of registry.sections) {
+    const flag = `--${flagName(section.id)}`;
+    if (section.multi) {
+      for (const value of multiValues(normalized, section.id)) {
+        if (!value || value === "none") continue;
+        parts.push(flag, value);
+      }
+      continue;
+    }
+    const value = normalized.choices[section.id];
+    if (!value || value === "none") continue;
+    parts.push(flag, value);
+  }
+  return parts.join(" ");
+}
+
+export function selectionFromFlags(pairs: Array<[string, string]>): { selection: Selection; errors: string[] } {
+  const choices: Record<string, string> = {};
+  const agents: AgentId[] = [];
+  const tools: string[] = [];
+  const errors: string[] = [];
+  const requested: Array<[string, string]> = [];
+
+  for (const [sectionId, optionId] of pairs) {
+    const section = sectionById(sectionId);
+    if (!section) {
+      errors.push(`Unknown section "${sectionId}".`);
+      continue;
+    }
+    if (optionId === "none") continue;
+    if (!optionIndex.has(fullId(sectionId, optionId))) {
+      errors.push(`Unknown option "${optionId}" for --${flagName(sectionId)}.`);
+      continue;
+    }
+    requested.push([sectionId, optionId]);
+    if (section.multi) {
+      if (sectionId === "agents" && isAgent(optionId) && !agents.includes(optionId)) agents.push(optionId);
+      if (sectionId === "tools" && knownTool(optionId) && !tools.includes(optionId)) tools.push(optionId);
+      continue;
+    }
+    choices[sectionId] = optionId;
+  }
+
+  const selection = normalizeSelection({
+    registryVersion: registry.version,
+    preset: null,
+    agents,
+    tools,
+    choices,
+    notes: "",
+  });
+
+  for (const [sectionId, optionId] of requested) {
+    const section = sectionById(sectionId);
+    const kept = section?.multi
+      ? multiValues(selection, sectionId).includes(optionId)
+      : selection.choices[sectionId] === optionId;
+    if (kept) continue;
+    const draft = clone(selection);
+    if (section?.multi) {
+      if (sectionId === "agents" && isAgent(optionId)) draft.agents = [...draft.agents, optionId];
+      if (sectionId === "tools") draft.tools = [...draft.tools, optionId];
+    } else {
+      draft.choices[sectionId] = optionId;
+    }
+    errors.push(disableReason(sectionId, optionId, draft) ?? `${sectionLabel(sectionId)} ${optionId} conflicts with the rest of the stack.`);
+  }
+
+  return { selection, errors };
 }
 
 export function choiceLabel(sectionId: string, optionId: string): string {

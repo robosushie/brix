@@ -4,14 +4,14 @@ import { createInterface } from "node:readline/promises";
 import { resolve } from "node:path";
 import { stdin as input, stdout as output } from "node:process";
 import {
-  AGENTS,
   type AgentId,
   type Selection,
   type SkillRef,
   choiceLabel,
-  decodeConfig,
   evaluate,
   registry,
+  sectionIdForFlag,
+  selectionFromFlags,
   skillAgentMap,
 } from "@brix/core";
 import { renderSkill, skillFolder } from "./skills.ts";
@@ -20,26 +20,28 @@ type Flags = {
   help: boolean;
   yes: boolean;
   config: string;
-  agents: AgentId[];
+  pairs: Array<[string, string]>;
 };
 
 function parseArgs(argv: string[]): { command: string; flags: Flags } {
   const command = argv[0] && !argv[0].startsWith("-") ? argv[0] : "help";
   const start = command === argv[0] ? 1 : 0;
-  const flags: Flags = { help: command === "help", yes: false, config: "", agents: [] };
+  const flags: Flags = { help: command === "help", yes: false, config: "", pairs: [] };
   for (let i = start; i < argv.length; i += 1) {
     const arg = argv[i];
     if (arg === "--") continue;
     if (arg === "--help" || arg === "-h") flags.help = true;
     else if (arg === "--yes" || arg === "-y") flags.yes = true;
     else if (arg === "--config") flags.config = argv[(i += 1)] ?? "";
-    else if (arg === "--agent") {
-      const agent = argv[(i += 1)] ?? "";
-      if ((AGENTS as readonly string[]).includes(agent)) flags.agents.push(agent as AgentId);
-      else {
-        console.error(`Unknown agent "${agent}". Use ${AGENTS.join(", ")}.`);
+    else if (arg.startsWith("--")) {
+      const sectionId = sectionIdForFlag(arg.slice(2));
+      const value = argv[i + 1] ?? "";
+      if (!sectionId || !value || value.startsWith("-")) {
+        console.error(sectionId ? `Missing value for ${arg}.` : `Unknown argument "${arg}".`);
         process.exit(1);
       }
+      i += 1;
+      flags.pairs.push([sectionId, value]);
     } else {
       console.error(`Unknown argument "${arg}".`);
       process.exit(1);
@@ -51,36 +53,49 @@ function parseArgs(argv: string[]): { command: string; flags: Flags } {
 function help() {
   console.log(`brix — install the skill set for a stack
 
-  brix init [--config <hash-or-stack.json>] [--yes] [--agent ${AGENTS.join("|")}]
+  brix init [--yes] [--app-type <id>] [--frontend <id>] [--agent <id>] [--tool <id>] ...
+  brix init --config <stack.json>
   brix add
   brix doctor
 
+Repeat --agent and --tool once per selection. A missing flag, or None, adds nothing.
 Inside this repo, npx brix uses the local bin. From an empty folder, npx brix works only after the package is published.
 `);
 }
 
-async function loadSelection(config: string): Promise<Selection> {
-  if (!config) {
+async function readStackFile(path: string): Promise<Selection> {
+  const raw = await readFile(path, "utf8");
+  return JSON.parse(raw) as Selection;
+}
+
+async function loadSelection(flags: Flags): Promise<Selection> {
+  if (flags.pairs.length > 0 && flags.config) {
+    console.error("Pass section flags or --config, not both.");
+    process.exit(1);
+  }
+  if (flags.pairs.length > 0) {
+    const parsed = selectionFromFlags(flags.pairs);
+    if (parsed.errors.length > 0) {
+      console.error(parsed.errors.join("\n"));
+      process.exit(1);
+    }
+    return parsed.selection;
+  }
+  if (flags.config) {
+    const asPath = resolve(flags.config);
     try {
-      const raw = await readFile(resolve("stack.json"), "utf8");
-      return JSON.parse(raw) as Selection;
+      await access(asPath);
+      return await readStackFile(asPath);
     } catch {
-      console.error("Pass --config <hash> from /stack, or run inside a folder that has stack.json.");
+      console.error("Could not read --config as a stack.json path.");
       process.exit(1);
     }
   }
-  const asPath = resolve(config);
   try {
-    await access(asPath);
-    const raw = await readFile(asPath, "utf8");
-    return JSON.parse(raw) as Selection;
+    return await readStackFile(resolve("stack.json"));
   } catch {
-    const decoded = decodeConfig(config);
-    if (!decoded) {
-      console.error("Could not read --config as a file path or stack hash.");
-      process.exit(1);
-    }
-    return decoded;
+    console.error("Pass section flags from /stack, or run inside a folder that has stack.json.");
+    process.exit(1);
   }
 }
 
@@ -133,8 +148,7 @@ async function confirm(message: string): Promise<boolean> {
 }
 
 async function init(flags: Flags) {
-  const selection = await loadSelection(flags.config);
-  if (flags.agents.length > 0) selection.agents = flags.agents;
+  const selection = await loadSelection(flags);
   const result = evaluate(selection);
   if (!result.valid) {
     console.error(result.errors.join("\n"));

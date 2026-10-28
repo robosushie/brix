@@ -2,6 +2,12 @@
   "version": "2026.10.3",
   "alwaysOnSkills": ["brix-architect", "brix-security", "brix-verify"],
   "presets": [],
+  "groups": [
+    { "id": "core", "label": "Core" },
+    { "id": "services", "label": "Services" },
+    { "id": "cloud", "label": "Cloud" },
+    { "id": "tools", "label": "Tools" }
+  ],
   "sections": [
     {
       "id": "appType",
@@ -9,34 +15,40 @@
       "options": [
         { "id": "frontend-backend", "label": "Frontend + Backend", "status": "proven" },
         { "id": "backend-only", "label": "Backend Only", "status": "proven" },
-        { "id": "frontend-only", "label": "Frontend Only", "status": "proven" }
+        { "id": "frontend-only", "label": "Frontend Only", "status": "proven" },
+        { "id": "none", "label": "None", "status": "proven" }
       ]
     },
     {
       "id": "frontend",
       "label": "Frontend",
+      "group": "core",
       "appliesTo": ["frontend-backend", "frontend-only"],
       "options": [
         { "id": "nextjs", "label": "Next.js", "status": "proven", "skill": "nextjs", "license": "MIT" },
         { "id": "vite-react", "label": "Vite + React", "status": "experimental" },
         { "id": "sveltekit", "label": "SvelteKit", "status": "experimental" },
-        { "id": "nuxt", "label": "Nuxt", "status": "experimental" }
+        { "id": "nuxt", "label": "Nuxt", "status": "experimental" },
+        { "id": "none", "label": "None", "status": "proven" }
       ]
     },
     {
       "id": "ui",
       "label": "UI",
+      "group": "core",
       "appliesTo": ["frontend-backend", "frontend-only"],
       "options": [
         { "id": "tailwind-shadcn", "label": "Tailwind + shadcn", "status": "proven" },
         { "id": "tailwind", "label": "Tailwind only", "status": "experimental" },
         { "id": "mui", "label": "MUI / Mantine", "status": "experimental" },
-        { "id": "plain", "label": "Plain CSS", "status": "experimental" }
+        { "id": "plain", "label": "Plain CSS", "status": "experimental" },
+        { "id": "none", "label": "None", "status": "proven" }
       ]
     },
     {
       "id": "backend",
       "label": "Backend",
+      "group": "core",
       "appliesTo": ["frontend-backend", "backend-only"],
       "options": [
         { "id": "hono", "label": "Hono", "status": "proven", "skill": "hono", "license": "MIT", "excludes": ["runtime.python", "orm.sqlalchemy", "orm.django"] },
@@ -45,22 +57,26 @@
         { "id": "fastapi", "label": "FastAPI", "status": "proven", "skill": "fastapi", "license": "MIT", "excludes": ["orm.drizzle", "orm.prisma", "orm.mongoose", "orm.django"] },
         { "id": "flask", "label": "Flask", "status": "experimental", "skill": "flask", "license": "MIT", "excludes": ["orm.drizzle", "orm.prisma", "orm.mongoose", "orm.django"] },
         { "id": "django", "label": "Django", "status": "experimental", "skill": "django", "license": "MIT", "excludes": ["orm.drizzle", "orm.prisma", "orm.sqlalchemy", "orm.mongoose"] },
-        { "id": "next-handlers", "label": "Next route handlers", "status": "experimental", "requires": ["frontend.nextjs"], "excludes": ["runtime.python", "orm.sqlalchemy", "orm.django"] }
+        { "id": "next-handlers", "label": "Next route handlers", "status": "experimental", "requires": ["frontend.nextjs"], "excludes": ["runtime.python", "orm.sqlalchemy", "orm.django"] },
+        { "id": "none", "label": "None", "status": "proven" }
       ]
     },
     {
       "id": "package",
       "label": "Package manager",
+      "group": "core",
       "options": [
         { "id": "bun-turbo", "label": "bun + Turborepo", "status": "experimental" },
         { "id": "pnpm-turbo", "label": "pnpm + Turborepo", "status": "proven" },
         { "id": "npm", "label": "npm workspaces", "status": "experimental" },
-        { "id": "uv", "label": "uv (Python)", "status": "proven" }
+        { "id": "uv", "label": "uv (Python)", "status": "proven" },
+        { "id": "none", "label": "None", "status": "proven" }
       ]
     },
     {
       "id": "runtime",
       "label": "Runtime",
+      "group": "core",
       "options": [
         { "id": "node", "label": "Node", "status": "proven" },
         { "id": "bun", "label": "Bun", "status": "experimental" },
@@ -70,12 +86,14 @@
           "label": "Cloudflare Workers",
           "status": "experimental",
           "excludes": ["backend.express", "backend.fastify", "backend.fastapi", "backend.flask", "backend.django", "cache.redis-bullmq", "orm.prisma"]
-        }
+        },
+        { "id": "none", "label": "None", "status": "proven" }
       ]
     },
     {
       "id": "database",
       "label": "Database",
+      "group": "core",
       "appliesTo": ["frontend-backend", "backend-only"],
       "options": [
         { "id": "postgres", "label": "Postgres", "status": "proven", "skill": "postgres", "license": "MIT" },
@@ -93,6 +111,7 @@
     {
       "id": "dbProvider",
       "label": "DB provider",
+      "group": "core",
       "appliesTo": ["frontend-backend", "backend-only"],
       "appliesWhen": ["database.postgres", "database.mysql", "database.sqlite", "database.mongo"],
       "options": [
@@ -100,12 +119,14 @@
         { "id": "supabase", "label": "Supabase", "status": "experimental", "requires": ["database.postgres"] },
         { "id": "railway", "label": "Railway / Render managed", "status": "experimental", "excludes": ["database.none"] },
         { "id": "rds", "label": "AWS RDS", "status": "experimental", "excludes": ["database.sqlite", "database.none"] },
-        { "id": "local-docker", "label": "Local Docker", "status": "proven", "excludes": ["database.none"] }
+        { "id": "local-docker", "label": "Local Docker", "status": "proven", "excludes": ["database.none"] },
+        { "id": "none", "label": "None", "status": "proven" }
       ]
     },
     {
       "id": "orm",
       "label": "ORM",
+      "group": "core",
       "appliesTo": ["frontend-backend", "backend-only"],
       "appliesWhen": ["database.postgres", "database.mysql", "database.sqlite", "database.mongo"],
       "options": [
@@ -113,12 +134,26 @@
         { "id": "prisma", "label": "Prisma", "status": "experimental", "skill": "prisma", "license": "MIT", "excludes": ["database.mongo", "database.none", "runtime.workers", "runtime.python", "backend.django"] },
         { "id": "sqlalchemy", "label": "SQLAlchemy", "status": "proven", "skill": "sqlalchemy", "license": "MIT", "excludes": ["database.mongo", "database.none", "runtime.workers", "backend.django", "backend.hono", "backend.express", "backend.fastify", "backend.next-handlers"] },
         { "id": "django", "label": "Django ORM", "status": "experimental", "requires": ["backend.django"], "excludes": ["database.mongo", "database.none", "runtime.workers"] },
-        { "id": "mongoose", "label": "Mongoose", "status": "experimental", "requires": ["database.mongo"], "excludes": ["backend.django", "backend.fastapi", "backend.flask"] }
+        { "id": "mongoose", "label": "Mongoose", "status": "experimental", "requires": ["database.mongo"], "excludes": ["backend.django", "backend.fastapi", "backend.flask"] },
+        { "id": "none", "label": "None", "status": "proven" }
+      ]
+    },
+    {
+      "id": "agents",
+      "label": "Coding agents",
+      "group": "core",
+      "multi": true,
+      "options": [
+        { "id": "claude-code", "label": "Claude Code", "status": "proven" },
+        { "id": "codex", "label": "Codex", "status": "proven" },
+        { "id": "cursor", "label": "Cursor", "status": "proven" },
+        { "id": "none", "label": "None", "status": "proven" }
       ]
     },
     {
       "id": "auth",
       "label": "Auth",
+      "group": "services",
       "options": [
         { "id": "better-auth", "label": "Better Auth", "status": "proven", "skill": "better-auth", "license": "MIT", "excludes": ["database.none"] },
         { "id": "clerk", "label": "Clerk", "status": "experimental" },
@@ -130,6 +165,7 @@
     {
       "id": "payments",
       "label": "Payments",
+      "group": "services",
       "options": [
         { "id": "stripe", "label": "Stripe", "status": "proven", "skill": "stripe", "license": "MIT" },
         { "id": "razorpay", "label": "Razorpay", "status": "experimental" },
@@ -140,6 +176,7 @@
     {
       "id": "cache",
       "label": "Cache / queues",
+      "group": "services",
       "appliesTo": ["frontend-backend", "backend-only"],
       "options": [
         { "id": "redis-bullmq", "label": "Redis + BullMQ", "status": "experimental", "excludes": ["runtime.workers", "runtime.python"] },
@@ -151,6 +188,7 @@
     {
       "id": "storage",
       "label": "File storage",
+      "group": "services",
       "appliesTo": ["frontend-backend", "backend-only"],
       "options": [
         { "id": "s3", "label": "S3", "status": "experimental" },
@@ -162,6 +200,7 @@
     {
       "id": "email",
       "label": "Email",
+      "group": "services",
       "appliesTo": ["frontend-backend", "backend-only"],
       "options": [
         { "id": "resend", "label": "Resend", "status": "experimental" },
@@ -171,8 +210,21 @@
       ]
     },
     {
+      "id": "testing",
+      "label": "Testing",
+      "group": "services",
+      "options": [
+        { "id": "vitest-playwright", "label": "Vitest + Playwright", "status": "experimental" },
+        { "id": "jest-cypress", "label": "Jest + Cypress", "status": "experimental" },
+        { "id": "pytest", "label": "pytest", "status": "proven" },
+        { "id": "minimal", "label": "Minimal", "status": "experimental" },
+        { "id": "none", "label": "None", "status": "proven" }
+      ]
+    },
+    {
       "id": "monitoring",
       "label": "Monitoring",
+      "group": "cloud",
       "options": [
         { "id": "sentry", "label": "Sentry", "status": "experimental" },
         { "id": "sentry-posthog", "label": "Sentry + PostHog", "status": "experimental" },
@@ -181,18 +233,9 @@
       ]
     },
     {
-      "id": "testing",
-      "label": "Testing",
-      "options": [
-        { "id": "vitest-playwright", "label": "Vitest + Playwright", "status": "experimental" },
-        { "id": "jest-cypress", "label": "Jest + Cypress", "status": "experimental" },
-        { "id": "pytest", "label": "pytest", "status": "proven" },
-        { "id": "minimal", "label": "Minimal", "status": "experimental" }
-      ]
-    },
-    {
       "id": "cicd",
       "label": "CI/CD",
+      "group": "cloud",
       "options": [
         { "id": "github-actions", "label": "GitHub Actions", "status": "proven" },
         { "id": "gitlab", "label": "GitLab CI", "status": "experimental" },
@@ -202,23 +245,28 @@
     {
       "id": "deploy",
       "label": "Cloud / deploy",
+      "group": "cloud",
       "options": [
         { "id": "railway", "label": "Railway", "status": "proven" },
         { "id": "render", "label": "Render", "status": "experimental" },
         { "id": "aws", "label": "AWS", "status": "experimental" },
         { "id": "azure", "label": "Azure", "status": "experimental" },
         { "id": "cloudflare", "label": "Cloudflare", "status": "experimental" },
-        { "id": "vercel", "label": "Vercel + separate backend", "status": "experimental" }
+        { "id": "vercel", "label": "Vercel + separate backend", "status": "experimental" },
+        { "id": "none", "label": "None", "status": "proven" }
       ]
     },
     {
-      "id": "agents",
-      "label": "AI tools",
+      "id": "tools",
+      "label": "Tools",
+      "group": "tools",
       "multi": true,
       "options": [
-        { "id": "claude-code", "label": "Claude Code", "status": "proven" },
-        { "id": "codex", "label": "Codex", "status": "proven" },
-        { "id": "cursor", "label": "Cursor", "status": "proven" }
+        { "id": "codegraph", "label": "CodeGraph", "status": "proven" },
+        { "id": "graphify", "label": "Graphify", "status": "proven" },
+        { "id": "security-audit", "label": "Security audit", "status": "proven" },
+        { "id": "docker", "label": "Docker", "status": "proven" },
+        { "id": "none", "label": "None", "status": "proven" }
       ]
     }
   ]

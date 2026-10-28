@@ -17,7 +17,6 @@ Audience: solo builders and small teams using AI agents, including stacks that T
 These are not choices. Every generated project includes them:
 
 - Security baseline
-- Docker
 - Lint and format
 - Health endpoint
 - `.env.example` plus a validated env schema
@@ -29,16 +28,16 @@ Base skills: `brix/architect`, `brix/security`, `brix/verify`.
 ## User flow
 
 1. Open `/` and go to `/stack`, or start from a preset.
-2. Choose across 20 sections. Incompatible options are disabled with a reason. Dependents are selected with the parent.
+2. Choose App type, then Core, Services, Cloud, and Tools. Incompatible options are disabled with a reason. Every question has None, and None adds no flag.
 3. Optional notes (Advanced).
-4. Summary lists skills and one command: `npx brix init --config <hash>`.
+4. The summary command updates as pills are selected: `npx brix init --frontend nextjs --agent cursor`.
 5. In an empty folder, run the CLI. It installs skills for the chosen agents and writes `stack.json`, `AGENTS.md`, `CLAUDE.md`, `PROMPT.md`.
 6. Tell the agent: “Read PROMPT.md and build the project.”
 7. The agent scaffolds with official CLIs, applies skills, runs the verification gate, and leaves a pass/fail checklist plus next steps.
 
-Selection state lives in the URL hash only. Reloading or pasting the link restores the same choices. An invalid combination cannot produce a command.
+The page keeps the selection in the URL hash so a reload restores it. The copied command is the flags, not that hash.
 
-AI tools (Claude Code, Codex, Cursor) are the only multi-select section.
+Coding agents and Tools are the multi-select questions. CodeGraph, Graphify, and Security audit install only when those tools are selected. Docker is recorded for local database, cache, files, and email.
 
 ## Data
 

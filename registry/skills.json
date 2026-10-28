@@ -14,7 +14,7 @@
       "id": "security-audit",
       "kind": "upstream",
       "license": "MIT",
-      "when": { "always": true },
+      "when": { "any": ["tools.security-audit"] },
       "preinstall": { "windows": [], "linux": [], "darwin": [] },
       "install": {
         "windows": [["npx", "--yes", "skills", "add", "https://github.com/cloudflare/security-audit-skill", "--skill", "security-audit", "-y", "--copy", "-a", "{agents}"]],
@@ -27,7 +27,7 @@
       "id": "codegraph",
       "kind": "upstream",
       "license": "MIT",
-      "when": { "always": true },
+      "when": { "any": ["tools.codegraph"] },
       "official": {
         "windows": "irm https://raw.githubusercontent.com/colbymchenry/codegraph/main/install.ps1 | iex",
         "linux": "curl -fsSL https://raw.githubusercontent.com/colbymchenry/codegraph/main/install.sh | sh",
@@ -53,7 +53,7 @@
       "id": "graphify",
       "kind": "upstream",
       "license": "MIT",
-      "when": { "always": true },
+      "when": { "any": ["tools.graphify"] },
       "optional": true,
       "requiresCommand": "uv",
       "missingHelp": "https://docs.astral.sh/uv/getting-started/installation/",

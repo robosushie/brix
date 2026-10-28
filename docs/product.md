@@ -9,9 +9,9 @@ Solo builders and small teams who already work in Claude Code, Codex, or Cursor 
 ## Journey
 
 1. Land on `/` and read how the command works.
-2. Open `/stack`. The form starts empty, with Cursor selected.
-3. Pick each section. Later options stay disabled until the section they depend on has a choice, and illegal choices are cleared.
-4. Copy `npx brix init --config <hash>`.
+2. Open `/stack`. The form starts empty. Nothing is selected, so the command is `npx brix init`.
+3. Pick App type, then open Core, Services, Cloud, or Tools. Illegal choices stay disabled. None adds no flag.
+4. Copy the flag command, for example `npx brix init --frontend nextjs --backend fastapi --agent cursor`.
 5. Run it in an empty directory. Review the skill list (skip the prompt with `--yes`).
 6. Paste “Read PROMPT.md and build the project” into the agent.
 
@@ -27,7 +27,7 @@ Solo builders and small teams who already work in Claude Code, Codex, or Cursor 
 
 ## Choices
 
-There is no preset. App type is Frontend + Backend, Backend Only, or Frontend Only, and those three pills stay available. Each later section unlocks after the one above it. Frontend Only turns off the backend, database, cache, storage, and email. Backend Only turns off the frontend and UI. A Backend Only Python service leaves only uv, Python, and pytest. A Frontend + Backend app can keep a JavaScript package manager beside a Python API.
+There is no preset. App type is Frontend + Backend, Backend Only, Frontend Only, or None. Frontend Only turns off the backend, database, cache, storage, and email, and it requires a frontend. Backend Only turns off the frontend and UI. A Backend Only Python service leaves uv, Python, and pytest, and None stays available on those questions. A Frontend + Backend app can keep a JavaScript package manager beside a Python API.
 
 ## Principles
 

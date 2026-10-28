@@ -54,9 +54,7 @@ Full option id is `sectionId.optionId` (example: `frontend.nextjs`).
 
 `choices` in a selection stores the short option id per section. Multi sections store an array (`agents`).
 
-## `registry/rules.json`
-
-Narrative list of v1 constraints (R1–R14). The evaluator enforces them through each option’s `depends` and the `rules` array, which stay in `registry.json` so the UI and CLI cannot drift.
+The evaluator enforces constraints through each option’s `depends` and the `rules` array in `registry.json`, so the UI and CLI cannot drift.
 
 ## `stack.json`
 

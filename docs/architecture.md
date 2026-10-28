@@ -26,7 +26,7 @@ Skills-first stack builder. No auth. No sidebar.
 | `components/ui` | Cards, pills, buttons |
 | `packages/core` | Registry types, rules, hash codec, skill resolution |
 | `packages/cli` | `brix` command. Generates skill files into the user's project |
-| `registry/` | `registry.json`, `rules.json` |
+| `registry/` | `registry.json` |
 | `styles/theme.css` | Color and type tokens |
 | `docs/` | Product and design notes (lowercase filenames) |
 

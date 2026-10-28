@@ -58,7 +58,8 @@ function Question({
             const selected = isSelected(section, option.id, selection);
             const relations = optionRelations(section.id, option.id, selection);
             const reason = relations.reason;
-            const hasDepends = relations.with.length > 0 || relations.without.length > 0;
+            const dependencies = [...relations.with, ...relations.without];
+            const status = reason && !reason.startsWith("Conflicts with") && !reason.startsWith("Requires ") ? reason : null;
             return (
               <span key={option.id} className="group relative inline-flex">
                 <Button
@@ -70,20 +71,27 @@ function Question({
                 >
                   {option.label}
                 </Button>
-                {option.description || reason || hasDepends ? (
+                {option.description || status || dependencies.length > 0 ? (
                   <span
                     role="tooltip"
-                    className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-2 hidden w-64 -translate-x-1/2 rounded-[4px] border border-stone bg-eggshell px-3 py-2 text-left text-xs leading-relaxed text-ink group-hover:block group-focus-within:block"
+                    className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-2 hidden w-72 -translate-x-1/2 rounded-[4px] border border-stone bg-eggshell px-3 py-2 text-left text-xs leading-relaxed text-ink group-hover:block group-focus-within:block"
                   >
-                    {reason ? <span className="mb-1 block font-medium">{reason}</span> : null}
+                    {status ? <span className="mb-1 block font-medium">{status}</span> : null}
                     {option.description ? <span className="block">{option.description}</span> : null}
-                    {hasDepends ? (
+                    {dependencies.length > 0 ? (
                       <>
                         <span className="my-2 block h-px w-full bg-stone" />
-                        {relations.with.length > 0 ? <span className="block">With {relations.with.join(", ")}</span> : null}
-                        {relations.without.length > 0 ? (
-                          <span className="block">Not with {relations.without.join(", ")}</span>
-                        ) : null}
+                        <span className="block text-[10px] uppercase tracking-wide text-smoke">Dependencies:</span>
+                        <span className="mt-1.5 flex flex-wrap gap-1">
+                          {dependencies.map((label) => (
+                            <span
+                              key={label}
+                              className="inline-flex items-center rounded-full border border-stone bg-taupe px-2 py-0.5 text-[10px] leading-4 text-ink"
+                            >
+                              {label}
+                            </span>
+                          ))}
+                        </span>
                       </>
                     ) : null}
                   </span>

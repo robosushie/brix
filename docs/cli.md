@@ -25,7 +25,7 @@ brix init --config <stack.json>
 3. Print the skill list and licenses.
 4. Ask for consent unless `--yes`.
 5. Write `stack.json`, `AGENTS.md`, `CLAUDE.md`, and `PROMPT.md` in the current directory.
-6. For each matching skill, run its three phases from `registry/skills.json`:
+6. For each matching skill, run its three phases from `registry/registry.json`:
    - `preinstall` installs a tool binary when the skill needs one.
    - `install` writes a local `SKILL.md`, or copies an upstream skill with `npx skills add --copy`, or wires a tool into the project.
    - `postinstall` runs in the project after those files exist. Codegraph runs `codegraph init` here.

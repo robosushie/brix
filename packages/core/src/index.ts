@@ -1,9 +1,9 @@
 import registryJson from "../../../registry/registry.json";
-import skillsJson from "../../../registry/skills.json";
 
 export const AGENTS = ["claude-code", "codex", "cursor"] as const;
 export type AgentId = (typeof AGENTS)[number];
 
+/** One-way. Ids must be from an earlier section. Selecting one of them turns this option off. */
 export type StackDepends = {
   requires?: string[];
   conflicts?: string[];
@@ -49,13 +49,20 @@ export type Preset = {
   choices: Record<string, string>;
 };
 
+export type AgentTargets = {
+  skills: string;
+  codegraph: string;
+  graphify: string;
+};
+
 export type Registry = {
   version: string;
-  alwaysOnSkills: string[];
+  agents: Record<AgentId, AgentTargets>;
   presets: Preset[];
   groups: StackGroup[];
   rules: StackRule[];
   sections: StackSection[];
+  skills: SkillCatalogEntry[];
 };
 
 export type Selection = {
@@ -99,13 +106,6 @@ export type SkillRef = {
   postinstall?: SkillCommands;
 };
 
-export const skillAgentMap = skillsJson.agentMap as Record<
-  AgentId,
-  { skills: string; codegraph: string; graphify: string }
->;
-
-const skillCatalog = skillsJson.skills as SkillCatalogEntry[];
-
 export type Evaluation = {
   selection: Selection;
   disabled: Record<string, string>;
@@ -115,6 +115,10 @@ export type Evaluation = {
 };
 
 export const registry = registryJson as Registry;
+
+export const skillAgentMap = registry.agents;
+
+const skillCatalog = registry.skills;
 
 export type IndexedOption = StackOption & { sectionId: string; fullId: string };
 
@@ -254,12 +258,6 @@ export function disableReason(sectionId: string, optionId: string, sel: Selectio
     const other = optionIndex.get(conflictId);
     if (!other || other.sectionId === opt.sectionId || !chosenEarlier(other.sectionId, opt.sectionId)) continue;
     return `Conflicts with ${other.label}`;
-  }
-
-  for (const id of selected) {
-    const other = optionIndex.get(id);
-    if (!other || other.sectionId === opt.sectionId || !chosenEarlier(other.sectionId, opt.sectionId)) continue;
-    if (other.depends?.conflicts?.includes(opt.fullId)) return `Conflicts with ${other.label}`;
   }
 
   const requiredBySection = new Map<string, string[]>();

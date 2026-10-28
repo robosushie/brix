@@ -4,6 +4,7 @@ import {
   encodeConfig,
   evaluate,
   initCommand,
+  registry,
   selectOption,
   selectionFromFlags,
   type Selection,
@@ -37,6 +38,26 @@ if (evaluate(postgres).disabled["dbProvider.supabase"] || evaluate(postgres).dis
 }
 const vite = selectOption(openApp, "frontend", "vite-react");
 if (!evaluate(vite).disabled["backend.next-handlers"]) throw new Error("vite should disable next route handlers");
+
+const sectionOrder = new Map(registry.sections.map((section, index) => [section.id, index]));
+for (const section of registry.sections) {
+  for (const option of section.options) {
+    for (const id of [...(option.depends?.requires ?? []), ...(option.depends?.conflicts ?? [])]) {
+      const otherSection = id.slice(0, id.indexOf("."));
+      if ((sectionOrder.get(otherSection) ?? 0) >= (sectionOrder.get(section.id) ?? 0)) {
+        throw new Error(`${section.id}.${option.id} depends on later option ${id}`);
+      }
+    }
+  }
+}
+const mongo = selectOption(openApp, "database", "mongo");
+const mongoEval = evaluate(mongo);
+if (mongoEval.disabled["database.mongo"]) throw new Error("mongo should stay enabled");
+if (!mongoEval.disabled["orm.drizzle"]) throw new Error("mongo should disable drizzle");
+const mongoBadges = registry.sections
+  .find((section) => section.id === "database")
+  ?.options.find((option) => option.id === "mongo")?.depends;
+if (mongoBadges) throw new Error("mongo should not declare dependencies");
 
 const frontendOnly = selectOption(empty.selection, "appType", "frontend-only");
 const frontendOnlyEval = evaluate(frontendOnly);
@@ -121,6 +142,11 @@ const codegraph = byId.get("codegraph");
 if (!codegraph) throw new Error("codegraph should install when selected");
 if (byId.has("graphify")) throw new Error("graphify should wait for its own selection");
 if (!byId.has("security-audit")) throw new Error("security audit should stay on");
+const fastApi = evaluate(pick(emptySelection(), [["appType", "backend-only"], ["backend", "fastapi"]]));
+const fastApiIds = fastApi.skills.map((skill) => skill.id);
+for (const id of ["fastapi", "brix-architect", "brix-security", "brix-verify", "security-audit"]) {
+  if (!fastApiIds.includes(id)) throw new Error(`fastapi selection missing ${id}`);
+}
 const memOnly = evaluate(selectOption(done.selection, "memory", "mem0"));
 if (memOnly.skills.some((skill) => skill.id === "mem0")) throw new Error("mem0 is recorded only");
 if (!done.disabled["workflows.prefect"]) throw new Error("prefect should wait for a Python stack");

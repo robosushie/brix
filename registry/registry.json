@@ -1,19 +1,53 @@
 {
-  "version": "2026.10.4",
-  "alwaysOnSkills": ["brix-architect", "brix-security", "brix-verify"],
+  "version": "2026.10.5",
+  "agents": {
+    "claude-code": {
+      "skills": "claude-code",
+      "codegraph": "claude",
+      "graphify": "claude"
+    },
+    "codex": {
+      "skills": "codex",
+      "codegraph": "codex",
+      "graphify": "codex"
+    },
+    "cursor": {
+      "skills": "cursor",
+      "codegraph": "cursor",
+      "graphify": "cursor"
+    }
+  },
   "presets": [],
   "groups": [
-    { "id": "core", "label": "Core" },
-    { "id": "services", "label": "Services" },
-    { "id": "cloud", "label": "Cloud" },
-    { "id": "tools", "label": "Tools" }
+    {
+      "id": "core",
+      "label": "Core"
+    },
+    {
+      "id": "services",
+      "label": "Services"
+    },
+    {
+      "id": "cloud",
+      "label": "Cloud"
+    },
+    {
+      "id": "tools",
+      "label": "Tools"
+    }
   ],
   "rules": [
     {
       "id": "python-backend-only",
       "reason": "Not used for a Python stack",
-      "whenAll": ["appType.backend-only"],
-      "whenAny": ["backend.fastapi", "backend.flask", "backend.django"],
+      "whenAll": [
+        "appType.backend-only"
+      ],
+      "whenAny": [
+        "backend.fastapi",
+        "backend.flask",
+        "backend.django"
+      ],
       "disable": [
         "package.bun-turbo",
         "package.pnpm-turbo",
@@ -29,26 +63,49 @@
     {
       "id": "javascript-stack",
       "reason": "Not used for a JavaScript stack",
-      "whenAny": ["appType.frontend-only", "backend.hono", "backend.express", "backend.fastify", "backend.next-handlers"],
-      "disable": ["testing.pytest", "workflows.prefect"]
+      "whenAny": [
+        "appType.frontend-only",
+        "backend.hono",
+        "backend.express",
+        "backend.fastify",
+        "backend.next-handlers"
+      ],
+      "disable": [
+        "testing.pytest",
+        "workflows.prefect"
+      ]
     },
     {
       "id": "frontend-only-python",
       "reason": "Not used for Frontend Only",
-      "whenAll": ["appType.frontend-only"],
-      "disable": ["package.uv", "runtime.python"]
+      "whenAll": [
+        "appType.frontend-only"
+      ],
+      "disable": [
+        "package.uv",
+        "runtime.python"
+      ]
     },
     {
       "id": "clerk-needs-frontend",
       "reason": "Not used for Backend Only",
-      "whenAll": ["appType.backend-only"],
-      "disable": ["auth.clerk"]
+      "whenAll": [
+        "appType.backend-only"
+      ],
+      "disable": [
+        "auth.clerk"
+      ]
     },
     {
       "id": "database-auth",
       "reason": "Not used without a database",
-      "whenAll": ["appType.frontend-only"],
-      "disable": ["auth.better-auth", "auth.authjs"]
+      "whenAll": [
+        "appType.frontend-only"
+      ],
+      "disable": [
+        "auth.better-auth",
+        "auth.authjs"
+      ]
     }
   ],
   "sections": [
@@ -56,48 +113,164 @@
       "id": "appType",
       "label": "App type",
       "options": [
-        { "id": "frontend-backend", "label": "Frontend + Backend", "status": "proven", "description": "A browser app and a separate API." },
-        { "id": "backend-only", "label": "Backend Only", "status": "proven", "description": "An API with no frontend." },
-        { "id": "frontend-only", "label": "Frontend Only", "status": "proven", "description": "A browser app with no separate API." }
+        {
+          "id": "frontend-backend",
+          "label": "Frontend + Backend",
+          "status": "proven",
+          "description": "A browser app and a separate API."
+        },
+        {
+          "id": "backend-only",
+          "label": "Backend Only",
+          "status": "proven",
+          "description": "An API with no frontend."
+        },
+        {
+          "id": "frontend-only",
+          "label": "Frontend Only",
+          "status": "proven",
+          "description": "A browser app with no separate API."
+        }
       ]
     },
     {
       "id": "frontend",
       "label": "Frontend",
       "group": "core",
-      "appliesTo": ["frontend-backend", "frontend-only"],
+      "appliesTo": [
+        "frontend-backend",
+        "frontend-only"
+      ],
       "options": [
-        { "id": "nextjs", "label": "Next.js", "status": "proven", "skill": "nextjs", "license": "MIT", "description": "React framework with server rendering and route handlers." },
-        { "id": "vite-react", "label": "Vite + React", "status": "experimental", "description": "A client-side React app built with Vite." },
-        { "id": "sveltekit", "label": "SvelteKit", "status": "experimental", "description": "Svelte app framework with file-based routes." },
-        { "id": "nuxt", "label": "Nuxt", "status": "experimental", "description": "Vue app framework with server rendering." }
+        {
+          "id": "nextjs",
+          "label": "Next.js",
+          "status": "proven",
+          "skill": "nextjs",
+          "license": "MIT",
+          "description": "React framework with server rendering and route handlers."
+        },
+        {
+          "id": "vite-react",
+          "label": "Vite + React",
+          "status": "experimental",
+          "description": "A client-side React app built with Vite."
+        },
+        {
+          "id": "sveltekit",
+          "label": "SvelteKit",
+          "status": "experimental",
+          "description": "Svelte app framework with file-based routes."
+        },
+        {
+          "id": "nuxt",
+          "label": "Nuxt",
+          "status": "experimental",
+          "description": "Vue app framework with server rendering."
+        }
       ]
     },
     {
       "id": "ui",
       "label": "UI",
       "group": "core",
-      "appliesTo": ["frontend-backend", "frontend-only"],
+      "appliesTo": [
+        "frontend-backend",
+        "frontend-only"
+      ],
       "options": [
-        { "id": "tailwind-shadcn", "label": "Tailwind + shadcn", "status": "proven", "description": "Tailwind utilities plus shadcn components." },
-        { "id": "tailwind", "label": "Tailwind only", "status": "experimental", "description": "Tailwind utilities without a component kit." },
-        { "id": "mui", "label": "MUI / Mantine", "status": "experimental", "description": "A React component library instead of Tailwind." },
-        { "id": "plain", "label": "Plain CSS", "status": "experimental", "description": "Hand-written CSS, with no utility framework." }
+        {
+          "id": "tailwind-shadcn",
+          "label": "Tailwind + shadcn",
+          "status": "proven",
+          "description": "Tailwind utilities plus shadcn components."
+        },
+        {
+          "id": "tailwind",
+          "label": "Tailwind only",
+          "status": "experimental",
+          "description": "Tailwind utilities without a component kit."
+        },
+        {
+          "id": "mui",
+          "label": "MUI / Mantine",
+          "status": "experimental",
+          "description": "A React component library instead of Tailwind."
+        },
+        {
+          "id": "plain",
+          "label": "Plain CSS",
+          "status": "experimental",
+          "description": "Hand-written CSS, with no utility framework."
+        }
       ]
     },
     {
       "id": "backend",
       "label": "Backend",
       "group": "core",
-      "appliesTo": ["frontend-backend", "backend-only"],
+      "appliesTo": [
+        "frontend-backend",
+        "backend-only"
+      ],
       "options": [
-        { "id": "hono", "label": "Hono", "status": "proven", "skill": "hono", "license": "MIT", "description": "Small TypeScript HTTP framework that runs on Node or Workers.", "depends": { "conflicts": ["runtime.python", "orm.sqlalchemy", "orm.django"] } },
-        { "id": "express", "label": "Express", "status": "experimental", "skill": "express", "license": "MIT", "description": "Node HTTP framework with middleware and a large ecosystem.", "depends": { "conflicts": ["runtime.python", "runtime.workers", "orm.sqlalchemy", "orm.django"] } },
-        { "id": "fastify", "label": "Fastify", "status": "experimental", "description": "Node HTTP framework with a schema-first style.", "depends": { "conflicts": ["runtime.python", "runtime.workers", "orm.sqlalchemy", "orm.django"] } },
-        { "id": "fastapi", "label": "FastAPI", "status": "proven", "skill": "fastapi", "license": "MIT", "description": "Python API framework with typed routes and automatic OpenAPI.", "depends": { "conflicts": ["orm.drizzle", "orm.prisma", "orm.mongoose", "orm.django"] } },
-        { "id": "flask", "label": "Flask", "status": "experimental", "skill": "flask", "license": "MIT", "description": "Small Python HTTP framework you extend with libraries.", "depends": { "conflicts": ["orm.drizzle", "orm.prisma", "orm.mongoose", "orm.django"] } },
-        { "id": "django", "label": "Django", "status": "experimental", "skill": "django", "license": "MIT", "description": "Python framework with its own ORM, admin, and auth.", "depends": { "conflicts": ["orm.drizzle", "orm.prisma", "orm.sqlalchemy", "orm.mongoose"] } },
-        { "id": "next-handlers", "label": "Next route handlers", "status": "experimental", "description": "API routes inside the Next.js app, with no separate server.", "depends": { "requires": ["frontend.nextjs"], "conflicts": ["runtime.python", "orm.sqlalchemy", "orm.django"] } }
+        {
+          "id": "hono",
+          "label": "Hono",
+          "status": "proven",
+          "skill": "hono",
+          "license": "MIT",
+          "description": "Small TypeScript HTTP framework that runs on Node or Workers."
+        },
+        {
+          "id": "express",
+          "label": "Express",
+          "status": "experimental",
+          "skill": "express",
+          "license": "MIT",
+          "description": "Node HTTP framework with middleware and a large ecosystem."
+        },
+        {
+          "id": "fastify",
+          "label": "Fastify",
+          "status": "experimental",
+          "description": "Node HTTP framework with a schema-first style."
+        },
+        {
+          "id": "fastapi",
+          "label": "FastAPI",
+          "status": "proven",
+          "skill": "fastapi",
+          "license": "MIT",
+          "description": "Python API framework with typed routes and automatic OpenAPI."
+        },
+        {
+          "id": "flask",
+          "label": "Flask",
+          "status": "experimental",
+          "skill": "flask",
+          "license": "MIT",
+          "description": "Small Python HTTP framework you extend with libraries."
+        },
+        {
+          "id": "django",
+          "label": "Django",
+          "status": "experimental",
+          "skill": "django",
+          "license": "MIT",
+          "description": "Python framework with its own ORM, admin, and auth."
+        },
+        {
+          "id": "next-handlers",
+          "label": "Next route handlers",
+          "status": "experimental",
+          "description": "API routes inside the Next.js app, with no separate server.",
+          "depends": {
+            "requires": [
+              "frontend.nextjs"
+            ]
+          }
+        }
       ]
     },
     {
@@ -105,10 +278,30 @@
       "label": "Package manager",
       "group": "core",
       "options": [
-        { "id": "bun-turbo", "label": "bun + Turborepo", "status": "experimental", "description": "Bun workspaces orchestrated by Turborepo." },
-        { "id": "pnpm-turbo", "label": "pnpm + Turborepo", "status": "proven", "description": "pnpm workspaces orchestrated by Turborepo." },
-        { "id": "npm", "label": "npm workspaces", "status": "experimental", "description": "npm workspaces, with no Turborepo." },
-        { "id": "uv", "label": "uv (Python)", "status": "proven", "description": "Python project and package manager." }
+        {
+          "id": "bun-turbo",
+          "label": "bun + Turborepo",
+          "status": "experimental",
+          "description": "Bun workspaces orchestrated by Turborepo."
+        },
+        {
+          "id": "pnpm-turbo",
+          "label": "pnpm + Turborepo",
+          "status": "proven",
+          "description": "pnpm workspaces orchestrated by Turborepo."
+        },
+        {
+          "id": "npm",
+          "label": "npm workspaces",
+          "status": "experimental",
+          "description": "npm workspaces, with no Turborepo."
+        },
+        {
+          "id": "uv",
+          "label": "uv (Python)",
+          "status": "proven",
+          "description": "Python project and package manager."
+        }
       ]
     },
     {
@@ -116,50 +309,263 @@
       "label": "Runtime",
       "group": "core",
       "options": [
-        { "id": "node", "label": "Node", "status": "proven", "description": "Node.js for the JavaScript parts of the stack." },
-        { "id": "bun", "label": "Bun", "status": "experimental", "description": "Bun as the JavaScript runtime and package runner." },
-        { "id": "python", "label": "Python", "status": "proven", "description": "Python runtime for a Python API.", "depends": { "conflicts": ["cache.redis-bullmq", "backend.hono", "backend.express", "backend.fastify", "backend.next-handlers"] } },
-        { "id": "workers", "label": "Cloudflare Workers", "status": "experimental", "description": "Edge runtime on Cloudflare Workers.", "depends": { "conflicts": ["backend.express", "backend.fastify", "backend.fastapi", "backend.flask", "backend.django", "cache.redis-bullmq", "orm.prisma"] } }
+        {
+          "id": "node",
+          "label": "Node",
+          "status": "proven",
+          "description": "Node.js for the JavaScript parts of the stack."
+        },
+        {
+          "id": "bun",
+          "label": "Bun",
+          "status": "experimental",
+          "description": "Bun as the JavaScript runtime and package runner."
+        },
+        {
+          "id": "python",
+          "label": "Python",
+          "status": "proven",
+          "description": "Python runtime for a Python API.",
+          "depends": {
+            "conflicts": [
+              "backend.hono",
+              "backend.express",
+              "backend.fastify",
+              "backend.next-handlers"
+            ]
+          }
+        },
+        {
+          "id": "workers",
+          "label": "Cloudflare Workers",
+          "status": "experimental",
+          "description": "Edge runtime on Cloudflare Workers.",
+          "depends": {
+            "conflicts": [
+              "backend.express",
+              "backend.fastify",
+              "backend.fastapi",
+              "backend.flask",
+              "backend.django"
+            ]
+          }
+        }
       ]
     },
     {
       "id": "database",
       "label": "Database",
       "group": "core",
-      "appliesTo": ["frontend-backend", "backend-only"],
+      "appliesTo": [
+        "frontend-backend",
+        "backend-only"
+      ],
       "options": [
-        { "id": "postgres", "label": "Postgres", "status": "proven", "skill": "postgres", "license": "MIT", "description": "Relational database that unlocks a provider and an ORM." },
-        { "id": "mysql", "label": "MySQL", "status": "experimental", "description": "Relational database that unlocks a provider and an ORM." },
-        { "id": "sqlite", "label": "SQLite", "status": "experimental", "description": "File database. Neon and RDS stay off.", "depends": { "conflicts": ["dbProvider.neon", "dbProvider.rds"] } },
-        { "id": "mongo", "label": "MongoDB", "status": "experimental", "description": "Document database. SQL ORMs stay off.", "depends": { "conflicts": ["orm.drizzle", "orm.prisma", "orm.sqlalchemy", "orm.django"] } }
+        {
+          "id": "postgres",
+          "label": "Postgres",
+          "status": "proven",
+          "skill": "postgres",
+          "license": "MIT",
+          "description": "Relational database that unlocks a provider and an ORM."
+        },
+        {
+          "id": "mysql",
+          "label": "MySQL",
+          "status": "experimental",
+          "description": "Relational database that unlocks a provider and an ORM."
+        },
+        {
+          "id": "sqlite",
+          "label": "SQLite",
+          "status": "experimental",
+          "description": "File database. Neon and RDS stay off."
+        },
+        {
+          "id": "mongo",
+          "label": "MongoDB",
+          "status": "experimental",
+          "description": "Document database. SQL ORMs stay off."
+        }
       ]
     },
     {
       "id": "dbProvider",
       "label": "DB provider",
       "group": "core",
-      "appliesTo": ["frontend-backend", "backend-only"],
-      "appliesWhen": ["database.postgres", "database.mysql", "database.sqlite", "database.mongo"],
+      "appliesTo": [
+        "frontend-backend",
+        "backend-only"
+      ],
+      "appliesWhen": [
+        "database.postgres",
+        "database.mysql",
+        "database.sqlite",
+        "database.mongo"
+      ],
       "options": [
-        { "id": "neon", "label": "Neon", "status": "proven", "description": "Serverless Postgres.", "depends": { "conflicts": ["database.sqlite", "database.mongo"] } },
-        { "id": "supabase", "label": "Supabase", "status": "experimental", "description": "Hosted Postgres plus Supabase APIs.", "depends": { "requires": ["database.postgres"] } },
-        { "id": "railway", "label": "Railway / Render managed", "status": "experimental", "description": "Database hosted on Railway or Render." },
-        { "id": "rds", "label": "AWS RDS", "status": "experimental", "description": "Managed SQL on AWS.", "depends": { "conflicts": ["database.sqlite"] } },
-        { "id": "postgres-docker", "label": "Postgres Docker", "status": "proven", "description": "Postgres running in Docker on the developer machine.", "depends": { "requires": ["database.postgres"] } }
+        {
+          "id": "neon",
+          "label": "Neon",
+          "status": "proven",
+          "description": "Serverless Postgres.",
+          "depends": {
+            "conflicts": [
+              "database.sqlite",
+              "database.mongo"
+            ]
+          }
+        },
+        {
+          "id": "supabase",
+          "label": "Supabase",
+          "status": "experimental",
+          "description": "Hosted Postgres plus Supabase APIs.",
+          "depends": {
+            "requires": [
+              "database.postgres"
+            ]
+          }
+        },
+        {
+          "id": "railway",
+          "label": "Railway / Render managed",
+          "status": "experimental",
+          "description": "Database hosted on Railway or Render."
+        },
+        {
+          "id": "rds",
+          "label": "AWS RDS",
+          "status": "experimental",
+          "description": "Managed SQL on AWS.",
+          "depends": {
+            "conflicts": [
+              "database.sqlite"
+            ]
+          }
+        },
+        {
+          "id": "postgres-docker",
+          "label": "Postgres Docker",
+          "status": "proven",
+          "description": "Postgres running in Docker on the developer machine.",
+          "depends": {
+            "requires": [
+              "database.postgres"
+            ]
+          }
+        }
       ]
     },
     {
       "id": "orm",
       "label": "ORM",
       "group": "core",
-      "appliesTo": ["frontend-backend", "backend-only"],
-      "appliesWhen": ["database.postgres", "database.mysql", "database.sqlite", "database.mongo"],
+      "appliesTo": [
+        "frontend-backend",
+        "backend-only"
+      ],
+      "appliesWhen": [
+        "database.postgres",
+        "database.mysql",
+        "database.sqlite",
+        "database.mongo"
+      ],
       "options": [
-        { "id": "drizzle", "label": "Drizzle", "status": "proven", "skill": "drizzle", "license": "MIT", "description": "TypeScript SQL toolkit with a schema you write in code.", "depends": { "conflicts": ["database.mongo", "runtime.python", "backend.django"] } },
-        { "id": "prisma", "label": "Prisma", "status": "experimental", "skill": "prisma", "license": "MIT", "description": "TypeScript schema and generated database client.", "depends": { "conflicts": ["database.mongo", "runtime.workers", "runtime.python", "backend.django"] } },
-        { "id": "sqlalchemy", "label": "SQLAlchemy", "status": "proven", "skill": "sqlalchemy", "license": "MIT", "description": "Python SQL toolkit for a FastAPI or Flask API on a SQL database.", "depends": { "requires": ["runtime.python"], "conflicts": ["database.mongo", "runtime.workers", "backend.django", "backend.hono", "backend.express", "backend.fastify", "backend.next-handlers"] } },
-        { "id": "django", "label": "Django ORM", "status": "experimental", "description": "ORM that ships with Django.", "depends": { "requires": ["backend.django"], "conflicts": ["database.mongo", "runtime.workers"] } },
-        { "id": "mongoose", "label": "Mongoose", "status": "experimental", "description": "MongoDB models for a Node API.", "depends": { "requires": ["database.mongo"], "conflicts": ["backend.django", "backend.fastapi", "backend.flask"] } }
+        {
+          "id": "drizzle",
+          "label": "Drizzle",
+          "status": "proven",
+          "skill": "drizzle",
+          "license": "MIT",
+          "description": "TypeScript SQL toolkit with a schema you write in code.",
+          "depends": {
+            "conflicts": [
+              "database.mongo",
+              "runtime.python",
+              "backend.django",
+              "backend.fastapi",
+              "backend.flask"
+            ]
+          }
+        },
+        {
+          "id": "prisma",
+          "label": "Prisma",
+          "status": "experimental",
+          "skill": "prisma",
+          "license": "MIT",
+          "description": "TypeScript schema and generated database client.",
+          "depends": {
+            "conflicts": [
+              "database.mongo",
+              "runtime.workers",
+              "runtime.python",
+              "backend.django",
+              "backend.fastapi",
+              "backend.flask"
+            ]
+          }
+        },
+        {
+          "id": "sqlalchemy",
+          "label": "SQLAlchemy",
+          "status": "proven",
+          "skill": "sqlalchemy",
+          "license": "MIT",
+          "description": "Python SQL toolkit for a FastAPI or Flask API on a SQL database.",
+          "depends": {
+            "requires": [
+              "runtime.python"
+            ],
+            "conflicts": [
+              "database.mongo",
+              "runtime.workers",
+              "backend.django",
+              "backend.hono",
+              "backend.express",
+              "backend.fastify",
+              "backend.next-handlers"
+            ]
+          }
+        },
+        {
+          "id": "django",
+          "label": "Django ORM",
+          "status": "experimental",
+          "description": "ORM that ships with Django.",
+          "depends": {
+            "requires": [
+              "backend.django"
+            ],
+            "conflicts": [
+              "database.mongo",
+              "runtime.workers",
+              "backend.hono",
+              "backend.express",
+              "backend.fastify",
+              "backend.next-handlers",
+              "backend.fastapi",
+              "backend.flask"
+            ]
+          }
+        },
+        {
+          "id": "mongoose",
+          "label": "Mongoose",
+          "status": "experimental",
+          "description": "MongoDB models for a Node API.",
+          "depends": {
+            "requires": [
+              "database.mongo"
+            ],
+            "conflicts": [
+              "backend.django",
+              "backend.fastapi",
+              "backend.flask"
+            ]
+          }
+        }
       ]
     },
     {
@@ -168,9 +574,24 @@
       "group": "core",
       "multi": true,
       "options": [
-        { "id": "claude-code", "label": "Claude Code", "status": "proven", "description": "Install skills into .claude/skills." },
-        { "id": "codex", "label": "Codex", "status": "proven", "description": "Install skills into .agents/skills for Codex." },
-        { "id": "cursor", "label": "Cursor", "status": "proven", "description": "Install skills into .agents/skills for Cursor." }
+        {
+          "id": "claude-code",
+          "label": "Claude Code",
+          "status": "proven",
+          "description": "Install skills into .claude/skills."
+        },
+        {
+          "id": "codex",
+          "label": "Codex",
+          "status": "proven",
+          "description": "Install skills into .agents/skills for Codex."
+        },
+        {
+          "id": "cursor",
+          "label": "Cursor",
+          "status": "proven",
+          "description": "Install skills into .agents/skills for Cursor."
+        }
       ]
     },
     {
@@ -178,11 +599,38 @@
       "label": "Auth",
       "group": "services",
       "options": [
-        { "id": "better-auth", "label": "Better Auth", "status": "proven", "skill": "better-auth", "license": "MIT", "description": "Auth library that stores users in your database." },
-        { "id": "clerk", "label": "Clerk", "status": "experimental", "description": "Hosted auth for a JavaScript frontend." },
-        { "id": "firebase", "label": "Firebase Auth", "status": "experimental", "description": "Hosted auth from Firebase." },
-        { "id": "authjs", "label": "Auth.js", "status": "experimental", "description": "Auth for JavaScript apps, backed by your database." },
-        { "id": "none", "label": "None", "status": "proven", "description": "No auth. Leaves --auth off the command." }
+        {
+          "id": "better-auth",
+          "label": "Better Auth",
+          "status": "proven",
+          "skill": "better-auth",
+          "license": "MIT",
+          "description": "Auth library that stores users in your database."
+        },
+        {
+          "id": "clerk",
+          "label": "Clerk",
+          "status": "experimental",
+          "description": "Hosted auth for a JavaScript frontend."
+        },
+        {
+          "id": "firebase",
+          "label": "Firebase Auth",
+          "status": "experimental",
+          "description": "Hosted auth from Firebase."
+        },
+        {
+          "id": "authjs",
+          "label": "Auth.js",
+          "status": "experimental",
+          "description": "Auth for JavaScript apps, backed by your database."
+        },
+        {
+          "id": "none",
+          "label": "None",
+          "status": "proven",
+          "description": "No auth. Leaves --auth off the command."
+        }
       ]
     },
     {
@@ -190,58 +638,190 @@
       "label": "Payments",
       "group": "services",
       "options": [
-        { "id": "stripe", "label": "Stripe", "status": "proven", "skill": "stripe", "license": "MIT", "description": "Card checkout and webhooks in test mode." },
-        { "id": "razorpay", "label": "Razorpay", "status": "experimental", "description": "Payments with INR support." },
-        { "id": "lemon", "label": "Lemon Squeezy / Paddle", "status": "experimental", "description": "Merchant of record for subscriptions." },
-        { "id": "none", "label": "None", "status": "proven", "description": "No payments. Leaves --payments off the command." }
+        {
+          "id": "stripe",
+          "label": "Stripe",
+          "status": "proven",
+          "skill": "stripe",
+          "license": "MIT",
+          "description": "Card checkout and webhooks in test mode."
+        },
+        {
+          "id": "razorpay",
+          "label": "Razorpay",
+          "status": "experimental",
+          "description": "Payments with INR support."
+        },
+        {
+          "id": "lemon",
+          "label": "Lemon Squeezy / Paddle",
+          "status": "experimental",
+          "description": "Merchant of record for subscriptions."
+        },
+        {
+          "id": "none",
+          "label": "None",
+          "status": "proven",
+          "description": "No payments. Leaves --payments off the command."
+        }
       ]
     },
     {
       "id": "cache",
       "label": "Cache / queues",
       "group": "services",
-      "appliesTo": ["frontend-backend", "backend-only"],
+      "appliesTo": [
+        "frontend-backend",
+        "backend-only"
+      ],
       "options": [
-        { "id": "redis-bullmq", "label": "Redis + BullMQ", "status": "experimental", "description": "Redis cache and BullMQ jobs on Node or Bun.", "depends": { "conflicts": ["runtime.workers", "runtime.python"] } },
-        { "id": "upstash", "label": "Upstash Redis", "status": "experimental", "description": "Serverless Redis, including Workers." },
-        { "id": "pgboss", "label": "Postgres jobs (pg-boss)", "status": "experimental", "description": "Job queue stored in Postgres.", "depends": { "requires": ["database.postgres"] } },
-        { "id": "none", "label": "None", "status": "proven", "description": "No cache or queue. Leaves --cache off the command." }
+        {
+          "id": "redis-bullmq",
+          "label": "Redis + BullMQ",
+          "status": "experimental",
+          "description": "Redis cache and BullMQ jobs on Node or Bun.",
+          "depends": {
+            "conflicts": [
+              "runtime.workers",
+              "runtime.python"
+            ]
+          }
+        },
+        {
+          "id": "upstash",
+          "label": "Upstash Redis",
+          "status": "experimental",
+          "description": "Serverless Redis, including Workers."
+        },
+        {
+          "id": "pgboss",
+          "label": "Postgres jobs (pg-boss)",
+          "status": "experimental",
+          "description": "Job queue stored in Postgres.",
+          "depends": {
+            "requires": [
+              "database.postgres"
+            ]
+          }
+        },
+        {
+          "id": "none",
+          "label": "None",
+          "status": "proven",
+          "description": "No cache or queue. Leaves --cache off the command."
+        }
       ]
     },
     {
       "id": "storage",
       "label": "File storage",
       "group": "services",
-      "appliesTo": ["frontend-backend", "backend-only"],
+      "appliesTo": [
+        "frontend-backend",
+        "backend-only"
+      ],
       "options": [
-        { "id": "s3", "label": "S3", "status": "experimental", "description": "Object storage on Amazon S3." },
-        { "id": "r2", "label": "R2", "status": "experimental", "description": "Object storage on Cloudflare R2." },
-        { "id": "supabase-storage", "label": "Supabase Storage", "status": "experimental", "description": "Files on Supabase, stored beside a Supabase Postgres database.", "depends": { "requires": ["dbProvider.supabase", "database.postgres"] } },
-        { "id": "none", "label": "None", "status": "proven", "description": "No file storage. Leaves --storage off the command." }
+        {
+          "id": "s3",
+          "label": "S3",
+          "status": "experimental",
+          "description": "Object storage on Amazon S3."
+        },
+        {
+          "id": "r2",
+          "label": "R2",
+          "status": "experimental",
+          "description": "Object storage on Cloudflare R2."
+        },
+        {
+          "id": "supabase-storage",
+          "label": "Supabase Storage",
+          "status": "experimental",
+          "description": "Files on Supabase, stored beside a Supabase Postgres database.",
+          "depends": {
+            "requires": [
+              "dbProvider.supabase",
+              "database.postgres"
+            ]
+          }
+        },
+        {
+          "id": "none",
+          "label": "None",
+          "status": "proven",
+          "description": "No file storage. Leaves --storage off the command."
+        }
       ]
     },
     {
       "id": "email",
       "label": "Email",
       "group": "services",
-      "appliesTo": ["frontend-backend", "backend-only"],
+      "appliesTo": [
+        "frontend-backend",
+        "backend-only"
+      ],
       "options": [
-        { "id": "resend", "label": "Resend", "status": "experimental", "description": "Transactional email through Resend." },
-        { "id": "ses", "label": "SES", "status": "experimental", "description": "Transactional email through Amazon SES." },
-        { "id": "postmark", "label": "Postmark", "status": "experimental", "description": "Transactional email through Postmark." },
-        { "id": "none", "label": "None", "status": "proven", "description": "No email. Leaves --email off the command." }
+        {
+          "id": "resend",
+          "label": "Resend",
+          "status": "experimental",
+          "description": "Transactional email through Resend."
+        },
+        {
+          "id": "ses",
+          "label": "SES",
+          "status": "experimental",
+          "description": "Transactional email through Amazon SES."
+        },
+        {
+          "id": "postmark",
+          "label": "Postmark",
+          "status": "experimental",
+          "description": "Transactional email through Postmark."
+        },
+        {
+          "id": "none",
+          "label": "None",
+          "status": "proven",
+          "description": "No email. Leaves --email off the command."
+        }
       ]
     },
     {
       "id": "workflows",
       "label": "Workflows",
       "group": "services",
-      "appliesTo": ["frontend-backend", "backend-only", "frontend-only"],
+      "appliesTo": [
+        "frontend-backend",
+        "backend-only",
+        "frontend-only"
+      ],
       "options": [
-        { "id": "temporal", "label": "Temporal", "status": "experimental", "description": "Durable workflows. Installs the Temporal developer skill." },
-        { "id": "prefect", "label": "Prefect", "status": "experimental", "description": "Python flows and deployments. Installs the Prefect workflows skill." },
-        { "id": "trigger", "label": "Trigger.dev", "status": "experimental", "description": "Background tasks on Trigger.dev. Installs the Trigger.dev skills." },
-        { "id": "none", "label": "None", "status": "proven", "description": "No workflow engine. Leaves --workflows off the command." }
+        {
+          "id": "temporal",
+          "label": "Temporal",
+          "status": "experimental",
+          "description": "Durable workflows. Installs the Temporal developer skill."
+        },
+        {
+          "id": "prefect",
+          "label": "Prefect",
+          "status": "experimental",
+          "description": "Python flows and deployments. Installs the Prefect workflows skill."
+        },
+        {
+          "id": "trigger",
+          "label": "Trigger.dev",
+          "status": "experimental",
+          "description": "Background tasks on Trigger.dev. Installs the Trigger.dev skills."
+        },
+        {
+          "id": "none",
+          "label": "None",
+          "status": "proven",
+          "description": "No workflow engine. Leaves --workflows off the command."
+        }
       ]
     },
     {
@@ -249,11 +829,36 @@
       "label": "Testing",
       "group": "services",
       "options": [
-        { "id": "vitest-playwright", "label": "Vitest + Playwright", "status": "experimental", "description": "Unit tests with Vitest and browser tests with Playwright." },
-        { "id": "jest-cypress", "label": "Jest + Cypress", "status": "experimental", "description": "Unit tests with Jest and browser tests with Cypress." },
-        { "id": "pytest", "label": "pytest", "status": "proven", "description": "Python tests with pytest." },
-        { "id": "minimal", "label": "Minimal", "status": "experimental", "description": "Only the health route is checked." },
-        { "id": "none", "label": "None", "status": "proven", "description": "No test runner. Leaves --testing off the command." }
+        {
+          "id": "vitest-playwright",
+          "label": "Vitest + Playwright",
+          "status": "experimental",
+          "description": "Unit tests with Vitest and browser tests with Playwright."
+        },
+        {
+          "id": "jest-cypress",
+          "label": "Jest + Cypress",
+          "status": "experimental",
+          "description": "Unit tests with Jest and browser tests with Cypress."
+        },
+        {
+          "id": "pytest",
+          "label": "pytest",
+          "status": "proven",
+          "description": "Python tests with pytest."
+        },
+        {
+          "id": "minimal",
+          "label": "Minimal",
+          "status": "experimental",
+          "description": "Only the health route is checked."
+        },
+        {
+          "id": "none",
+          "label": "None",
+          "status": "proven",
+          "description": "No test runner. Leaves --testing off the command."
+        }
       ]
     },
     {
@@ -261,10 +866,30 @@
       "label": "Monitoring",
       "group": "cloud",
       "options": [
-        { "id": "sentry", "label": "Sentry", "status": "experimental", "description": "Error tracking with Sentry." },
-        { "id": "sentry-posthog", "label": "Sentry + PostHog", "status": "experimental", "description": "Errors in Sentry and product analytics in PostHog." },
-        { "id": "otel", "label": "OpenTelemetry", "status": "experimental", "description": "Traces and metrics through OpenTelemetry." },
-        { "id": "none", "label": "None", "status": "proven", "description": "No monitoring. Leaves --monitoring off the command." }
+        {
+          "id": "sentry",
+          "label": "Sentry",
+          "status": "experimental",
+          "description": "Error tracking with Sentry."
+        },
+        {
+          "id": "sentry-posthog",
+          "label": "Sentry + PostHog",
+          "status": "experimental",
+          "description": "Errors in Sentry and product analytics in PostHog."
+        },
+        {
+          "id": "otel",
+          "label": "OpenTelemetry",
+          "status": "experimental",
+          "description": "Traces and metrics through OpenTelemetry."
+        },
+        {
+          "id": "none",
+          "label": "None",
+          "status": "proven",
+          "description": "No monitoring. Leaves --monitoring off the command."
+        }
       ]
     },
     {
@@ -272,9 +897,24 @@
       "label": "CI/CD",
       "group": "cloud",
       "options": [
-        { "id": "github-actions", "label": "GitHub Actions", "status": "proven", "description": "Build and test on GitHub Actions." },
-        { "id": "gitlab", "label": "GitLab CI", "status": "experimental", "description": "Build and test on GitLab CI." },
-        { "id": "none", "label": "None", "status": "experimental", "description": "No CI config. Leaves --cicd off the command." }
+        {
+          "id": "github-actions",
+          "label": "GitHub Actions",
+          "status": "proven",
+          "description": "Build and test on GitHub Actions."
+        },
+        {
+          "id": "gitlab",
+          "label": "GitLab CI",
+          "status": "experimental",
+          "description": "Build and test on GitLab CI."
+        },
+        {
+          "id": "none",
+          "label": "None",
+          "status": "experimental",
+          "description": "No CI config. Leaves --cicd off the command."
+        }
       ]
     },
     {
@@ -282,13 +922,48 @@
       "label": "Cloud / deploy",
       "group": "cloud",
       "options": [
-        { "id": "railway", "label": "Railway", "status": "proven", "description": "Deploy the app on Railway." },
-        { "id": "render", "label": "Render", "status": "experimental", "description": "Deploy the app on Render." },
-        { "id": "aws", "label": "AWS", "status": "experimental", "description": "Deploy on AWS." },
-        { "id": "azure", "label": "Azure", "status": "experimental", "description": "Deploy on Azure." },
-        { "id": "cloudflare", "label": "Cloudflare", "status": "experimental", "description": "Deploy on Cloudflare, including Workers when that runtime is selected." },
-        { "id": "vercel", "label": "Vercel + separate backend", "status": "experimental", "description": "Frontend on Vercel, with the API deployed beside it." },
-        { "id": "none", "label": "None", "status": "proven", "description": "No deploy target. Leaves --deploy off the command." }
+        {
+          "id": "railway",
+          "label": "Railway",
+          "status": "proven",
+          "description": "Deploy the app on Railway."
+        },
+        {
+          "id": "render",
+          "label": "Render",
+          "status": "experimental",
+          "description": "Deploy the app on Render."
+        },
+        {
+          "id": "aws",
+          "label": "AWS",
+          "status": "experimental",
+          "description": "Deploy on AWS."
+        },
+        {
+          "id": "azure",
+          "label": "Azure",
+          "status": "experimental",
+          "description": "Deploy on Azure."
+        },
+        {
+          "id": "cloudflare",
+          "label": "Cloudflare",
+          "status": "experimental",
+          "description": "Deploy on Cloudflare, including Workers when that runtime is selected."
+        },
+        {
+          "id": "vercel",
+          "label": "Vercel + separate backend",
+          "status": "experimental",
+          "description": "Frontend on Vercel, with the API deployed beside it."
+        },
+        {
+          "id": "none",
+          "label": "None",
+          "status": "proven",
+          "description": "No deploy target. Leaves --deploy off the command."
+        }
       ]
     },
     {
@@ -296,10 +971,30 @@
       "label": "Containers",
       "group": "cloud",
       "options": [
-        { "id": "docker", "label": "Docker", "status": "proven", "description": "Local database, cache, files, and email in Docker." },
-        { "id": "kubernetes", "label": "Kubernetes", "status": "experimental", "description": "Run the app on a Kubernetes cluster." },
-        { "id": "helm", "label": "Helm", "status": "experimental", "description": "Package the cluster deploy as Helm charts." },
-        { "id": "none", "label": "None", "status": "proven", "description": "No container tooling. Leaves --containers off the command." }
+        {
+          "id": "docker",
+          "label": "Docker",
+          "status": "proven",
+          "description": "Local database, cache, files, and email in Docker."
+        },
+        {
+          "id": "kubernetes",
+          "label": "Kubernetes",
+          "status": "experimental",
+          "description": "Run the app on a Kubernetes cluster."
+        },
+        {
+          "id": "helm",
+          "label": "Helm",
+          "status": "experimental",
+          "description": "Package the cluster deploy as Helm charts."
+        },
+        {
+          "id": "none",
+          "label": "None",
+          "status": "proven",
+          "description": "No container tooling. Leaves --containers off the command."
+        }
       ]
     },
     {
@@ -307,10 +1002,30 @@
       "label": "Code index",
       "group": "tools",
       "options": [
-        { "id": "codegraph", "label": "CodeGraph", "status": "proven", "description": "Live code graph over MCP. The agent asks one call for source, call paths, and blast radius." },
-        { "id": "graphify", "label": "Graphify", "status": "proven", "description": "Knowledge graph of code plus docs, PDFs, and other project files." },
-        { "id": "gitnexus", "label": "GitNexus", "status": "experimental", "description": "Deeper code graph with clusters and a browser view. Noncommercial license." },
-        { "id": "none", "label": "None", "status": "proven", "description": "No code index. Leaves --code-index off the command." }
+        {
+          "id": "codegraph",
+          "label": "CodeGraph",
+          "status": "proven",
+          "description": "Live code graph over MCP. The agent asks one call for source, call paths, and blast radius."
+        },
+        {
+          "id": "graphify",
+          "label": "Graphify",
+          "status": "proven",
+          "description": "Knowledge graph of code plus docs, PDFs, and other project files."
+        },
+        {
+          "id": "gitnexus",
+          "label": "GitNexus",
+          "status": "experimental",
+          "description": "Deeper code graph with clusters and a browser view. Noncommercial license."
+        },
+        {
+          "id": "none",
+          "label": "None",
+          "status": "proven",
+          "description": "No code index. Leaves --code-index off the command."
+        }
       ]
     },
     {
@@ -318,8 +1033,18 @@
       "label": "Reply style",
       "group": "tools",
       "options": [
-        { "id": "caveman", "label": "Caveman", "status": "experimental", "description": "Terse agent prose. Shrinks what the agent says, not the code it writes." },
-        { "id": "none", "label": "None", "status": "proven", "description": "No reply-style skill. Leaves --reply-style off the command." }
+        {
+          "id": "caveman",
+          "label": "Caveman",
+          "status": "experimental",
+          "description": "Terse agent prose. Shrinks what the agent says, not the code it writes."
+        },
+        {
+          "id": "none",
+          "label": "None",
+          "status": "proven",
+          "description": "No reply-style skill. Leaves --reply-style off the command."
+        }
       ]
     },
     {
@@ -327,8 +1052,18 @@
       "label": "Implementation",
       "group": "tools",
       "options": [
-        { "id": "ponytail", "label": "Ponytail", "status": "experimental", "description": "Smallest change that works. Shrinks what the agent builds, not how it talks." },
-        { "id": "none", "label": "None", "status": "proven", "description": "No implementation skill. Leaves --implementation off the command." }
+        {
+          "id": "ponytail",
+          "label": "Ponytail",
+          "status": "experimental",
+          "description": "Smallest change that works. Shrinks what the agent builds, not how it talks."
+        },
+        {
+          "id": "none",
+          "label": "None",
+          "status": "proven",
+          "description": "No implementation skill. Leaves --implementation off the command."
+        }
       ]
     },
     {
@@ -336,10 +1071,30 @@
       "label": "Memory",
       "group": "tools",
       "options": [
-        { "id": "supermemory", "label": "Supermemory", "status": "experimental", "description": "Hosted memory API. The agent learns facts across conversations." },
-        { "id": "mem0", "label": "Mem0", "status": "experimental", "description": "Memory layer that stores extracted facts per user or agent. Recorded only, with no skill install." },
-        { "id": "mempalace", "label": "MemPalace", "status": "experimental", "description": "Local memory. Stores conversations verbatim and searches them on your machine." },
-        { "id": "none", "label": "None", "status": "proven", "description": "No memory skill. Leaves --memory off the command." }
+        {
+          "id": "supermemory",
+          "label": "Supermemory",
+          "status": "experimental",
+          "description": "Hosted memory API. The agent learns facts across conversations."
+        },
+        {
+          "id": "mem0",
+          "label": "Mem0",
+          "status": "experimental",
+          "description": "Memory layer that stores extracted facts per user or agent. Recorded only, with no skill install."
+        },
+        {
+          "id": "mempalace",
+          "label": "MemPalace",
+          "status": "experimental",
+          "description": "Local memory. Stores conversations verbatim and searches them on your machine."
+        },
+        {
+          "id": "none",
+          "label": "None",
+          "status": "proven",
+          "description": "No memory skill. Leaves --memory off the command."
+        }
       ]
     },
     {
@@ -347,10 +1102,1804 @@
       "label": "Skill pack",
       "group": "tools",
       "options": [
-        { "id": "mattpocock", "label": "Matt Pocock skills", "status": "experimental", "description": "Small engineering skills for TDD, grilling, and design. You keep the process." },
-        { "id": "superpowers", "label": "Superpowers", "status": "experimental", "description": "Opinionated agent workflow for planning, TDD, debugging, and review." },
-        { "id": "none", "label": "None", "status": "proven", "description": "No skill pack. Leaves --skill-pack off the command." }
+        {
+          "id": "mattpocock",
+          "label": "Matt Pocock skills",
+          "status": "experimental",
+          "description": "Small engineering skills for TDD, grilling, and design. You keep the process."
+        },
+        {
+          "id": "superpowers",
+          "label": "Superpowers",
+          "status": "experimental",
+          "description": "Opinionated agent workflow for planning, TDD, debugging, and review."
+        },
+        {
+          "id": "none",
+          "label": "None",
+          "status": "proven",
+          "description": "No skill pack. Leaves --skill-pack off the command."
+        }
       ]
+    }
+  ],
+  "skills": [
+    {
+      "id": "brix-architect",
+      "kind": "local",
+      "license": "MIT",
+      "when": {
+        "always": true
+      },
+      "preinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "install": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "postinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "name": "Architect",
+      "description": "Scaffolds the chosen stack from stack.json and PROMPT.md."
+    },
+    {
+      "id": "brix-security",
+      "kind": "local",
+      "license": "MIT",
+      "when": {
+        "always": true
+      },
+      "preinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "install": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "postinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "name": "Security",
+      "description": "Applies the always-on Brix security baseline."
+    },
+    {
+      "id": "brix-verify",
+      "kind": "local",
+      "license": "MIT",
+      "when": {
+        "always": true
+      },
+      "preinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "install": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "postinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "name": "Verify",
+      "description": "Runs the Brix verification gate before the agent stops."
+    },
+    {
+      "id": "solid",
+      "kind": "local",
+      "license": "MIT",
+      "when": {
+        "always": true
+      },
+      "preinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "install": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "postinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "name": "SOLID",
+      "description": "Splits routes, services, and data access into separate modules."
+    },
+    {
+      "id": "api-design",
+      "kind": "local",
+      "license": "MIT",
+      "when": {
+        "always": true
+      },
+      "preinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "install": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "postinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "name": "API design",
+      "description": "REST rules, problem+json errors, pagination, and stateless auth."
+    },
+    {
+      "id": "security-audit",
+      "kind": "upstream",
+      "license": "MIT",
+      "when": {
+        "always": true
+      },
+      "preinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "install": {
+        "windows": [
+          [
+            "npx",
+            "--yes",
+            "skills",
+            "add",
+            "https://github.com/cloudflare/security-audit-skill",
+            "--skill",
+            "security-audit",
+            "-y",
+            "--copy",
+            "-a",
+            "{agents}"
+          ]
+        ],
+        "linux": [
+          [
+            "npx",
+            "--yes",
+            "skills",
+            "add",
+            "https://github.com/cloudflare/security-audit-skill",
+            "--skill",
+            "security-audit",
+            "-y",
+            "--copy",
+            "-a",
+            "{agents}"
+          ]
+        ],
+        "darwin": [
+          [
+            "npx",
+            "--yes",
+            "skills",
+            "add",
+            "https://github.com/cloudflare/security-audit-skill",
+            "--skill",
+            "security-audit",
+            "-y",
+            "--copy",
+            "-a",
+            "{agents}"
+          ]
+        ]
+      },
+      "postinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "name": "Security audit",
+      "description": "Reviews the project for common vulnerabilities. Installed on every stack."
+    },
+    {
+      "id": "codegraph",
+      "kind": "upstream",
+      "license": "MIT",
+      "when": {
+        "any": [
+          "codeIndex.codegraph"
+        ]
+      },
+      "official": {
+        "windows": "irm https://raw.githubusercontent.com/colbymchenry/codegraph/main/install.ps1 | iex",
+        "linux": "curl -fsSL https://raw.githubusercontent.com/colbymchenry/codegraph/main/install.sh | sh",
+        "darwin": "curl -fsSL https://raw.githubusercontent.com/colbymchenry/codegraph/main/install.sh | sh"
+      },
+      "preinstall": {
+        "windows": [
+          [
+            "npm",
+            "install",
+            "-g",
+            "@colbymchenry/codegraph"
+          ]
+        ],
+        "linux": [
+          [
+            "npm",
+            "install",
+            "-g",
+            "@colbymchenry/codegraph"
+          ]
+        ],
+        "darwin": [
+          [
+            "npm",
+            "install",
+            "-g",
+            "@colbymchenry/codegraph"
+          ]
+        ]
+      },
+      "install": {
+        "windows": [
+          [
+            "codegraph",
+            "install",
+            "--target={codegraphTargets}",
+            "--location=local",
+            "--yes"
+          ]
+        ],
+        "linux": [
+          [
+            "codegraph",
+            "install",
+            "--target={codegraphTargets}",
+            "--location=local",
+            "--yes"
+          ]
+        ],
+        "darwin": [
+          [
+            "codegraph",
+            "install",
+            "--target={codegraphTargets}",
+            "--location=local",
+            "--yes"
+          ]
+        ]
+      },
+      "postinstall": {
+        "windows": [
+          [
+            "codegraph",
+            "init",
+            "--yes"
+          ]
+        ],
+        "linux": [
+          [
+            "codegraph",
+            "init",
+            "--yes"
+          ]
+        ],
+        "darwin": [
+          [
+            "codegraph",
+            "init",
+            "--yes"
+          ]
+        ]
+      },
+      "name": "CodeGraph",
+      "description": "Live code graph over MCP for source, call paths, and blast radius."
+    },
+    {
+      "id": "graphify",
+      "kind": "upstream",
+      "license": "MIT",
+      "when": {
+        "any": [
+          "codeIndex.graphify"
+        ]
+      },
+      "optional": true,
+      "requiresCommand": "uv",
+      "missingHelp": "https://docs.astral.sh/uv/getting-started/installation/",
+      "preinstall": {
+        "windows": [
+          [
+            "uv",
+            "tool",
+            "install",
+            "graphifyy"
+          ]
+        ],
+        "linux": [
+          [
+            "uv",
+            "tool",
+            "install",
+            "graphifyy"
+          ]
+        ],
+        "darwin": [
+          [
+            "uv",
+            "tool",
+            "install",
+            "graphifyy"
+          ]
+        ]
+      },
+      "install": {
+        "windows": [
+          [
+            "graphify",
+            "install",
+            "--project",
+            "--platform",
+            "{graphifyPlatform}"
+          ]
+        ],
+        "linux": [
+          [
+            "graphify",
+            "install",
+            "--project",
+            "--platform",
+            "{graphifyPlatform}"
+          ]
+        ],
+        "darwin": [
+          [
+            "graphify",
+            "install",
+            "--project",
+            "--platform",
+            "{graphifyPlatform}"
+          ]
+        ]
+      },
+      "postinstall": {
+        "windows": [
+          [
+            "graphify",
+            "extract",
+            ".",
+            "--code-only"
+          ]
+        ],
+        "linux": [
+          [
+            "graphify",
+            "extract",
+            ".",
+            "--code-only"
+          ]
+        ],
+        "darwin": [
+          [
+            "graphify",
+            "extract",
+            ".",
+            "--code-only"
+          ]
+        ]
+      },
+      "name": "Graphify",
+      "description": "Knowledge graph of code plus docs and other project files."
+    },
+    {
+      "id": "gitnexus",
+      "kind": "upstream",
+      "license": "PolyForm-Noncommercial-1.0.0",
+      "when": {
+        "any": [
+          "codeIndex.gitnexus"
+        ]
+      },
+      "preinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "install": {
+        "windows": [
+          [
+            "npx",
+            "--yes",
+            "skills",
+            "add",
+            "gitnexus",
+            "-y",
+            "--copy",
+            "-a",
+            "{agents}"
+          ]
+        ],
+        "linux": [
+          [
+            "npx",
+            "--yes",
+            "skills",
+            "add",
+            "gitnexus",
+            "-y",
+            "--copy",
+            "-a",
+            "{agents}"
+          ]
+        ],
+        "darwin": [
+          [
+            "npx",
+            "--yes",
+            "skills",
+            "add",
+            "gitnexus",
+            "-y",
+            "--copy",
+            "-a",
+            "{agents}"
+          ]
+        ]
+      },
+      "postinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "name": "GitNexus",
+      "description": "Deeper code graph with clusters and a browser view. Noncommercial license."
+    },
+    {
+      "id": "caveman",
+      "kind": "upstream",
+      "license": "MIT",
+      "when": {
+        "any": [
+          "replyStyle.caveman"
+        ]
+      },
+      "preinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "install": {
+        "windows": [
+          [
+            "npx",
+            "--yes",
+            "skills",
+            "add",
+            "JuliusBrussee/caveman",
+            "-y",
+            "--copy",
+            "-a",
+            "{agents}"
+          ]
+        ],
+        "linux": [
+          [
+            "npx",
+            "--yes",
+            "skills",
+            "add",
+            "JuliusBrussee/caveman",
+            "-y",
+            "--copy",
+            "-a",
+            "{agents}"
+          ]
+        ],
+        "darwin": [
+          [
+            "npx",
+            "--yes",
+            "skills",
+            "add",
+            "JuliusBrussee/caveman",
+            "-y",
+            "--copy",
+            "-a",
+            "{agents}"
+          ]
+        ]
+      },
+      "postinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "name": "Caveman",
+      "description": "Terse agent prose. Shrinks what the agent says, not the code it writes."
+    },
+    {
+      "id": "ponytail",
+      "kind": "upstream",
+      "license": "MIT",
+      "when": {
+        "any": [
+          "implementation.ponytail"
+        ]
+      },
+      "preinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "install": {
+        "windows": [
+          [
+            "npx",
+            "--yes",
+            "skills",
+            "add",
+            "DietrichGebert/ponytail",
+            "-y",
+            "--copy",
+            "-a",
+            "{agents}"
+          ]
+        ],
+        "linux": [
+          [
+            "npx",
+            "--yes",
+            "skills",
+            "add",
+            "DietrichGebert/ponytail",
+            "-y",
+            "--copy",
+            "-a",
+            "{agents}"
+          ]
+        ],
+        "darwin": [
+          [
+            "npx",
+            "--yes",
+            "skills",
+            "add",
+            "DietrichGebert/ponytail",
+            "-y",
+            "--copy",
+            "-a",
+            "{agents}"
+          ]
+        ]
+      },
+      "postinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "name": "Ponytail",
+      "description": "Smallest change that works. Shrinks what the agent builds."
+    },
+    {
+      "id": "supermemory",
+      "kind": "upstream",
+      "license": "MIT",
+      "when": {
+        "any": [
+          "memory.supermemory"
+        ]
+      },
+      "preinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "install": {
+        "windows": [
+          [
+            "npx",
+            "--yes",
+            "skills",
+            "add",
+            "supermemoryai/skills",
+            "--skill",
+            "supermemory",
+            "-y",
+            "--copy",
+            "-a",
+            "{agents}"
+          ]
+        ],
+        "linux": [
+          [
+            "npx",
+            "--yes",
+            "skills",
+            "add",
+            "supermemoryai/skills",
+            "--skill",
+            "supermemory",
+            "-y",
+            "--copy",
+            "-a",
+            "{agents}"
+          ]
+        ],
+        "darwin": [
+          [
+            "npx",
+            "--yes",
+            "skills",
+            "add",
+            "supermemoryai/skills",
+            "--skill",
+            "supermemory",
+            "-y",
+            "--copy",
+            "-a",
+            "{agents}"
+          ]
+        ]
+      },
+      "postinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "name": "Supermemory",
+      "description": "Hosted memory so the agent keeps facts across conversations."
+    },
+    {
+      "id": "mempalace",
+      "kind": "upstream",
+      "license": "MIT",
+      "when": {
+        "any": [
+          "memory.mempalace"
+        ]
+      },
+      "preinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "install": {
+        "windows": [
+          [
+            "npx",
+            "--yes",
+            "skills",
+            "add",
+            "MemPalace/mempalace",
+            "-y",
+            "--copy",
+            "-a",
+            "{agents}"
+          ]
+        ],
+        "linux": [
+          [
+            "npx",
+            "--yes",
+            "skills",
+            "add",
+            "MemPalace/mempalace",
+            "-y",
+            "--copy",
+            "-a",
+            "{agents}"
+          ]
+        ],
+        "darwin": [
+          [
+            "npx",
+            "--yes",
+            "skills",
+            "add",
+            "MemPalace/mempalace",
+            "-y",
+            "--copy",
+            "-a",
+            "{agents}"
+          ]
+        ]
+      },
+      "postinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "name": "MemPalace",
+      "description": "Local memory that stores conversations verbatim and searches them on the machine."
+    },
+    {
+      "id": "mattpocock",
+      "kind": "upstream",
+      "license": "MIT",
+      "when": {
+        "any": [
+          "skillPack.mattpocock"
+        ]
+      },
+      "preinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "install": {
+        "windows": [
+          [
+            "npx",
+            "--yes",
+            "skills",
+            "add",
+            "mattpocock/skills",
+            "-y",
+            "--copy",
+            "-a",
+            "{agents}"
+          ]
+        ],
+        "linux": [
+          [
+            "npx",
+            "--yes",
+            "skills",
+            "add",
+            "mattpocock/skills",
+            "-y",
+            "--copy",
+            "-a",
+            "{agents}"
+          ]
+        ],
+        "darwin": [
+          [
+            "npx",
+            "--yes",
+            "skills",
+            "add",
+            "mattpocock/skills",
+            "-y",
+            "--copy",
+            "-a",
+            "{agents}"
+          ]
+        ]
+      },
+      "postinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "name": "Matt Pocock skills",
+      "description": "Small engineering skills for TDD, grilling, and design."
+    },
+    {
+      "id": "superpowers",
+      "kind": "upstream",
+      "license": "MIT",
+      "when": {
+        "any": [
+          "skillPack.superpowers"
+        ]
+      },
+      "preinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "install": {
+        "windows": [
+          [
+            "npx",
+            "--yes",
+            "skills",
+            "add",
+            "obra/superpowers",
+            "-y",
+            "--copy",
+            "-a",
+            "{agents}"
+          ]
+        ],
+        "linux": [
+          [
+            "npx",
+            "--yes",
+            "skills",
+            "add",
+            "obra/superpowers",
+            "-y",
+            "--copy",
+            "-a",
+            "{agents}"
+          ]
+        ],
+        "darwin": [
+          [
+            "npx",
+            "--yes",
+            "skills",
+            "add",
+            "obra/superpowers",
+            "-y",
+            "--copy",
+            "-a",
+            "{agents}"
+          ]
+        ]
+      },
+      "postinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "name": "Superpowers",
+      "description": "Opinionated agent workflow for planning, TDD, debugging, and review."
+    },
+    {
+      "id": "temporal",
+      "kind": "upstream",
+      "license": "MIT",
+      "when": {
+        "any": [
+          "workflows.temporal"
+        ]
+      },
+      "preinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "install": {
+        "windows": [
+          [
+            "npx",
+            "--yes",
+            "skills",
+            "add",
+            "temporalio/skill-temporal-developer",
+            "-y",
+            "--copy",
+            "-a",
+            "{agents}"
+          ]
+        ],
+        "linux": [
+          [
+            "npx",
+            "--yes",
+            "skills",
+            "add",
+            "temporalio/skill-temporal-developer",
+            "-y",
+            "--copy",
+            "-a",
+            "{agents}"
+          ]
+        ],
+        "darwin": [
+          [
+            "npx",
+            "--yes",
+            "skills",
+            "add",
+            "temporalio/skill-temporal-developer",
+            "-y",
+            "--copy",
+            "-a",
+            "{agents}"
+          ]
+        ]
+      },
+      "postinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "name": "Temporal",
+      "description": "Official Temporal developer skill for durable workflows."
+    },
+    {
+      "id": "prefect",
+      "kind": "upstream",
+      "license": "Apache-2.0",
+      "when": {
+        "any": [
+          "workflows.prefect"
+        ]
+      },
+      "preinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "install": {
+        "windows": [
+          [
+            "npx",
+            "--yes",
+            "skills",
+            "add",
+            "prefecthq/prefect-mcp-server",
+            "--skill",
+            "workflows",
+            "-y",
+            "--copy",
+            "-a",
+            "{agents}"
+          ],
+          [
+            "npx",
+            "--yes",
+            "skills",
+            "add",
+            "prefecthq/prefect-mcp-server",
+            "--skill",
+            "cli",
+            "-y",
+            "--copy",
+            "-a",
+            "{agents}"
+          ]
+        ],
+        "linux": [
+          [
+            "npx",
+            "--yes",
+            "skills",
+            "add",
+            "prefecthq/prefect-mcp-server",
+            "--skill",
+            "workflows",
+            "-y",
+            "--copy",
+            "-a",
+            "{agents}"
+          ],
+          [
+            "npx",
+            "--yes",
+            "skills",
+            "add",
+            "prefecthq/prefect-mcp-server",
+            "--skill",
+            "cli",
+            "-y",
+            "--copy",
+            "-a",
+            "{agents}"
+          ]
+        ],
+        "darwin": [
+          [
+            "npx",
+            "--yes",
+            "skills",
+            "add",
+            "prefecthq/prefect-mcp-server",
+            "--skill",
+            "workflows",
+            "-y",
+            "--copy",
+            "-a",
+            "{agents}"
+          ],
+          [
+            "npx",
+            "--yes",
+            "skills",
+            "add",
+            "prefecthq/prefect-mcp-server",
+            "--skill",
+            "cli",
+            "-y",
+            "--copy",
+            "-a",
+            "{agents}"
+          ]
+        ]
+      },
+      "postinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "name": "Prefect",
+      "description": "Official Prefect workflows and CLI skills."
+    },
+    {
+      "id": "trigger",
+      "kind": "upstream",
+      "license": "MIT",
+      "when": {
+        "any": [
+          "workflows.trigger"
+        ]
+      },
+      "preinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "install": {
+        "windows": [
+          [
+            "npx",
+            "--yes",
+            "skills",
+            "add",
+            "triggerdotdev/skills",
+            "-y",
+            "--copy",
+            "-a",
+            "{agents}"
+          ]
+        ],
+        "linux": [
+          [
+            "npx",
+            "--yes",
+            "skills",
+            "add",
+            "triggerdotdev/skills",
+            "-y",
+            "--copy",
+            "-a",
+            "{agents}"
+          ]
+        ],
+        "darwin": [
+          [
+            "npx",
+            "--yes",
+            "skills",
+            "add",
+            "triggerdotdev/skills",
+            "-y",
+            "--copy",
+            "-a",
+            "{agents}"
+          ]
+        ]
+      },
+      "postinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "name": "Trigger.dev",
+      "description": "Official Trigger.dev skills for background tasks."
+    },
+    {
+      "id": "shadcn",
+      "kind": "upstream",
+      "license": "MIT",
+      "when": {
+        "any": [
+          "ui.tailwind-shadcn",
+          "ui.tailwind"
+        ]
+      },
+      "preinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "install": {
+        "windows": [
+          [
+            "npx",
+            "--yes",
+            "skills",
+            "add",
+            "shadcn/ui",
+            "-y",
+            "--copy",
+            "-a",
+            "{agents}"
+          ]
+        ],
+        "linux": [
+          [
+            "npx",
+            "--yes",
+            "skills",
+            "add",
+            "shadcn/ui",
+            "-y",
+            "--copy",
+            "-a",
+            "{agents}"
+          ]
+        ],
+        "darwin": [
+          [
+            "npx",
+            "--yes",
+            "skills",
+            "add",
+            "shadcn/ui",
+            "-y",
+            "--copy",
+            "-a",
+            "{agents}"
+          ]
+        ]
+      },
+      "postinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "name": "shadcn",
+      "description": "Component patterns for Tailwind and shadcn."
+    },
+    {
+      "id": "web-design-guidelines",
+      "kind": "upstream",
+      "license": "MIT",
+      "when": {
+        "any": [
+          "frontend.nextjs",
+          "frontend.vite-react",
+          "frontend.sveltekit",
+          "frontend.nuxt"
+        ]
+      },
+      "preinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "install": {
+        "windows": [
+          [
+            "npx",
+            "--yes",
+            "skills",
+            "add",
+            "vercel-labs/agent-skills",
+            "--skill",
+            "web-design-guidelines",
+            "-y",
+            "--copy",
+            "-a",
+            "{agents}"
+          ]
+        ],
+        "linux": [
+          [
+            "npx",
+            "--yes",
+            "skills",
+            "add",
+            "vercel-labs/agent-skills",
+            "--skill",
+            "web-design-guidelines",
+            "-y",
+            "--copy",
+            "-a",
+            "{agents}"
+          ]
+        ],
+        "darwin": [
+          [
+            "npx",
+            "--yes",
+            "skills",
+            "add",
+            "vercel-labs/agent-skills",
+            "--skill",
+            "web-design-guidelines",
+            "-y",
+            "--copy",
+            "-a",
+            "{agents}"
+          ]
+        ]
+      },
+      "postinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "name": "Web design guidelines",
+      "description": "Accessibility and interface review for the pages the agent builds."
+    },
+    {
+      "id": "frontend-design",
+      "kind": "upstream",
+      "license": "MIT",
+      "when": {
+        "any": [
+          "frontend.nextjs",
+          "frontend.vite-react",
+          "frontend.sveltekit",
+          "frontend.nuxt"
+        ]
+      },
+      "preinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "install": {
+        "windows": [
+          [
+            "npx",
+            "--yes",
+            "skills",
+            "add",
+            "anthropics/skills",
+            "--skill",
+            "frontend-design",
+            "-y",
+            "--copy",
+            "-a",
+            "{agents}"
+          ]
+        ],
+        "linux": [
+          [
+            "npx",
+            "--yes",
+            "skills",
+            "add",
+            "anthropics/skills",
+            "--skill",
+            "frontend-design",
+            "-y",
+            "--copy",
+            "-a",
+            "{agents}"
+          ]
+        ],
+        "darwin": [
+          [
+            "npx",
+            "--yes",
+            "skills",
+            "add",
+            "anthropics/skills",
+            "--skill",
+            "frontend-design",
+            "-y",
+            "--copy",
+            "-a",
+            "{agents}"
+          ]
+        ]
+      },
+      "postinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "name": "Frontend design",
+      "description": "Visual design guidance for the interface."
+    },
+    {
+      "id": "vercel-react-best-practices",
+      "kind": "upstream",
+      "license": "MIT",
+      "when": {
+        "any": [
+          "frontend.nextjs"
+        ]
+      },
+      "preinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "install": {
+        "windows": [
+          [
+            "npx",
+            "--yes",
+            "skills",
+            "add",
+            "vercel-labs/agent-skills",
+            "--skill",
+            "vercel-react-best-practices",
+            "-y",
+            "--copy",
+            "-a",
+            "{agents}"
+          ]
+        ],
+        "linux": [
+          [
+            "npx",
+            "--yes",
+            "skills",
+            "add",
+            "vercel-labs/agent-skills",
+            "--skill",
+            "vercel-react-best-practices",
+            "-y",
+            "--copy",
+            "-a",
+            "{agents}"
+          ]
+        ],
+        "darwin": [
+          [
+            "npx",
+            "--yes",
+            "skills",
+            "add",
+            "vercel-labs/agent-skills",
+            "--skill",
+            "vercel-react-best-practices",
+            "-y",
+            "--copy",
+            "-a",
+            "{agents}"
+          ]
+        ]
+      },
+      "postinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "name": "React best practices",
+      "description": "React and Next.js performance guidance."
+    },
+    {
+      "id": "better-auth",
+      "kind": "upstream",
+      "license": "MIT",
+      "when": {
+        "any": [
+          "auth.better-auth"
+        ]
+      },
+      "preinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "install": {
+        "windows": [
+          [
+            "npx",
+            "--yes",
+            "skills",
+            "add",
+            "better-auth/skills",
+            "-y",
+            "--copy",
+            "-a",
+            "{agents}"
+          ]
+        ],
+        "linux": [
+          [
+            "npx",
+            "--yes",
+            "skills",
+            "add",
+            "better-auth/skills",
+            "-y",
+            "--copy",
+            "-a",
+            "{agents}"
+          ]
+        ],
+        "darwin": [
+          [
+            "npx",
+            "--yes",
+            "skills",
+            "add",
+            "better-auth/skills",
+            "-y",
+            "--copy",
+            "-a",
+            "{agents}"
+          ]
+        ]
+      },
+      "postinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "name": "Better Auth",
+      "description": "Auth stored in the project database."
+    },
+    {
+      "id": "cloudflare",
+      "kind": "upstream",
+      "license": "MIT",
+      "when": {
+        "any": [
+          "deploy.cloudflare",
+          "runtime.workers"
+        ]
+      },
+      "preinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "install": {
+        "windows": [
+          [
+            "npx",
+            "--yes",
+            "skills",
+            "add",
+            "https://github.com/cloudflare/skills",
+            "--skill",
+            "wrangler",
+            "--skill",
+            "workers-best-practices",
+            "-y",
+            "--copy",
+            "-a",
+            "{agents}"
+          ]
+        ],
+        "linux": [
+          [
+            "npx",
+            "--yes",
+            "skills",
+            "add",
+            "https://github.com/cloudflare/skills",
+            "--skill",
+            "wrangler",
+            "--skill",
+            "workers-best-practices",
+            "-y",
+            "--copy",
+            "-a",
+            "{agents}"
+          ]
+        ],
+        "darwin": [
+          [
+            "npx",
+            "--yes",
+            "skills",
+            "add",
+            "https://github.com/cloudflare/skills",
+            "--skill",
+            "wrangler",
+            "--skill",
+            "workers-best-practices",
+            "-y",
+            "--copy",
+            "-a",
+            "{agents}"
+          ]
+        ]
+      },
+      "postinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "name": "Cloudflare",
+      "description": "Deploy and Workers guidance for Cloudflare."
+    },
+    {
+      "id": "nextjs",
+      "kind": "local",
+      "license": "MIT",
+      "when": {
+        "any": [
+          "frontend.nextjs"
+        ]
+      },
+      "preinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "install": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "postinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "name": "Next.js",
+      "description": "Scaffold and structure a Next.js app."
+    },
+    {
+      "id": "hono",
+      "kind": "local",
+      "license": "MIT",
+      "when": {
+        "any": [
+          "backend.hono"
+        ]
+      },
+      "preinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "install": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "postinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "name": "Hono",
+      "description": "Scaffold a Hono API."
+    },
+    {
+      "id": "express",
+      "kind": "local",
+      "license": "MIT",
+      "when": {
+        "any": [
+          "backend.express"
+        ]
+      },
+      "preinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "install": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "postinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "name": "Express",
+      "description": "Scaffold an Express API."
+    },
+    {
+      "id": "fastapi",
+      "kind": "local",
+      "license": "MIT",
+      "when": {
+        "any": [
+          "backend.fastapi"
+        ]
+      },
+      "preinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "install": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "postinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "name": "FastAPI",
+      "description": "Scaffold a FastAPI service."
+    },
+    {
+      "id": "flask",
+      "kind": "local",
+      "license": "MIT",
+      "when": {
+        "any": [
+          "backend.flask"
+        ]
+      },
+      "preinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "install": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "postinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "name": "Flask",
+      "description": "Scaffold a Flask service."
+    },
+    {
+      "id": "django",
+      "kind": "local",
+      "license": "MIT",
+      "when": {
+        "any": [
+          "backend.django"
+        ]
+      },
+      "preinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "install": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "postinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "name": "Django",
+      "description": "Scaffold a Django project."
+    },
+    {
+      "id": "drizzle",
+      "kind": "local",
+      "license": "MIT",
+      "when": {
+        "any": [
+          "orm.drizzle"
+        ]
+      },
+      "preinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "install": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "postinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "name": "Drizzle",
+      "description": "TypeScript SQL schema and queries."
+    },
+    {
+      "id": "prisma",
+      "kind": "local",
+      "license": "MIT",
+      "when": {
+        "any": [
+          "orm.prisma"
+        ]
+      },
+      "preinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "install": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "postinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "name": "Prisma",
+      "description": "TypeScript schema and generated database client."
+    },
+    {
+      "id": "sqlalchemy",
+      "kind": "local",
+      "license": "MIT",
+      "when": {
+        "any": [
+          "orm.sqlalchemy"
+        ]
+      },
+      "preinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "install": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "postinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "name": "SQLAlchemy",
+      "description": "Python SQL models and sessions."
+    },
+    {
+      "id": "stripe",
+      "kind": "local",
+      "license": "MIT",
+      "when": {
+        "any": [
+          "payments.stripe"
+        ]
+      },
+      "preinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "install": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "postinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "name": "Stripe",
+      "description": "Checkout and webhooks in test mode."
+    },
+    {
+      "id": "postgres",
+      "kind": "local",
+      "license": "MIT",
+      "when": {
+        "any": [
+          "database.postgres"
+        ]
+      },
+      "preinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "install": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "postinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "name": "Postgres",
+      "description": "Local and hosted Postgres."
     }
   ]
 }

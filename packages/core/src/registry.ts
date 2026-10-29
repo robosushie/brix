@@ -1,4 +1,4 @@
-import registryJson from "@/registry/registry.json";
+import registryJson from "../../../registry/registry.json";
 import { type IndexedOption, type Registry, type Selection, type StackSection } from "./types.ts";
 
 export const registry = registryJson as Registry;

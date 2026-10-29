@@ -7,10 +7,10 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "brix": "pnpm --filter @brix/cli exec brix"
+    "brix": "pnpm --filter usebrix build && pnpm --filter usebrix exec brix"
   },
   "dependencies": {
-    "@brix/cli": "workspace:*",
+    "usebrix": "workspace:*",
     "@brix/core": "workspace:*",
     "@radix-ui/react-separator": "^1.2.0",
     "@radix-ui/react-slot": "^1.5.0",

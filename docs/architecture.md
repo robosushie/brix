@@ -34,7 +34,7 @@ Skills-first stack builder. No auth. No sidebar.
 
 1. User picks options on `/stack`.
 2. `packages/core` applies requires/excludes and resolves the skill list.
-3. The summary shows `npx brix init` plus one `--flag value` for each selection. None is omitted.
+3. The summary shows `npx usebrix@latest init` plus one `--flag value` for each selection. None is omitted.
 4. The CLI generates those skills into the user's directory and writes `stack.json`, `AGENTS.md`, `CLAUDE.md`, and `PROMPT.md`.
 
 ## vs pilot-dashboard
@@ -44,7 +44,7 @@ Skills-first stack builder. No auth. No sidebar.
 
 1. User picks options on `/stack`.
 2. `packages/core` applies requires/excludes and resolves the skill list.
-3. The summary shows `npx brix init` plus one `--flag value` for each selection. None is omitted.
+3. The summary shows `npx usebrix@latest init` plus one `--flag value` for each selection. None is omitted.
 4. The CLI installs those skills and writes `stack.json`, `AGENTS.md`, `CLAUDE.md`, and `PROMPT.md`.
 
 ## vs pilot-dashboard
@@ -54,7 +54,7 @@ Skills-first stack builder. No auth. No sidebar.
 
 1. User picks options on `/stack`.
 2. `packages/core` applies requires/excludes and resolves the skill list.
-3. The summary shows `npx brix init` plus one `--flag value` for each selection. None is omitted.
+3. The summary shows `npx usebrix@latest init` plus one `--flag value` for each selection. None is omitted.
 4. The CLI installs those skills and writes `stack.json`, `AGENTS.md`, `CLAUDE.md`, and `PROMPT.md`.
 
 ## vs pilot-dashboard

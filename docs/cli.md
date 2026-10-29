@@ -1,16 +1,16 @@
 # Brix CLI
 
-Package: `@brix/cli`  
+Package: `usebrix`  
 Bin: `brix`  
-Published form (when released): `npx brix …`
+Published form: `npx usebrix@latest …`
 
-Inside this repo, `npx brix` uses the local bin from `@brix/cli`. From an empty folder, `npx brix` works only after the package is published.
+Inside this repo, `pnpm brix` builds `packages/cli` and runs the local bin. From an empty folder, `npx usebrix@latest` works after the package is published.
 
 Local (from the `brix` folder):
 
 ```bash
 pnpm brix init --yes --frontend nextjs --agent cursor
-pnpm --filter @brix/cli exec brix init --help
+pnpm --filter usebrix exec brix init --help
 ```
 
 ## `brix init`

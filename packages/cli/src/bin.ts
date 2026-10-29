@@ -17,7 +17,7 @@ function help() {
   brix doctor
 
 Repeat --agent once per coding agent. A missing flag, or None, adds nothing.
-Inside this repo, npx brix uses the local bin. From an empty folder, npx brix works only after the package is published.
+Inside this repo, pnpm brix runs the local build. From an empty folder: npx usebrix@latest init
 `);
 }
 

@@ -17,7 +17,7 @@ function pick(start: Selection, pairs: Array<[string, string]>): Selection {
 const empty = evaluate(emptySelection());
 if (!empty.valid) throw new Error(`empty selection should be valid, got ${empty.errors.join("; ")}`);
 if (empty.selection.agents.length !== 0) throw new Error("empty selection should not pick an agent");
-if (initCommand(empty.selection) !== "npx brix init") throw new Error("empty command should have no flags");
+if (initCommand(empty.selection) !== "npx usebrix@latest init") throw new Error("empty command should have no flags");
 for (const id of ["frontend-backend", "backend-only", "frontend-only"]) {
   if (empty.disabled[`appType.${id}`]) throw new Error(`${id} should stay enabled`);
 }
@@ -238,7 +238,7 @@ const partial = selectionFromFlags([
 if (partial.errors.length !== 0 || partial.selection.choices.auth !== "clerk" || partial.selection.choices.cache) {
   throw new Error(`partial flags failed: ${partial.errors.join("; ")}`);
 }
-if (initCommand(partial.selection) !== "npx brix init --auth clerk") throw new Error(initCommand(partial.selection));
+if (initCommand(partial.selection) !== "npx usebrix@latest init --auth clerk") throw new Error(initCommand(partial.selection));
 
 const conflict = selectionFromFlags([
   ["appType", "backend-only"],

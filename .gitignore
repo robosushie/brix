@@ -19,6 +19,7 @@ node_modules
 
 # production
 /build
+packages/cli/dist
 
 # misc
 .DS_Store

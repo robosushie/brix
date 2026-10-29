@@ -21,7 +21,7 @@ function multiValues(sel: Selection, sectionId: string): string[] {
 
 export function initCommand(sel: Selection): string {
   const normalized = normalizeSelection(sel);
-  const parts = ["npx brix init"];
+  const parts = ["npx usebrix@latest init"];
   for (const section of registry.sections) {
     const flag = `--${flagName(section.id)}`;
     if (section.multi) {

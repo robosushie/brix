@@ -1,6 +1,6 @@
 # Stack sections
 
-App type stays above the accordions. Core has no None. Every other question has None, and None stays off the `npx brix init` command.
+App type stays above the accordions. Core has no None. Every other question has None, and None stays off the `npx usebrix@latest init` command.
 
 ## App type
 
@@ -45,7 +45,7 @@ Security audit is always installed. Mem0 is recorded only. The others install wh
 ## Command
 
 ```bash
-npx brix init --app-type frontend-backend --frontend nextjs --backend fastapi --agent cursor --code-index codegraph --reply-style caveman
+npx usebrix@latest init --app-type frontend-backend --frontend nextjs --backend fastapi --agent cursor --code-index codegraph --reply-style caveman
 ```
 
 Flag names are the section ids in kebab case (`codeIndex` is `--code-index`, `skillPack` is `--skill-pack`). A missing answer and None both omit the flag.

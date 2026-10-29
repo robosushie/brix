@@ -1,16 +1,40 @@
 {
-  "name": "@brix/cli",
+  "name": "usebrix",
   "version": "0.1.0",
-  "private": true,
+  "description": "Install the Brix skill set for a stack.",
+  "keywords": [
+    "brix",
+    "cli",
+    "stack",
+    "skills",
+    "agents"
+  ],
+  "homepage": "https://github.com/robosushie/brix",
+  "bugs": {
+    "url": "https://github.com/robosushie/brix/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/robosushie/brix.git",
+    "directory": "packages/cli"
+  },
   "type": "module",
   "bin": {
-    "brix": "./bin.js"
+    "brix": "./dist/bin.mjs"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=20"
   },
   "scripts": {
-    "start": "tsx src/bin.ts"
+    "build": "tsdown --config-loader native",
+    "prepublishOnly": "tsdown --config-loader native",
+    "start": "node dist/bin.mjs"
   },
-  "dependencies": {
-    "@brix/core": "workspace:*",
-    "tsx": "^4.20.5"
+  "devDependencies": {
+    "tsdown": "^0.23.3"
   }
 }

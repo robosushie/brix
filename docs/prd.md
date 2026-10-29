@@ -30,7 +30,7 @@ Base skills: `brix/architect`, `brix/security`, `brix/verify`.
 1. Open `/` and go to `/stack`, or start from a preset.
 2. Choose App type, then Core, Services, Cloud, and Tools. Incompatible options are disabled with a reason. Core has no None. Every other question has None, and None adds no flag.
 3. Optional notes (Advanced).
-4. The summary command updates as pills are selected: `npx brix init --frontend nextjs --agent cursor`.
+4. The summary command updates as pills are selected: `npx usebrix@latest init --frontend nextjs --agent cursor`.
 5. In an empty folder, run the CLI. It installs skills for the chosen agents and writes `stack.json`, `AGENTS.md`, `CLAUDE.md`, `PROMPT.md`.
 6. Tell the agent: “Read PROMPT.md and build the project.”
 7. The agent scaffolds with official CLIs, applies skills, runs the verification gate, and leaves a pass/fail checklist plus next steps.

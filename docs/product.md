@@ -9,9 +9,9 @@ Solo builders and small teams who already work in Claude Code, Codex, or Cursor 
 ## Journey
 
 1. Land on `/` and read how the command works.
-2. Open `/stack`. The form starts empty. Nothing is selected, so the command is `npx brix init`.
+2. Open `/stack`. The form starts empty. Nothing is selected, so the command is `npx usebrix@latest init`.
 3. Pick App type, then open Core, Services, Cloud, or Tools. Illegal choices stay disabled. None adds no flag.
-4. Copy the flag command, for example `npx brix init --frontend nextjs --backend fastapi --agent cursor`.
+4. Copy the flag command, for example `npx usebrix@latest init --frontend nextjs --backend fastapi --agent cursor`.
 5. Run it in an empty directory. Review the skill list (skip the prompt with `--yes`).
 6. Paste “Read PROMPT.md and build the project” into the agent.
 

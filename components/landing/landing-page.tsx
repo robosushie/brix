@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { StackDemo } from "@/components/landing/stack-demo";
 import { SiteFooter } from "@/components/site/site-footer";
 import { SiteHeader } from "@/components/site/site-header";
 import { buttonVariants } from "@/components/ui/button";
@@ -19,14 +20,46 @@ const features = [
   },
 ];
 
+const files = [
+  ["stack.json", "Choices, agents, and the registry version"],
+  ["AGENTS.md", "Build instructions for the agent"],
+  ["CLAUDE.md", "Pointer at AGENTS.md"],
+  ["PROMPT.md", "The short prompt you paste into the agent"],
+  [".agents/skills/", "Skills for Cursor and Codex"],
+  [".claude/skills/", "Skills for Claude Code"],
+];
+
+const groups = [
+  {
+    label: "Core",
+    body: "Frontend, UI, backend, package manager, runtime, database, ORM, and coding agents.",
+  },
+  {
+    label: "Services",
+    body: "Auth, payments, cache, storage, email, workflows, and testing.",
+  },
+  {
+    label: "Cloud",
+    body: "Monitoring, CI/CD, deploy, and containers.",
+  },
+  {
+    label: "Tools",
+    body: "Code index, reply style, implementation, memory, and a skill pack.",
+  },
+];
+
 export function LandingPage() {
   return (
     <div className="flex min-h-full flex-1 flex-col bg-eggshell">
       <SiteHeader />
       <main>
-        <section className="mx-auto grid max-w-[1280px] items-end gap-10 px-8 pb-8 pt-24 md:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
+        <section className="mx-auto grid max-w-[1280px] items-center gap-10 px-8 pt-24 md:grid-cols-2">
           <div>
             <h1 className="display max-w-xl text-[48px] text-ink">Pick a stack. Copy one command.</h1>
+            <p className="mt-6 max-w-md text-base leading-normal text-smoke">
+              Choose the pieces of a repo. Brix writes the instructions, and your agent builds from an
+              empty folder.
+            </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link href="/stack" className={cn(buttonVariants())}>
                 Get started
@@ -36,25 +69,55 @@ export function LandingPage() {
               </Link>
             </div>
           </div>
-          <div className="relative pb-16">
-            <p className="max-w-md text-base leading-normal text-smoke">
-              Choose the pieces of a production repo. Brix writes the instructions, and your agent
-              builds the project from an empty folder.
-            </p>
+          <div className="relative">
             <div className="pointer-events-none absolute -bottom-2 right-6 flex gap-3" aria-hidden>
-              <span className="size-16 rounded-full bg-violet-spark/80 blur-[2px]" />
-              <span className="size-10 translate-y-3 rounded-full bg-ember-orange/80 blur-[2px]" />
+              <span className="brix-drift size-16 rounded-full bg-violet-spark/80 blur-[2px]" />
+              <span className="brix-drift-late size-10 rounded-full bg-ember-orange/80 blur-[2px]" />
             </div>
+            <StackDemo />
           </div>
         </section>
 
         <section id="how" className="mx-auto mt-24 grid max-w-[1280px] gap-4 px-8 md:grid-cols-3">
-          {features.map((feature) => (
-            <article key={feature.title} className="rounded-[20px] bg-taupe px-8 py-8">
+          {features.map((feature, index) => (
+            <article
+              key={feature.title}
+              className={cn("brix-rise rounded-[20px] bg-taupe px-8 py-8", index > 0 && `brix-rise-${index + 1}`)}
+            >
               <h2 className="display text-[32px] text-ink">{feature.title}</h2>
               <p className="mt-4 text-base leading-normal text-smoke">{feature.body}</p>
             </article>
           ))}
+        </section>
+
+        <section className="mx-auto mt-24 max-w-[1280px] px-8">
+          <h2 className="display text-[36px] text-ink">What it writes</h2>
+          <p className="mt-4 max-w-xl text-base leading-normal text-smoke">
+            A partial stack is valid. None never appears on the command.
+          </p>
+          <ul className="mt-8 grid gap-4 md:grid-cols-2">
+            {files.map(([name, role]) => (
+              <li key={name} className="rounded-[20px] bg-taupe px-8 py-6">
+                <p className="font-mono text-sm text-ink">{name}</p>
+                <p className="mt-2 text-sm leading-normal text-smoke">{role}</p>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <section className="mx-auto mt-24 max-w-[1280px] px-8">
+          <h2 className="display text-[36px] text-ink">What you can pick</h2>
+          <div className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            {groups.map((group) => (
+              <article key={group.label} className="rounded-[20px] bg-taupe px-8 py-8">
+                <p className="mono-label text-muted-foreground">{group.label}</p>
+                <p className="mt-4 text-sm leading-normal text-smoke">{group.body}</p>
+              </article>
+            ))}
+          </div>
+          <p className="mt-6 max-w-xl text-base leading-normal text-smoke">
+            A Python-only API cannot take Node. Clerk cannot sit on Backend Only.
+          </p>
         </section>
 
         <section className="mx-auto mt-24 max-w-[1280px] px-8">

@@ -99,10 +99,11 @@ export function optionRelations(
   const opt = getOption(fullId(sectionId, optionId));
   const reason = disableReason(sectionId, optionId, sel);
   if (!opt) return { reason, with: [], without: [] };
+  const selected = new Set(selectedIds(sel));
   const labelFor = (id: string) => getOption(id)?.label ?? id;
   return {
     reason,
-    with: (opt.depends?.requires ?? []).map(labelFor),
-    without: (opt.depends?.conflicts ?? []).map(labelFor),
+    with: [],
+    without: (opt.depends?.conflicts ?? []).filter((id) => selected.has(id)).map(labelFor),
   };
 }

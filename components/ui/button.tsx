@@ -4,16 +4,17 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 rounded-full border text-sm font-medium no-underline whitespace-nowrap transition-opacity disabled:pointer-events-none disabled:text-ash disabled:opacity-50 [&_svg]:size-4",
+  "inline-flex cursor-pointer items-center justify-center gap-2 rounded-full border text-sm font-medium no-underline whitespace-nowrap transition-[background-color,border-color,color,transform] duration-200 ease-out disabled:pointer-events-none disabled:text-ash disabled:opacity-50 motion-safe:active:scale-[0.98] [&_svg]:size-4",
   {
     variants: {
       variant: {
-        default: "border-ink bg-ink text-eggshell hover:opacity-80",
-        outline: "border-stone bg-eggshell text-ink hover:bg-taupe",
-        ink: "border-ink bg-ink text-eggshell hover:opacity-80",
+        default: "border-ink bg-ink text-eggshell hover:border-graphite hover:bg-graphite",
+        outline: "border-stone bg-eggshell text-ink hover:border-ink hover:bg-stone",
+        ink: "border-ink bg-ink text-eggshell hover:border-graphite hover:bg-graphite",
         ghost: "border-transparent bg-transparent text-ink hover:bg-taupe",
-        pill: "border-stone bg-eggshell text-ink hover:bg-taupe",
-        pillSelected: "border-ink bg-ink text-eggshell hover:opacity-90",
+        pill: "border-stone bg-eggshell text-ink motion-safe:hover:-translate-y-px hover:border-ink hover:bg-stone",
+        pillSelected:
+          "border-ink bg-ink text-eggshell motion-safe:hover:-translate-y-px hover:border-graphite hover:bg-graphite",
       },
       size: {
         default: "h-10 px-4",

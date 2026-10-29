@@ -6,16 +6,22 @@ export function SiteFooter() {
         <p className="flex flex-wrap items-center gap-x-4 gap-y-1">
           <span>
             by{" "}
-            <a href="mailto:iam@robosushie.com" className="text-ink no-underline">
+            <a
+              href="mailto:iam@robosushie.com"
+              className="cursor-pointer text-ink no-underline transition-colors duration-200 hover:text-smoke"
+            >
               robosushie
             </a>
           </span>
-          <a href="mailto:iam@robosushie.com" className="text-ink no-underline">
+          <a
+            href="mailto:iam@robosushie.com"
+            className="cursor-pointer text-ink no-underline transition-colors duration-200 hover:text-smoke"
+          >
             iam@robosushie.com
           </a>
           <a
             href="https://github.com/robosushie/brix"
-            className="text-ink no-underline"
+            className="cursor-pointer text-ink no-underline transition-colors duration-200 hover:text-smoke"
           >
             GitHub
           </a>

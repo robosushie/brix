@@ -98,7 +98,7 @@ export function StackBuilder() {
             <Card key={group.id}>
               <button
                 type="button"
-                className="flex w-full items-center justify-between px-8 py-6 text-left"
+                className="flex w-full cursor-pointer items-center justify-between px-8 py-6 text-left"
                 aria-expanded={expanded}
                 onClick={() =>
                   setOpen((current) => ({ ...current, [group.id]: !expanded }))
@@ -158,7 +158,7 @@ export function StackBuilder() {
                 <button
                   type="button"
                   aria-label={copied ? "Copied" : "Copy command"}
-                  className="absolute top-2 left-2 inline-flex size-6 items-center justify-center rounded-md text-ink hover:bg-eggshell cursor-pointer"
+                  className="absolute top-2 left-2 inline-flex size-6 cursor-pointer items-center justify-center rounded-md text-ink transition-colors duration-200 hover:bg-eggshell"
                   onClick={async () => {
                     await navigator.clipboard.writeText(command);
                     setCopied(true);

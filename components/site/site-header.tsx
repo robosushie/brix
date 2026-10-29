@@ -15,7 +15,7 @@ export function SiteHeader({ bordered = false }: { bordered?: boolean }) {
         <div className="flex items-center gap-8">
           <Link
             href="/"
-            className="flex items-center gap-2 text-sm font-medium tracking-normal text-ink no-underline"
+            className="flex cursor-pointer items-center gap-2 text-sm font-medium tracking-normal text-ink no-underline transition-colors duration-200 hover:text-smoke"
           >
             <Layers className="size-4" aria-hidden />
             Brix
@@ -25,7 +25,7 @@ export function SiteHeader({ bordered = false }: { bordered?: boolean }) {
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-sm font-medium text-ink no-underline hover:text-smoke"
+                className="cursor-pointer text-sm font-medium text-ink no-underline transition-colors duration-200 hover:text-smoke"
               >
                 {link.label}
               </Link>

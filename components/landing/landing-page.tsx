@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Star } from "lucide-react";
+import { DownloadsSection } from "@/components/landing/downloads-section";
 import { StackDemo } from "@/components/landing/stack-demo";
 import { SiteFooter } from "@/components/site/site-footer";
 import { SiteHeader } from "@/components/site/site-header";
@@ -92,6 +93,8 @@ export function LandingPage() {
             <StackDemo />
           </div>
         </section>
+
+        <DownloadsSection />
 
         <section id="how" className="mx-auto mt-24 max-w-[1280px] px-8">
           <h2 className="display text-[36px] text-ink">What a run does</h2>

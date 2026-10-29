@@ -10,7 +10,6 @@
     "brix": "pnpm --filter usebrix build && pnpm --filter usebrix exec brix"
   },
   "dependencies": {
-    "usebrix": "workspace:*",
     "@brix/core": "workspace:*",
     "@radix-ui/react-separator": "^1.2.0",
     "@radix-ui/react-slot": "^1.5.0",
@@ -20,7 +19,9 @@
     "next": "16.4.3",
     "react": "19.3.0",
     "react-dom": "19.3.0",
-    "tailwind-merge": "^3.7.0"
+    "recharts": "^3.10.1",
+    "tailwind-merge": "^3.7.0",
+    "usebrix": "workspace:*"
   },
   "devDependencies": {
     "@tailwindcss/turbopack": "^4",

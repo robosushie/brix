@@ -146,6 +146,8 @@ Pull requests run typecheck, the CLI bundle, and the Next.js production build.
 3. Open Actions → Publish usebrix → Run workflow.
 4. Choose the branch and enter the version.
 
-That run sets `packages/cli/package.json` to the version, commits `Release usebrix <version>` on that branch when the version changed, publishes with the `latest` tag, and pushes the git tag `v<version>`.
+That run sets `packages/cli/package.json` to the version, commits `Release usebrix <version>` on that branch when the version changed, publishes with the `latest` tag, and opens a GitHub Release `v<version>`. The release notes link to that version on npm and include `npx usebrix@<version> init`.
 
-`npx usebrix` and `npx usebrix@latest` both follow `latest`. Run the button only for a commit you want the world to install. The selected branch must allow the Actions bot to push the version commit and the tag.
+The run stops before that commit if the version is already on npm as `usebrix@<version>`, or if the git tag `v<version>` already exists. npm will not replace a published version. A failed npm lookup, other than “version not found”, also stops the run.
+
+`npx usebrix` and `npx usebrix@latest` both follow `latest`. Run the button only for a commit you want the world to install. The selected branch must allow the Actions bot to push the version commit and the release.

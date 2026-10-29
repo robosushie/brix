@@ -54,7 +54,7 @@ export function StackDemo() {
     if (media.matches) return;
     const timer = window.setInterval(() => {
       setIndex((current) => (current + 1) % scenes.length);
-    }, 1800);
+    }, 3600);
     return () => window.clearInterval(timer);
   }, []);
 

@@ -1,22 +1,23 @@
 import Link from "next/link";
+import { Star } from "lucide-react";
 import { StackDemo } from "@/components/landing/stack-demo";
 import { SiteFooter } from "@/components/site/site-footer";
 import { SiteHeader } from "@/components/site/site-header";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-const features = [
+const run = [
   {
-    title: "One selection",
-    body: "Every section is open. Later options turn off when they conflict with what you already picked.",
+    title: "A partial stack is enough",
+    body: "Leave a question blank and it stays off the command. None does the same. App type is the one choice that sets the shape: Frontend Only drops the API, Backend Only drops the UI.",
   },
   {
-    title: "One command",
-    body: "The summary copies a single init command. The skill files are written into the folder you run it in.",
+    title: "The line is the whole selection",
+    body: "Each answer becomes one flag. Repeat --agent once for Cursor, Claude Code, or Codex. Pass --yes to skip the confirm prompt, or --config to read a stack.json you already have.",
   },
   {
-    title: "One gate",
-    body: "The agent scaffolds with official CLIs, then checks the project before it stops.",
+    title: "Nothing is written if the pair is illegal",
+    body: "A Python-only API cannot take Node. Clerk cannot sit on Backend Only. The command exits before stack.json, the agent files, or any skill folder exists.",
   },
 ];
 
@@ -57,15 +58,15 @@ export function LandingPage() {
         <span className="brix-blob absolute bottom-24 left-1/3 size-64 rounded-full bg-violet-spark/15 blur-3xl" />
       </div>
       <div className="relative">
-      <p className="border-b border-stone bg-taupe/80 px-8 py-2 text-center text-sm text-smoke">
-        If you like the project, please{" "}
-        <a
-          href="https://github.com/robosushie/brix"
-          className="text-ink underline decoration-stone underline-offset-2"
-        >
-          give it a star
-        </a>
-        .
+      <p className="flex items-center justify-center gap-2 bg-ink px-8 py-2.5 text-center text-sm text-eggshell">
+        <Star className="size-3.5 fill-eggshell" aria-hidden />
+        <span>
+          If you like the project, please{" "}
+          <a href="https://github.com/robosushie/brix" className="underline underline-offset-2">
+            give it a star
+          </a>
+          .
+        </span>
       </p>
       <SiteHeader />
       <main>
@@ -73,8 +74,10 @@ export function LandingPage() {
           <div>
             <h1 className="display max-w-xl text-[48px] text-ink">Pick a stack. Copy one command.</h1>
             <p className="mt-6 max-w-md text-base leading-normal text-smoke">
-              Choose the pieces of a repo. Brix writes the instructions, and your agent builds from an
-              empty folder.
+              Choose the pieces of a repo: the frontend, the API, the database, and which coding agent
+              should build it. Brix checks that those pieces can sit together, then writes the
+              instructions into an empty folder. You paste one prompt, and the agent builds from those
+              files.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link href="/stack" className={cn(buttonVariants())}>
@@ -90,16 +93,19 @@ export function LandingPage() {
           </div>
         </section>
 
-        <section id="how" className="mx-auto mt-24 grid max-w-[1280px] gap-4 px-8 md:grid-cols-3">
-          {features.map((feature, index) => (
-            <article
-              key={feature.title}
-              className={cn("brix-rise rounded-[20px] bg-taupe px-8 py-8", index > 0 && `brix-rise-${index + 1}`)}
-            >
-              <h2 className="display text-[32px] text-ink">{feature.title}</h2>
-              <p className="mt-4 text-base leading-normal text-smoke">{feature.body}</p>
-            </article>
-          ))}
+        <section id="how" className="mx-auto mt-24 max-w-[1280px] px-8">
+          <h2 className="display text-[36px] text-ink">What a run does</h2>
+          <div className="mt-8 grid gap-4 md:grid-cols-3">
+            {run.map((item, index) => (
+              <article
+                key={item.title}
+                className={cn("brix-rise rounded-[20px] bg-taupe px-8 py-8", index > 0 && `brix-rise-${index + 1}`)}
+              >
+                <h3 className="text-base font-medium text-ink">{item.title}</h3>
+                <p className="mt-3 text-sm leading-normal text-smoke">{item.body}</p>
+              </article>
+            ))}
+          </div>
         </section>
 
         <section className="mx-auto mt-24 max-w-[1280px] px-8">

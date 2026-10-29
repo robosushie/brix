@@ -10,10 +10,13 @@ const links = [
 
 export function SiteHeader({ bordered = false }: { bordered?: boolean }) {
   return (
-    <header className={cn("bg-eggshell", bordered && "border-b border-stone")}>
+    <header className={cn(bordered && "border-b border-stone")}>
       <div className="mx-auto flex h-[50px] max-w-[1280px] items-center justify-between px-8">
         <div className="flex items-center gap-8">
-          <Link href="/" className="flex items-center gap-2 text-sm font-medium tracking-normal text-ink no-underline">
+          <Link
+            href="/"
+            className="flex items-center gap-2 text-sm font-medium tracking-normal text-ink no-underline"
+          >
             <Layers className="size-4" aria-hidden />
             Brix
           </Link>

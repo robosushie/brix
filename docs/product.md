@@ -1,6 +1,6 @@
 # Brix product
 
-Brix is a skills-first stack builder. Pick sections, copy a command, let an agent build the repo.
+You pick the stack and copy one command. The command installs the skills. You add a prompt with your app details. Your agent uses those skills to build the repo.
 
 ## Who it is for
 
@@ -13,7 +13,7 @@ Solo builders and small teams who already work in Claude Code, Codex, or Cursor 
 3. Pick App type, then open Core, Services, Cloud, or Tools. Illegal choices stay disabled. None adds no flag.
 4. Copy the flag command, for example `npx usebrix@latest init --frontend nextjs --backend fastapi --agent cursor`.
 5. Run it in an empty directory. Review the skill list (skip the prompt with `--yes`).
-6. Paste “Read PROMPT.md and build the project” into the agent.
+6. Add a prompt with your app details. The agent reads the installed skills and builds the repo.
 
 ## What the user gets
 
@@ -22,7 +22,7 @@ Solo builders and small teams who already work in Claude Code, Codex, or Cursor 
 | `stack.json` | Chosen options, agents, notes, registry version |
 | `AGENTS.md` | Canonical build instructions |
 | `CLAUDE.md` | Pointer at `AGENTS.md` |
-| `PROMPT.md` | Short prompt the user pastes into the agent |
+| `PROMPT.md` | Starter for the agent. Your own prompt carries the app details. |
 | `.agents/skills/` or `.claude/skills/` | Installed skill folders |
 
 ## Choices

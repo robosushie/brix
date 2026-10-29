@@ -21,7 +21,7 @@ const mono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Brix",
-  description: "Pick a stack. Copy one command. Let an agent build the repo.",
+  description: "Pick a stack. Brix installs the skills. Your prompt and your agent build the repo.",
 };
 
 export default function RootLayout({

@@ -1,6 +1,6 @@
 # Brix
 
-Brix is a skills-first stack builder. You pick the shape of an app, copy one command, and an agent builds the repo from a pinned skill set. It does not generate a template for every combination. The same skills apply to every valid stack, and illegal pairs are rejected before anything is written.
+You pick the stack. The command installs the skills into an empty folder and rejects pairs that cannot sit together. It does not generate the app. You add a prompt with your app details. Claude Code, Codex, or Cursor uses the skills to build the repo.
 
 There is no account. The CLI does not phone home.
 
@@ -10,7 +10,7 @@ There is no account. The CLI does not phone home.
 2. Pick an app type, then answer only the questions you care about. A partial stack is valid.
 3. Copy the command. None and unanswered questions stay off it.
 4. Run it in an empty directory. Review the skill list, or pass `--yes` to skip the prompt.
-5. Paste `Read PROMPT.md and build the project` into Claude Code, Codex, or Cursor.
+5. Add a prompt with your app details in Claude Code, Codex, or Cursor. The agent reads the installed skills and builds the repo.
 
 ```bash
 npx usebrix@latest init --app-type frontend-backend --frontend nextjs --backend fastapi --agent cursor --code-index codegraph
@@ -25,7 +25,7 @@ npx usebrix@latest init --app-type frontend-backend --frontend nextjs --backend 
 | `stack.json` | The choices, agents, notes, and registry version |
 | `AGENTS.md` | Build instructions for the agent |
 | `CLAUDE.md` | Pointer at `AGENTS.md` |
-| `PROMPT.md` | The short prompt you paste into the agent |
+| `PROMPT.md` | Starter for the agent. Your own prompt carries the app details. |
 | `.agents/skills/` | Skills for Cursor and Codex |
 | `.claude/skills/` | Skills for Claude Code |
 

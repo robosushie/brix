@@ -6,7 +6,7 @@ Source: `docs/external/PRD Skills-first Stack Builder (working name StackSkills)
 
 ## Positioning
 
-Free, static stack picker. A person chooses a stack, copies one command, and an agent (Claude Code, Codex, or Cursor) builds a production-shaped repo from an empty folder.
+Free, static stack picker. A person chooses a stack and copies one command. The command installs the skills. They add a prompt with the app details. Claude Code, Codex, or Cursor uses those skills to build the repo.
 
 Skills grow **additively**: each option maps to one or more Agent Skills. The site emits a config. The CLI installs the matching skills and writes instructions. The agent runs each framework’s official scaffolder. Brix does not host generated code and does not require accounts.
 
@@ -32,7 +32,7 @@ Base skills: `brix/architect`, `brix/security`, `brix/verify`, and SOLID. `node-
 3. Optional notes (Advanced).
 4. The summary command updates as pills are selected: `npx usebrix@latest init --frontend nextjs --agent cursor`.
 5. In an empty folder, run the CLI. It installs skills for the chosen agents and writes `stack.json`, `AGENTS.md`, `CLAUDE.md`, `PROMPT.md`.
-6. Tell the agent: “Read PROMPT.md and build the project.”
+6. Add a prompt with the app details. The agent reads the installed skills and builds the repo.
 7. The agent scaffolds with official CLIs, applies skills, runs the verification gate, and leaves a pass/fail checklist plus next steps.
 
 The page keeps the selection in the URL hash so a reload restores it. The copied command is the flags, not that hash.

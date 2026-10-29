@@ -26,7 +26,7 @@ const files = [
   ["stack.json", "Choices, agents, and the registry version"],
   ["AGENTS.md", "Build instructions for the agent"],
   ["CLAUDE.md", "Pointer at AGENTS.md"],
-  ["PROMPT.md", "The short prompt you paste into the agent"],
+  ["PROMPT.md", "Starter for the agent. Your own prompt carries the app details."],
   [".agents/skills/", "Skills for Cursor and Codex"],
   [".claude/skills/", "Skills for Claude Code"],
 ];
@@ -75,10 +75,9 @@ export function LandingPage() {
           <div>
             <h1 className="display max-w-xl text-[48px] text-ink">Pick a stack. Copy one command.</h1>
             <p className="mt-6 max-w-md text-base leading-normal text-smoke">
-              Choose the pieces of a repo: the frontend, the API, the database, and which coding agent
-              should build it. Brix checks that those pieces can sit together, then writes the
-              instructions into an empty folder. You paste one prompt, and the agent builds from those
-              files.
+              You choose the frontend, the API, the database, and which coding agent to use. Brix
+              checks that they fit, then writes the skills into an empty folder. You add your own
+              prompt. The agent follows the skills and builds the repo.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link href="/stack" className={cn(buttonVariants())}>

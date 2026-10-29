@@ -44,131 +44,23 @@ body {
   letter-spacing: 0.01em;
 }
 
-.brix-pill,
-.brix-cmd {
-  border-color: var(--stone);
-  background: var(--eggshell);
-  color: var(--ink);
-}
-
-.brix-cmd {
-  opacity: 0;
-}
-
-@keyframes brix-drift {
+@keyframes brix-blob {
   0%,
   100% {
-    transform: translateY(0);
+    transform: translate(0, 0) scale(1);
   }
   50% {
-    transform: translateY(-10px);
+    transform: translate(28px, -36px) scale(1.08);
   }
 }
 
-@keyframes brix-drift-late {
+@keyframes brix-blob-late {
   0%,
   100% {
-    transform: translateY(12px);
+    transform: translate(0, 0) scale(1);
   }
   50% {
-    transform: translateY(0);
-  }
-}
-
-@keyframes brix-fill-1 {
-  0%,
-  24% {
-    border-color: var(--stone);
-    background: var(--eggshell);
-    color: var(--ink);
-  }
-  25%,
-  100% {
-    border-color: var(--ink);
-    background: var(--ink);
-    color: var(--eggshell);
-  }
-}
-
-@keyframes brix-fill-2 {
-  0%,
-  49% {
-    border-color: var(--stone);
-    background: var(--eggshell);
-    color: var(--ink);
-  }
-  50%,
-  100% {
-    border-color: var(--ink);
-    background: var(--ink);
-    color: var(--eggshell);
-  }
-}
-
-@keyframes brix-fill-3 {
-  0%,
-  74% {
-    border-color: var(--stone);
-    background: var(--eggshell);
-    color: var(--ink);
-  }
-  75%,
-  100% {
-    border-color: var(--ink);
-    background: var(--ink);
-    color: var(--eggshell);
-  }
-}
-
-@keyframes brix-cmd-0 {
-  0%,
-  24% {
-    opacity: 1;
-  }
-  25%,
-  100% {
-    opacity: 0;
-  }
-}
-
-@keyframes brix-cmd-1 {
-  0%,
-  24% {
-    opacity: 0;
-  }
-  25%,
-  49% {
-    opacity: 1;
-  }
-  50%,
-  100% {
-    opacity: 0;
-  }
-}
-
-@keyframes brix-cmd-2 {
-  0%,
-  49% {
-    opacity: 0;
-  }
-  50%,
-  74% {
-    opacity: 1;
-  }
-  75%,
-  100% {
-    opacity: 0;
-  }
-}
-
-@keyframes brix-cmd-3 {
-  0%,
-  74% {
-    opacity: 0;
-  }
-  75%,
-  100% {
-    opacity: 1;
+    transform: translate(-36px, 24px) scale(0.92);
   }
 }
 
@@ -184,40 +76,12 @@ body {
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .brix-drift {
-    animation: brix-drift 7s ease-in-out infinite;
+  .brix-blob {
+    animation: brix-blob 14s ease-in-out infinite;
   }
 
-  .brix-drift-late {
-    animation: brix-drift-late 7s ease-in-out infinite;
-  }
-
-  .brix-pill-1 {
-    animation: brix-fill-1 8s linear infinite;
-  }
-
-  .brix-pill-2 {
-    animation: brix-fill-2 8s linear infinite;
-  }
-
-  .brix-pill-3 {
-    animation: brix-fill-3 8s linear infinite;
-  }
-
-  .brix-cmd-0 {
-    animation: brix-cmd-0 8s linear infinite;
-  }
-
-  .brix-cmd-1 {
-    animation: brix-cmd-1 8s linear infinite;
-  }
-
-  .brix-cmd-2 {
-    animation: brix-cmd-2 8s linear infinite;
-  }
-
-  .brix-cmd-3 {
-    animation: brix-cmd-3 8s linear infinite;
+  .brix-blob-late {
+    animation: brix-blob-late 18s ease-in-out infinite;
   }
 
   .brix-rise {
@@ -233,14 +97,3 @@ body {
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .brix-pill {
-    border-color: var(--ink);
-    background: var(--ink);
-    color: var(--eggshell);
-  }
-
-  .brix-cmd-3 {
-    opacity: 1;
-  }
-}

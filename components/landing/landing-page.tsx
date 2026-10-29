@@ -50,7 +50,23 @@ const groups = [
 
 export function LandingPage() {
   return (
-    <div className="flex min-h-full flex-1 flex-col bg-eggshell">
+    <div className="relative flex min-h-full flex-1 flex-col overflow-x-hidden bg-eggshell">
+      <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
+        <span className="brix-blob absolute -top-16 -left-16 size-72 rounded-full bg-violet-spark/25 blur-3xl" />
+        <span className="brix-blob-late absolute top-40 -right-20 size-80 rounded-full bg-ember-orange/20 blur-3xl" />
+        <span className="brix-blob absolute bottom-24 left-1/3 size-64 rounded-full bg-violet-spark/15 blur-3xl" />
+      </div>
+      <div className="relative">
+      <p className="border-b border-stone bg-taupe/80 px-8 py-2 text-center text-sm text-smoke">
+        If you like the project, please{" "}
+        <a
+          href="https://github.com/robosushie/brix"
+          className="text-ink underline decoration-stone underline-offset-2"
+        >
+          give it a star
+        </a>
+        .
+      </p>
       <SiteHeader />
       <main>
         <section className="mx-auto grid max-w-[1280px] items-center gap-10 px-8 pt-24 md:grid-cols-2">
@@ -70,10 +86,6 @@ export function LandingPage() {
             </div>
           </div>
           <div className="relative">
-            <div className="pointer-events-none absolute -bottom-2 right-6 flex gap-3" aria-hidden>
-              <span className="brix-drift size-16 rounded-full bg-violet-spark/80 blur-[2px]" />
-              <span className="brix-drift-late size-10 rounded-full bg-ember-orange/80 blur-[2px]" />
-            </div>
             <StackDemo />
           </div>
         </section>
@@ -130,6 +142,7 @@ export function LandingPage() {
         </section>
       </main>
       <SiteFooter />
+      </div>
     </div>
   );
 }

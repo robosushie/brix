@@ -9,5 +9,6 @@ Shared rules:
 - `docs/` is for human notes. `scripts/bootstrap/` is for seed data and one-off setup.
 - `public/` is static files for a web app. It stays at that app's root.
 - `types/` (TypeScript) or `schemas/` (Python) holds shapes that cross a boundary. Database tables stay in `models/` or the ORM folder.
-- `services/` owns use cases. `services/agent/` exists only when an AI framework is selected.
+- `src/agent/` exists only when an AI framework is selected. It holds that framework's library: prompts, tools, graphs, crews, and generated clients.
+- `services/` owns use cases. Each file is a runner: it calls `src/agent/` (or `src/mastra/`) and returns a result. It does not define tools, prompts, crews, or graphs.
 - Tests sit beside the project root (`tests/` for Python, the test runner's folder for TypeScript), not inside route files' feature folders.

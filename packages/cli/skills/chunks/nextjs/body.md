@@ -16,7 +16,7 @@ Example:
 npx create-next-app@latest . --ts --app --src-dir --eslint --use-pnpm
 ```
 
-Run the CLI in the frontend root from `node-layout`: the repo root for a single app, `apps/web` when the API is also JavaScript, or `frontend/` when the API is Python.
+Run the CLI in the UI root from `folder-structure`: the repo root for a single app, `packages/web` when the API is Hono, Express, or Fastify, or `apps/web` when the API is Python.
 
 ## Layout rules (official)
 

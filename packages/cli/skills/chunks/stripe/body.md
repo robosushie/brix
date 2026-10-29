@@ -9,7 +9,7 @@ Add Stripe **test mode** only. Document `STRIPE_SECRET_KEY` and `STRIPE_WEBHOOK_
 
 ## Webhook (official)
 
-- Route lives in the API route tree (`src/routes` or `src/app/api/routes`), for example `POST /v1/stripe/webhook`.
+- Route lives in the API route tree (`src/routes` on Node, or `src/api/routes` on Python), for example `POST /v1/stripe/webhook`.
 - Verify signatures with the official SDK before trusting the payload:
   - Node: `stripe.webhooks.constructEvent(rawBody, signature, endpointSecret)`
   - Python: `stripe.Webhook.construct_event(payload, sig_header, secret)`

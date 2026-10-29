@@ -16,6 +16,22 @@ const postgresSkill = renderSkill("postgres");
 if (!postgresSkill.startsWith("---\nname: postgres\n") || !postgresSkill.includes("DATABASE_URL") || !postgresSkill.includes("postgres-docker")) {
   throw new Error("postgres skill did not compose the shared database chunks");
 }
+const folderSkill = renderSkill("folder-structure");
+if (!folderSkill.includes("apps/web") || !folderSkill.includes("packages/web")) {
+  throw new Error("folder skill is missing the apps and packages trees");
+}
+if (folderSkill.includes("frontend/") || folderSkill.includes("backend/")) {
+  throw new Error("folder skill still names frontend/ or backend/");
+}
+if (!folderSkill.includes("src/agent/") || folderSkill.includes("src/services/agent/")) {
+  throw new Error("folder skill should keep the agent library out of services");
+}
+const crewSkill = renderSkill("crewai");
+if (!crewSkill.includes("FastAPI")) throw new Error("crewai should name FastAPI");
+const bamlSkill = renderSkill("baml");
+if (!bamlSkill.includes("baml_client/") || !bamlSkill.includes(".gitignore")) {
+  throw new Error("baml should gitignore the generated client");
+}
 
 function pick(start: Selection, pairs: Array<[string, string]>): Selection {
   return pairs.reduce((sel, [section, option]) => selectOption(sel, section, option), start);

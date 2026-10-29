@@ -1,6 +1,6 @@
 ## Django
 
-Keep the official layout. Do not move it into `src/app`.
+Keep the official layout at the repo root. When a JavaScript UI exists, `manage.py` sits beside `apps/web`. Do not move Django into `src/`.
 
 ```
 manage.py
@@ -11,4 +11,4 @@ docs/
 scripts/bootstrap/
 ```
 
-Agent code, when an AI framework is selected, lives in the app package under `services/agent/`, not in a new top-level product folder.
+When an AI framework is selected, the library lives in `<app>/agent/`. `<app>/services/` is only the runner that views call. Do not put prompts, tools, crews, or graphs in `services/`.

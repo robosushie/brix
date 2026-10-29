@@ -1,19 +1,19 @@
 # LangGraph
 
-The graph lives in the agent folder. Routes start a run. They do not define nodes.
+The graph lives in `src/agent/`. `src/services/` starts a run by calling the compiled graph. Routes call that runner. They do not define nodes.
 
-Python, at the Python project root (`backend/` or the repo root):
+Python, at the repo root (Django: the same files under `<app>/agent/`):
 
 ```
 langgraph.json
-src/app/services/agent/graph.py
-src/app/services/agent/nodes.py
-src/app/services/agent/tools.py
-src/app/services/agent/state.py
+src/agent/graph.py
+src/agent/nodes.py
+src/agent/tools.py
+src/agent/state.py
 ```
 
 `langgraph.json` points `graphs` at the compiled graph and `dependencies` at the project. Pin `langgraph` in `pyproject.toml`.
 
-TypeScript API: the same split under `src/services/agent/`, using `@langchain/langgraph`. No `langgraph.json` on a Node service.
+TypeScript API: the same split under `packages/api/src/agent/` (or `src/agent/` when the API is the only app), using `@langchain/langgraph`. No `langgraph.json` on a Node service.
 
 Keys belong in `.env.example`. Do not add a second graph runtime.

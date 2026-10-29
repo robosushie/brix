@@ -11,7 +11,7 @@ src/db/client.ts          drizzle(client, { schema }); URL from env schema
 drizzle/                  generated SQL + snapshots (commit this folder)
 ```
 
-When the API is `apps/api`, those paths sit inside that package next to its `package.json`.
+When the API is `packages/api`, those paths sit inside that package next to its `package.json`.
 
 ## Workflow (official)
 

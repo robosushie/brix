@@ -1,6 +1,6 @@
 # Hono
 
-Scaffold with the official starter when starting from empty: `npm create hono@latest` (or pnpm / bun) and choose the `nodejs` or `bun` template to match `stack.json` runtime. Place the result in the API root from `node-layout` (`apps/api` or the repo root).
+Scaffold with the official starter when starting from empty: `npm create hono@latest` (or pnpm / bun) and choose the `nodejs` or `bun` template to match `stack.json` runtime. Place the result in the API root from `folder-structure` (`packages/api` or the repo root).
 
 ## Files
 
@@ -20,4 +20,4 @@ src/db/                 only when a database is selected
 - Mount product routes under `/v1`. Keep `/health` unversioned.
 - Validate with `@hono/zod-validator` (or Standard Schema) on the route. Handlers return `c.json(..., status)`.
 
-`app.ts` does not call `listen` / `serve`. Share types with the frontend only through a `packages/` package or exported `AppType`, not a deep import into `apps/web` source. Do not add a second HTTP framework. Node requires 18.14.1+ / 20+.
+`app.ts` does not call `listen` / `serve`. Share types with the UI only through `packages/shared` or exported `AppType`, not a deep import into `packages/web` source. Do not add a second HTTP framework. Node requires 18.14.1+ / 20+.

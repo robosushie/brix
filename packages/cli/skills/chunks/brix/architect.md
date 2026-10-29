@@ -3,8 +3,9 @@
 1. Read `stack.json`, `AGENTS.md`, and `PROMPT.md`. Treat `stack.json` as the only source of truth for which frameworks, providers, and agents were chosen.
 2. Pick the repo root from the app type, then follow the layout skill that was installed:
    - Frontend only, or a Node or Bun API with no frontend: one app at the repo root. Follow `node-layout`.
-   - Frontend plus Hono, Express, or Fastify: `apps/web` and `apps/api` (Turborepo / workspace convention). Follow `node-layout`.
-   - Frontend plus FastAPI, Flask, or Django: `frontend/` for the JavaScript app and `backend/` for the Python project. Follow both layout skills. The Python project is not an npm workspace member.
+   - Frontend plus Hono, Express, or Fastify: `packages/web` and `packages/api`. Follow `node-layout`.
+   - Frontend plus FastAPI or Flask: `apps/web` for the JavaScript app and `src/` at the repo root for Python. Follow both layout skills. The Python project is not an npm workspace member.
+   - Frontend plus Django: `apps/web` beside `manage.py` at the repo root. Follow both layout skills.
    - Backend only, Python: one uv project at the repo root. Follow `python-layout` (uv's default `src/` package layout).
    - Backend only, Node or Bun: one API at the repo root. Follow `node-layout`.
 The `folder-structure` skill is installed on every stack and wins if a framework sample tree disagrees.

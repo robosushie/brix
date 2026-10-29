@@ -1,6 +1,6 @@
 # Django
 
-Use `uv` and the official project layout. Do not rewrite Django into `src/app`.
+Use `uv` and the official project layout. Do not rewrite Django into `src/`.
 
 ```
 uv init

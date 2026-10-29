@@ -1,22 +1,25 @@
 ## Python API
 
-FastAPI or Flask. At the repo root when the app is backend-only. Under `backend/` when a JavaScript frontend exists (`frontend/` uses the Vite or Next section). Django does not use this tree.
+FastAPI or Flask. `pyproject.toml` stays at the repo root. The Python project is not an npm workspace member. Django does not use this tree.
+
+Backend only: this `src/` tree is the whole repo.
+
+A JavaScript UI beside this API lives in `apps/web`. Add `apps/admin` only when there is a second UI. Do not wrap the Python code in another folder.
 
 ```
-src/app/api/routes/
-src/app/api/deps.py
-src/app/core/
-src/app/services/
-src/app/services/agent/    only when an AI framework is selected
-src/app/schemas/
-src/app/models/
-src/app/lib/
-src/app/constants/
-src/app/enums/
-alembic/                   only when the ORM is SQLAlchemy
+apps/web/                      the Vite, React, or Next interior
+apps/admin/                    only when there is a second UI
+src/api/routes/
+src/agent/                     framework library, only when an AI framework is selected
+src/services/                  runners that call src/agent/; no prompts, tools, or graphs
+src/models/
+src/schemas/
+src/lib/
+src/constants/
+src/enums/
+alembic/                       only when the ORM is SQLAlchemy
 tests/
 docs/
 scripts/bootstrap/
+pyproject.toml
 ```
-
-The Python project is not an npm workspace package.

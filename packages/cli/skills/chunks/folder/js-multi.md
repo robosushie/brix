@@ -1,20 +1,12 @@
-## More than one JavaScript deployable
+## JavaScript UI plus a JavaScript API
 
-Frontend plus Hono, Express, or Fastify:
-
-```
-apps/web/                 the frontend section
-apps/api/                 the Node API section
-packages/shared/          only when a type or UI package is shared
-```
-
-Three or more deployable services use role names, not product names:
+Use this for a React, Next, or Vite app plus Hono, Express, or Fastify, including when there are exactly two deployables.
 
 ```
-packages/web/
-packages/admin/
-packages/api/
-packages/worker/
+packages/web/                  the frontend interior
+packages/api/                  the Node API interior
+packages/admin/                only when there is a second UI
+packages/worker/               only when there is a worker
 packages/shared/
 ```
 

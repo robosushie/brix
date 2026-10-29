@@ -1,6 +1,6 @@
 # Express
 
-Create an Express server with TypeScript inside the API root from `node-layout` (`apps/api`, or the repo root when there is no frontend). Prefer Express 5 when the generator / docs for the chosen major recommend it (rejected promises reach the error middleware).
+Create an Express server with TypeScript inside the API root from `folder-structure` (`packages/api`, or the repo root when there is no UI). Prefer Express 5 when the generator / docs for the chosen major recommend it (rejected promises reach the error middleware).
 
 ## Files
 

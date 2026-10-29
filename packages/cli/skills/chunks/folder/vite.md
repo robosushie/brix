@@ -1,6 +1,6 @@
 ## Vite, React, or SvelteKit
 
-Use this for a Vite, plain React, or SvelteKit frontend. It is the `frontend/` tree when the API is Python, and `apps/web` when the API is JavaScript.
+Interior for a Vite, plain React, or SvelteKit app:
 
 ```
 src/components/ui/
@@ -14,5 +14,11 @@ src/types/
 src/assets/
 public/
 ```
+
+Where that interior lives:
+
+- One app, no API: the repo root.
+- A Python API: `apps/web`. `apps/admin` only when there is a second UI.
+- A Hono, Express, or Fastify API: `packages/web`. `packages/admin` only when there is a second UI.
 
 SvelteKit keeps the `src/routes` tree its CLI emits. Do not add a parallel `pages/` tree.

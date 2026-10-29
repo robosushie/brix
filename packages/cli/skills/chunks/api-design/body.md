@@ -13,7 +13,7 @@ Mount the version on the router once: `/v1`. Route files do not repeat `v1` in t
 - A `db` module (or a Django model / manager) owns queries. Services call it. Routes do not.
 - OpenAPI lives next to that API. FastAPI exposes the generated schema from the app. A Node API keeps one OpenAPI 3.1 document (or generates it from route types) in the API package. Do not keep a second hand-written copy that can drift.
 
-Node files: `src/routes`, `src/services`, `src/db` (under `apps/api` when the repo has both a JavaScript frontend and a JavaScript API). Python files: `src/app/api/routes`, `src/app/services`, `src/app/schemas`, `src/app/db`. Django: views, models, and urls inside the app package from `startapp`.
+Node files: `src/routes`, `src/services`, `src/models` (under `packages/api` when the repo has both a JavaScript UI and a JavaScript API). Python files: `src/api/routes`, `src/services`, `src/schemas`, `src/models`. Django: views, models, and urls inside the app package from `startapp`.
 
 ## Resources
 

@@ -5,10 +5,9 @@ Use SQLAlchemy 2.x style only.
 ## Files
 
 ```
-src/app/db/base.py         class Base(DeclarativeBase)  # AsyncAttrs when async
-src/app/db/session.py      create_engine / create_async_engine + sessionmaker / async_sessionmaker
-src/app/db/models/         Mapped[...] + mapped_column; import all models in package init
-src/app/api/deps.py        yield a session per request, then close / context-manage it
+src/lib/db.py           create_engine / create_async_engine + sessionmaker / async_sessionmaker, and Base(DeclarativeBase)
+src/models/            Mapped[...] + mapped_column; import all models so metadata sees them
+src/api/deps.py        yield a session per request, then close / context-manage it
 alembic.ini                at the Python project root
 alembic/env.py
 alembic/versions/

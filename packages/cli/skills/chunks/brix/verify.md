@@ -5,7 +5,7 @@ Before stopping, run every check that applies to this `stack.json`. Fix failures
 ## Install
 
 - JavaScript workspace: install from the repo root so `apps/*` and `packages/*` resolve (npm / pnpm / bun as selected).
-- Python: `uv sync` in the directory that holds `pyproject.toml` (repo root, or `backend/` when a JavaScript frontend sits beside it).
+- Python: `uv sync` at the repo root, where `pyproject.toml` lives.
 
 ## Typecheck and tests
 

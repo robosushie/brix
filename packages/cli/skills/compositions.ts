@@ -46,7 +46,7 @@ export const compositions: Record<string, SkillComposition> = {
   },
   "node-layout": {
     name: "node-layout",
-    description: "Places a Node or Bun app in src, or in apps/web and apps/api. Use when the stack runtime is Node or Bun, or the frontend or JS API is selected.",
+    description: "Places a Node or Bun app in src, or in packages/web and packages/api. Use when the stack runtime is Node or Bun, or the frontend or JS API is selected.",
     parts: ["node-layout/body", "common/infra"],
   },
   "python-layout": {
@@ -116,17 +116,17 @@ export const compositions: Record<string, SkillComposition> = {
   },
   langchain: {
     name: "langchain",
-    description: "Adds LangChain calls in services/agent. Use when stack.json aiFramework is langchain.",
+    description: "Adds LangChain calls in src/agent. Use when stack.json aiFramework is langchain.",
     parts: ["langchain/body"],
   },
   langgraph: {
     name: "langgraph",
-    description: "Adds a LangGraph graph in services/agent. Use when stack.json aiFramework is langgraph.",
+    description: "Adds a LangGraph graph in src/agent. Use when stack.json aiFramework is langgraph.",
     parts: ["langgraph/body"],
   },
   crewai: {
     name: "crewai",
-    description: "Adds a CrewAI crew in services/agent. Use when stack.json aiFramework is crewai.",
+    description: "Adds a CrewAI crew in src/agent. Use when stack.json aiFramework is crewai.",
     parts: ["crewai/body"],
   },
   "ai-sdk": {

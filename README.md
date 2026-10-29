@@ -88,9 +88,10 @@ DB provider and ORM apply after a real database is chosen. A Frontend + Backend 
 | `--storage` | `s3` (AWS S3), `r2` (Cloudflare R2), `supabase-storage` |
 | `--email` | `resend`, `sendgrid` |
 | `--workflows` | `temporal`, `prefect`, `trigger` |
+| `--ai-framework` | `baml` (Boundary ML), `mastra`, `langchain`, `langgraph`, `crewai`, `ai-sdk` (Vercel AI SDK), `pydantic-ai` |
 | `--testing` | `vitest-playwright`, `jest-cypress`, `pytest`, `minimal` |
 
-`minimal` checks only the health route. `pgboss` needs Postgres. Supabase Storage needs `--db-provider supabase` and `--database postgres`. MUI and Mantine apply to React frontends. The stack form hides cache and monitoring; the CLI still accepts both flags.
+`minimal` checks only the health route. `pgboss` needs Postgres. Supabase Storage needs `--db-provider supabase` and `--database postgres`. MUI and Mantine apply to React frontends. Mastra and the Vercel AI SDK stay off a Python-only stack. CrewAI and PydanticAI stay off a JavaScript stack. Boundary ML, LangChain, and LangGraph work on either side. The stack form hides cache and monitoring; the CLI still accepts both flags.
 
 ### Cloud
 

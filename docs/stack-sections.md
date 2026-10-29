@@ -18,7 +18,9 @@ DB provider and ORM apply after a real database is chosen.
 
 ## Services
 
-Auth, payments, cache / queues, file storage, email, workflows, and testing. Each has None.
+Auth, payments, cache / queues, file storage, email, workflows, AI, and testing. Each has None.
+
+AI framework is Boundary ML, Mastra, LangChain, LangGraph, CrewAI, Vercel AI SDK, PydanticAI, or None. Mastra and the Vercel AI SDK stay off a Python-only stack. CrewAI and PydanticAI stay off a JavaScript stack. Boundary ML, LangChain, and LangGraph stay available on both.
 
 Workflows is Temporal, Prefect, Trigger.dev, or None. Prefect stays off a JavaScript stack. Trigger.dev stays off a Python-only stack. Temporal, Prefect, and Trigger.dev install their official skills when selected.
 

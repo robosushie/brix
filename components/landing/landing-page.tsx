@@ -38,7 +38,7 @@ const groups = [
   },
   {
     label: "Services",
-    body: "Auth, payments, storage, email, workflows, and testing.",
+    body: "Auth, payments, storage, email, workflows, AI, and testing.",
   },
   {
     label: "Cloud",

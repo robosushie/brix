@@ -7,6 +7,8 @@
    - Frontend plus FastAPI, Flask, or Django: `frontend/` for the JavaScript app and `backend/` for the Python project. Follow both layout skills. The Python project is not an npm workspace member.
    - Backend only, Python: one uv project at the repo root. Follow `python-layout` (uv's default `src/` package layout).
    - Backend only, Node or Bun: one API at the repo root. Follow `node-layout`.
+The `folder-structure` skill is installed on every stack and wins if a framework sample tree disagrees.
+
 3. Scaffold with the official CLI for each chosen framework. Prefer `create-next-app`, `create-hono`, `uv init`, `django-admin startproject`, and the package manager's workspace tools. Do not hand-roll boilerplate those CLIs already emit. Move the CLI output into the tree above when the CLI created a nested folder.
 4. Create `infra/` only when `stack.json` selects Docker, Kubernetes + Helm, or Postgres Docker. The layout skill says what goes inside it. Do not put a Dockerfile, compose file, or Helm chart inside `src/`.
 5. Apply the other installed skills in order: layout, framework, ORM / database, auth, payments, then `brix/security` and `api-design` when those skills installed.

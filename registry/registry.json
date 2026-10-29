@@ -56,7 +56,9 @@
         "runtime.bun",
         "testing.vitest-playwright",
         "testing.jest-cypress",
-        "workflows.trigger"
+        "workflows.trigger",
+        "aiFramework.mastra",
+        "aiFramework.ai-sdk"
       ]
     },
     {
@@ -70,7 +72,9 @@
       ],
       "disable": [
         "testing.pytest",
-        "workflows.prefect"
+        "workflows.prefect",
+        "aiFramework.crewai",
+        "aiFramework.pydantic-ai"
       ]
     },
     {
@@ -801,6 +805,75 @@
       ]
     },
     {
+      "id": "aiFramework",
+      "label": "AI framework",
+      "group": "services",
+      "options": [
+        {
+          "id": "baml",
+          "label": "Boundary ML",
+          "status": "experimental",
+          "skill": "baml",
+          "license": "MIT",
+          "description": "Typed prompts in baml_src, with a generated client for TypeScript or Python."
+        },
+        {
+          "id": "mastra",
+          "label": "Mastra",
+          "status": "experimental",
+          "skill": "mastra",
+          "license": "Apache-2.0",
+          "description": "TypeScript agents, tools, and workflows under src/mastra."
+        },
+        {
+          "id": "langchain",
+          "label": "LangChain",
+          "status": "experimental",
+          "skill": "langchain",
+          "license": "MIT",
+          "description": "Model and tool calls in services/agent, on TypeScript or Python."
+        },
+        {
+          "id": "langgraph",
+          "label": "LangGraph",
+          "status": "experimental",
+          "skill": "langgraph",
+          "license": "MIT",
+          "description": "A stateful graph of steps. Python uses langgraph.json. TypeScript uses src/services/agent."
+        },
+        {
+          "id": "crewai",
+          "label": "CrewAI",
+          "status": "experimental",
+          "skill": "crewai",
+          "license": "MIT",
+          "description": "Role-based Python agents with YAML config."
+        },
+        {
+          "id": "ai-sdk",
+          "label": "Vercel AI SDK",
+          "status": "experimental",
+          "skill": "ai-sdk",
+          "license": "Apache-2.0",
+          "description": "Streaming model calls from a TypeScript React app."
+        },
+        {
+          "id": "pydantic-ai",
+          "label": "PydanticAI",
+          "status": "experimental",
+          "skill": "pydantic-ai",
+          "license": "MIT",
+          "description": "A typed Python agent with Pydantic results."
+        },
+        {
+          "id": "none",
+          "label": "None",
+          "status": "proven",
+          "description": "No AI framework. Leaves --ai-framework off the command."
+        }
+      ]
+    },
+    {
       "id": "testing",
       "label": "Testing",
       "group": "services",
@@ -1222,6 +1295,31 @@
       },
       "name": "API design",
       "description": "REST rules, problem+json errors, pagination, and stateless auth."
+    },
+    {
+      "id": "folder-structure",
+      "kind": "local",
+      "license": "MIT",
+      "when": {
+        "always": true
+      },
+      "preinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "install": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "postinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "name": "Folder structure",
+      "description": "Opinionated folders for the selected frontend, API, and agent code."
     },
     {
       "id": "security-audit",
@@ -2913,6 +3011,97 @@
       },
       "name": "SQLAlchemy",
       "description": "Python SQL models and sessions."
+    },
+    {
+      "id": "baml",
+      "kind": "local",
+      "license": "MIT",
+      "when": {
+        "any": ["aiFramework.baml"]
+      },
+      "preinstall": { "windows": [], "linux": [], "darwin": [] },
+      "install": { "windows": [], "linux": [], "darwin": [] },
+      "postinstall": { "windows": [], "linux": [], "darwin": [] },
+      "name": "Boundary ML",
+      "description": "Typed prompts in baml_src."
+    },
+    {
+      "id": "mastra",
+      "kind": "local",
+      "license": "Apache-2.0",
+      "when": {
+        "any": ["aiFramework.mastra"]
+      },
+      "preinstall": { "windows": [], "linux": [], "darwin": [] },
+      "install": { "windows": [], "linux": [], "darwin": [] },
+      "postinstall": { "windows": [], "linux": [], "darwin": [] },
+      "name": "Mastra",
+      "description": "TypeScript agents under src/mastra."
+    },
+    {
+      "id": "langchain",
+      "kind": "local",
+      "license": "MIT",
+      "when": {
+        "any": ["aiFramework.langchain"]
+      },
+      "preinstall": { "windows": [], "linux": [], "darwin": [] },
+      "install": { "windows": [], "linux": [], "darwin": [] },
+      "postinstall": { "windows": [], "linux": [], "darwin": [] },
+      "name": "LangChain",
+      "description": "Model and tool calls in services/agent."
+    },
+    {
+      "id": "langgraph",
+      "kind": "local",
+      "license": "MIT",
+      "when": {
+        "any": ["aiFramework.langgraph"]
+      },
+      "preinstall": { "windows": [], "linux": [], "darwin": [] },
+      "install": { "windows": [], "linux": [], "darwin": [] },
+      "postinstall": { "windows": [], "linux": [], "darwin": [] },
+      "name": "LangGraph",
+      "description": "A stateful graph of agent steps."
+    },
+    {
+      "id": "crewai",
+      "kind": "local",
+      "license": "MIT",
+      "when": {
+        "any": ["aiFramework.crewai"]
+      },
+      "preinstall": { "windows": [], "linux": [], "darwin": [] },
+      "install": { "windows": [], "linux": [], "darwin": [] },
+      "postinstall": { "windows": [], "linux": [], "darwin": [] },
+      "name": "CrewAI",
+      "description": "Role-based Python agents."
+    },
+    {
+      "id": "ai-sdk",
+      "kind": "local",
+      "license": "Apache-2.0",
+      "when": {
+        "any": ["aiFramework.ai-sdk"]
+      },
+      "preinstall": { "windows": [], "linux": [], "darwin": [] },
+      "install": { "windows": [], "linux": [], "darwin": [] },
+      "postinstall": { "windows": [], "linux": [], "darwin": [] },
+      "name": "Vercel AI SDK",
+      "description": "Streaming model calls from a TypeScript React app."
+    },
+    {
+      "id": "pydantic-ai",
+      "kind": "local",
+      "license": "MIT",
+      "when": {
+        "any": ["aiFramework.pydantic-ai"]
+      },
+      "preinstall": { "windows": [], "linux": [], "darwin": [] },
+      "install": { "windows": [], "linux": [], "darwin": [] },
+      "postinstall": { "windows": [], "linux": [], "darwin": [] },
+      "name": "PydanticAI",
+      "description": "A typed Python agent with Pydantic results."
     },
     {
       "id": "stripe",

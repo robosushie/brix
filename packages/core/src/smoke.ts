@@ -84,6 +84,9 @@ if (!viteIds.includes("node-layout")) throw new Error("vite frontend should inst
 if (viteIds.includes("api-design") || viteIds.includes("python-layout")) {
   throw new Error("vite frontend should not install api design or the python layout");
 }
+if (viteIds.includes("crewai") || !viteOnly.disabled["aiFramework.crewai"]) {
+  throw new Error("a frontend-only stack should disable CrewAI");
+}
 
 const backendOnly = selectOption(empty.selection, "appType", "backend-only");
 if (!evaluate(backendOnly).disabled["frontend.nextjs"]?.startsWith("Not used for")) {
@@ -124,7 +127,7 @@ const stack = pick(empty.selection, [
 const done = evaluate(stack);
 if (!done.valid) throw new Error(done.errors.join("\n"));
 const ids = done.skills.map((skill) => skill.id);
-for (const id of ["security-audit", "shadcn", "solid", "api-design", "node-layout", "nextjs", "hono", "drizzle"]) {
+for (const id of ["security-audit", "shadcn", "solid", "api-design", "node-layout", "nextjs", "hono", "drizzle", "folder-structure"]) {
   if (!ids.includes(id)) throw new Error(`custom stack missing ${id}`);
 }
 if (ids.includes("python-layout")) throw new Error("a node API should not install the python layout");
@@ -158,10 +161,19 @@ if (byId.has("graphify")) throw new Error("graphify should wait for its own sele
 if (!byId.has("security-audit")) throw new Error("security audit should stay on");
 const fastApi = evaluate(pick(emptySelection(), [["appType", "backend-only"], ["backend", "fastapi"]]));
 const fastApiIds = fastApi.skills.map((skill) => skill.id);
-for (const id of ["fastapi", "python-layout", "api-design", "brix-architect", "brix-security", "brix-verify", "security-audit"]) {
+for (const id of ["fastapi", "python-layout", "api-design", "brix-architect", "brix-security", "brix-verify", "security-audit", "folder-structure"]) {
   if (!fastApiIds.includes(id)) throw new Error(`fastapi selection missing ${id}`);
 }
 if (fastApiIds.includes("node-layout")) throw new Error("fastapi should not install the node layout");
+if (fastApiIds.includes("mastra") || !fastApi.disabled["aiFramework.mastra"]) {
+  throw new Error("fastapi should disable Mastra");
+}
+const withBaml = selectOption(fastApi.selection, "aiFramework", "baml");
+if (!initCommand(withBaml).includes("--ai-framework baml")) throw new Error("ai framework should be a flag");
+if (!evaluate(withBaml).skills.some((skill) => skill.id === "baml")) throw new Error("baml should install when selected");
+if (selectOption(fastApi.selection, "aiFramework", "mastra").choices.aiFramework === "mastra") {
+  throw new Error("fastapi should refuse Mastra");
+}
 const memOnly = evaluate(selectOption(done.selection, "memory", "mem0"));
 if (memOnly.skills.some((skill) => skill.id === "mem0")) throw new Error("mem0 is recorded only");
 if (!done.disabled["workflows.prefect"]) throw new Error("prefect should wait for a Python stack");

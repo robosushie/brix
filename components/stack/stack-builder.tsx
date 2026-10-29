@@ -65,7 +65,7 @@ export function StackBuilder() {
           <p className="mt-3 max-w-xl text-base text-smoke">
             App type sets the shape of the app. Core is the frontend, UI, backend,
             database, and coding agents. Services adds auth, payments, files,
-            email, workflows, and testing. Cloud adds delivery and
+            email, workflows, AI, and testing. Cloud adds delivery and
             containers. Tools adds a code index, how the agent writes, memory, and a skill
             pack.
           </p>

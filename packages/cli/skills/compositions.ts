@@ -30,6 +30,20 @@ export const compositions: Record<string, SkillComposition> = {
     description: "Designs HTTP APIs with REST rules, problem+json errors, pagination, and stateless auth. Use when the stack exposes or consumes an HTTP API.",
     parts: ["api-design/body"],
   },
+  "folder-structure": {
+    name: "folder-structure",
+    description: "Places app code in the folders that match stack.json. Use on every project created with brix init.",
+    parts: [
+      "folder/rules",
+      "folder/nextjs",
+      "folder/vite",
+      "folder/node-api",
+      "folder/js-multi",
+      "folder/python-api",
+      "folder/django",
+      "folder/infra",
+    ],
+  },
   "node-layout": {
     name: "node-layout",
     description: "Places a Node or Bun app in src, or in apps/web and apps/api. Use when the stack runtime is Node or Bun, or the frontend or JS API is selected.",
@@ -43,37 +57,37 @@ export const compositions: Record<string, SkillComposition> = {
   nextjs: {
     name: "nextjs",
     description: "Scaffolds a Next.js app with the official create-next-app flow. Use when stack.json frontend is nextjs.",
-    parts: ["nextjs/body"],
+    parts: ["nextjs/body", "common/folder-placement"],
   },
   hono: {
     name: "hono",
     description: "Adds a Hono API beside the frontend. Use when stack.json backend is hono.",
-    parts: ["hono/body", "common/health-no-leak"],
+    parts: ["hono/body", "common/health-no-leak", "common/folder-placement"],
   },
   express: {
     name: "express",
     description: "Adds an Express API. Use when stack.json backend is express.",
-    parts: ["express/body", "common/health-no-leak"],
+    parts: ["express/body", "common/health-no-leak", "common/folder-placement"],
   },
   fastify: {
     name: "fastify",
     description: "Adds a Fastify API. Use when stack.json backend is fastify.",
-    parts: ["fastify/body", "common/health-no-leak"],
+    parts: ["fastify/body", "common/health-no-leak", "common/folder-placement"],
   },
   fastapi: {
     name: "fastapi",
     description: "Scaffolds a FastAPI service with uv. Use when stack.json backend is fastapi.",
-    parts: ["fastapi/body", "common/health-no-leak", "common/no-node-beside-python"],
+    parts: ["fastapi/body", "common/health-no-leak", "common/no-node-beside-python", "common/folder-placement"],
   },
   flask: {
     name: "flask",
     description: "Scaffolds a Flask API with uv. Use when stack.json backend is flask.",
-    parts: ["flask/body", "common/health-no-leak", "common/no-node-beside-python"],
+    parts: ["flask/body", "common/health-no-leak", "common/no-node-beside-python", "common/folder-placement"],
   },
   django: {
     name: "django",
     description: "Scaffolds a Django project with uv. Use when stack.json backend is django.",
-    parts: ["django/body", "common/database-url", "common/one-migration-path", "common/health-no-leak", "common/no-node-beside-python"],
+    parts: ["django/body", "common/database-url", "common/one-migration-path", "common/health-no-leak", "common/no-node-beside-python", "common/folder-placement"],
   },
   drizzle: {
     name: "drizzle",
@@ -89,6 +103,41 @@ export const compositions: Record<string, SkillComposition> = {
     name: "sqlalchemy",
     description: "Adds SQLAlchemy for a Python API. Use when stack.json orm is sqlalchemy.",
     parts: ["sqlalchemy/body", "common/database-url", "common/pooler-vs-direct", "common/one-migration-path"],
+  },
+  baml: {
+    name: "baml",
+    description: "Adds Boundary ML prompts in baml_src. Use when stack.json aiFramework is baml.",
+    parts: ["baml/body"],
+  },
+  mastra: {
+    name: "mastra",
+    description: "Adds Mastra agents under src/mastra. Use when stack.json aiFramework is mastra.",
+    parts: ["mastra/body"],
+  },
+  langchain: {
+    name: "langchain",
+    description: "Adds LangChain calls in services/agent. Use when stack.json aiFramework is langchain.",
+    parts: ["langchain/body"],
+  },
+  langgraph: {
+    name: "langgraph",
+    description: "Adds a LangGraph graph in services/agent. Use when stack.json aiFramework is langgraph.",
+    parts: ["langgraph/body"],
+  },
+  crewai: {
+    name: "crewai",
+    description: "Adds a CrewAI crew in services/agent. Use when stack.json aiFramework is crewai.",
+    parts: ["crewai/body"],
+  },
+  "ai-sdk": {
+    name: "ai-sdk",
+    description: "Adds Vercel AI SDK streaming from the React app. Use when stack.json aiFramework is ai-sdk.",
+    parts: ["ai-sdk/body"],
+  },
+  "pydantic-ai": {
+    name: "pydantic-ai",
+    description: "Adds a PydanticAI agent with typed results. Use when stack.json aiFramework is pydantic-ai.",
+    parts: ["pydantic-ai/body"],
   },
   stripe: {
     name: "stripe",

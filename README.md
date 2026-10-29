@@ -66,13 +66,13 @@ Frontend + Backend is a browser app and a separate API. Backend Only turns off t
 
 | Flag | Values |
 |---|---|
-| `--frontend` | `nextjs`, `vite-react`, `sveltekit`, `nuxt` |
-| `--ui` | `tailwind-shadcn`, `tailwind`, `mui`, `plain` |
-| `--backend` | `hono`, `express`, `fastify`, `fastapi`, `flask`, `django`, `next-handlers` |
+| `--frontend` | `nextjs`, `vite-react`, `sveltekit`, `react` |
+| `--ui` | `tailwind-shadcn`, `tailwind`, `mui`, `mantine`, `plain` |
+| `--backend` | `hono`, `express`, `fastify`, `fastapi`, `flask`, `django` |
 | `--package` | `bun-turbo`, `pnpm-turbo`, `npm`, `uv` |
-| `--runtime` | `node`, `bun`, `python`, `workers` |
+| `--runtime` | `node`, `bun`, `python` |
 | `--database` | `postgres`, `mysql`, `sqlite`, `mongo` |
-| `--db-provider` | `neon`, `supabase`, `railway`, `rds`, `postgres-docker` |
+| `--db-provider` | `neon`, `supabase`, `railway`, `render`, `rds`, `postgres-docker` |
 | `--orm` | `drizzle`, `prisma`, `sqlalchemy`, `django`, `mongoose` |
 | `--agent` | `claude-code`, `codex`, `cursor` |
 
@@ -83,25 +83,25 @@ DB provider and ORM apply after a real database is chosen. A Frontend + Backend 
 | Flag | Values |
 |---|---|
 | `--auth` | `better-auth`, `clerk`, `firebase`, `authjs` |
-| `--payments` | `stripe`, `razorpay`, `lemon` |
+| `--payments` | `stripe`, `razorpay` |
 | `--cache` | `redis-bullmq`, `upstash`, `pgboss` |
-| `--storage` | `s3`, `r2`, `supabase-storage` |
-| `--email` | `resend`, `ses`, `postmark` |
+| `--storage` | `s3` (AWS S3), `r2` (Cloudflare R2), `supabase-storage` |
+| `--email` | `resend`, `sendgrid` |
 | `--workflows` | `temporal`, `prefect`, `trigger` |
 | `--testing` | `vitest-playwright`, `jest-cypress`, `pytest`, `minimal` |
 
-`minimal` checks only the health route. `pgboss` needs Postgres. Supabase Storage needs `--db-provider supabase` and `--database postgres`.
+`minimal` checks only the health route. `pgboss` needs Postgres. Supabase Storage needs `--db-provider supabase` and `--database postgres`. MUI and Mantine apply to React frontends. The stack form hides cache and monitoring; the CLI still accepts both flags.
 
 ### Cloud
 
 | Flag | Values |
 |---|---|
 | `--monitoring` | `sentry`, `sentry-posthog`, `otel` |
-| `--cicd` | `github-actions`, `gitlab` |
-| `--deploy` | `railway`, `render`, `aws`, `azure`, `cloudflare`, `vercel` |
-| `--containers` | `docker`, `kubernetes`, `helm` |
+| `--cicd` | `github-actions`, `gitlab`, `jenkins` |
+| `--deploy` | `railway`, `render`, `aws`, `azure`, `cloudflare` |
+| `--containers` | `docker`, `kubernetes` |
 
-Containers are recorded on the selection. They do not install a skill. Docker is for local database, cache, files, and email when those options are selected.
+Containers are recorded on the selection. They do not install a skill. `kubernetes` means Kubernetes plus Helm. Docker is for local database, cache, files, and email when those options are selected.
 
 ### Tools
 
@@ -117,7 +117,7 @@ CodeGraph is a live code graph over MCP. Graphify indexes code plus docs and oth
 
 ## Combinations the checker rejects
 
-- A Python-only API (`fastapi`, `flask`, or `django` with Backend Only) cannot take a JavaScript package manager, Node, Bun, Workers, Vitest, Jest, or Trigger.dev.
+- A Python-only API (`fastapi`, `flask`, or `django` with Backend Only) cannot take a JavaScript package manager, Node, Bun, Vitest, Jest, or Trigger.dev.
 - A JavaScript stack cannot take pytest or Prefect.
 - Frontend Only cannot take uv or Python.
 - Clerk cannot be used on Backend Only.

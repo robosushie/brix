@@ -38,11 +38,11 @@ const groups = [
   },
   {
     label: "Services",
-    body: "Auth, payments, cache, storage, email, workflows, and testing.",
+    body: "Auth, payments, storage, email, workflows, and testing.",
   },
   {
     label: "Cloud",
-    body: "Monitoring, CI/CD, deploy, and containers.",
+    body: "CI/CD, deploy, and containers.",
   },
   {
     label: "Tools",

@@ -37,7 +37,7 @@ Base skills: `brix/architect`, `brix/security`, `brix/verify`.
 
 The page keeps the selection in the URL hash so a reload restores it. The copied command is the flags, not that hash.
 
-Coding agents are the only multi-select. Security audit installs on every stack. Code index, reply style, implementation, memory, and skill pack install only when chosen. Mem0 is recorded and does not install a skill. Docker, Kubernetes, and Helm are the Containers question under Cloud.
+Coding agents are the only multi-select. Security audit installs on every stack. Code index, reply style, implementation, memory, and skill pack install only when chosen. Mem0 is recorded and does not install a skill. Docker and Kubernetes + Helm are the Containers question under Cloud. Cache and monitoring stay on the CLI and are hidden on the stack form.
 
 ## Data
 

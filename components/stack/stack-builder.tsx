@@ -64,8 +64,8 @@ export function StackBuilder() {
           <h1 className="display mt-3 text-[48px] text-ink">Build a stack</h1>
           <p className="mt-3 max-w-xl text-base text-smoke">
             App type sets the shape of the app. Core is the frontend, UI, backend,
-            database, and coding agents. Services adds auth, payments, cache, files,
-            email, workflows, and testing. Cloud adds monitoring, delivery, and
+            database, and coding agents. Services adds auth, payments, files,
+            email, workflows, and testing. Cloud adds delivery and
             containers. Tools adds a code index, how the agent writes, memory, and a skill
             pack.
           </p>
@@ -91,7 +91,7 @@ export function StackBuilder() {
 
         {registry.groups.map((group) => {
           const sections = registry.sections.filter(
-            (section) => section.group === group.id,
+            (section) => section.group === group.id && !section.hidden,
           );
           const expanded = open[group.id] ?? false;
           return (

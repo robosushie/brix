@@ -54,7 +54,6 @@
         "package.npm",
         "runtime.node",
         "runtime.bun",
-        "runtime.workers",
         "testing.vitest-playwright",
         "testing.jest-cypress",
         "workflows.trigger"
@@ -67,8 +66,7 @@
         "appType.frontend-only",
         "backend.hono",
         "backend.express",
-        "backend.fastify",
-        "backend.next-handlers"
+        "backend.fastify"
       ],
       "disable": [
         "testing.pytest",
@@ -163,10 +161,10 @@
           "description": "Svelte app framework with file-based routes."
         },
         {
-          "id": "nuxt",
-          "label": "Nuxt",
+          "id": "react",
+          "label": "React",
           "status": "experimental",
-          "description": "Vue app framework with server rendering."
+          "description": "A React app that is not Next.js, Vite, or SvelteKit."
         }
       ]
     },
@@ -193,9 +191,25 @@
         },
         {
           "id": "mui",
-          "label": "MUI / Mantine",
+          "label": "MUI",
           "status": "experimental",
-          "description": "A React component library instead of Tailwind."
+          "description": "Material UI components for a React app.",
+          "depends": {
+            "conflicts": [
+              "frontend.sveltekit"
+            ]
+          }
+        },
+        {
+          "id": "mantine",
+          "label": "Mantine",
+          "status": "experimental",
+          "description": "Mantine components for a React app.",
+          "depends": {
+            "conflicts": [
+              "frontend.sveltekit"
+            ]
+          }
         },
         {
           "id": "plain",
@@ -220,7 +234,7 @@
           "status": "proven",
           "skill": "hono",
           "license": "MIT",
-          "description": "Small TypeScript HTTP framework that runs on Node or Workers."
+          "description": "Small TypeScript HTTP framework that runs on Node or Bun."
         },
         {
           "id": "express",
@@ -259,17 +273,6 @@
           "skill": "django",
           "license": "MIT",
           "description": "Python framework with its own ORM, admin, and auth."
-        },
-        {
-          "id": "next-handlers",
-          "label": "Next route handlers",
-          "status": "experimental",
-          "description": "API routes inside the Next.js app, with no separate server.",
-          "depends": {
-            "requires": [
-              "frontend.nextjs"
-            ]
-          }
         }
       ]
     },
@@ -330,23 +333,7 @@
             "conflicts": [
               "backend.hono",
               "backend.express",
-              "backend.fastify",
-              "backend.next-handlers"
-            ]
-          }
-        },
-        {
-          "id": "workers",
-          "label": "Cloudflare Workers",
-          "status": "experimental",
-          "description": "Edge runtime on Cloudflare Workers.",
-          "depends": {
-            "conflicts": [
-              "backend.express",
-              "backend.fastify",
-              "backend.fastapi",
-              "backend.flask",
-              "backend.django"
+              "backend.fastify"
             ]
           }
         }
@@ -429,9 +416,15 @@
         },
         {
           "id": "railway",
-          "label": "Railway / Render managed",
+          "label": "Railway",
           "status": "experimental",
-          "description": "Database hosted on Railway or Render."
+          "description": "Database hosted on Railway."
+        },
+        {
+          "id": "render",
+          "label": "Render",
+          "status": "experimental",
+          "description": "Database hosted on Render."
         },
         {
           "id": "rds",
@@ -499,7 +492,6 @@
           "depends": {
             "conflicts": [
               "database.mongo",
-              "runtime.workers",
               "runtime.python",
               "backend.django",
               "backend.fastapi",
@@ -520,12 +512,10 @@
             ],
             "conflicts": [
               "database.mongo",
-              "runtime.workers",
               "backend.django",
               "backend.hono",
               "backend.express",
-              "backend.fastify",
-              "backend.next-handlers"
+              "backend.fastify"
             ]
           }
         },
@@ -540,11 +530,9 @@
             ],
             "conflicts": [
               "database.mongo",
-              "runtime.workers",
               "backend.hono",
               "backend.express",
               "backend.fastify",
-              "backend.next-handlers",
               "backend.fastapi",
               "backend.flask"
             ]
@@ -653,12 +641,6 @@
           "description": "Payments with INR support."
         },
         {
-          "id": "lemon",
-          "label": "Lemon Squeezy / Paddle",
-          "status": "experimental",
-          "description": "Merchant of record for subscriptions."
-        },
-        {
           "id": "none",
           "label": "None",
           "status": "proven",
@@ -670,6 +652,7 @@
       "id": "cache",
       "label": "Cache / queues",
       "group": "services",
+      "hidden": true,
       "appliesTo": [
         "frontend-backend",
         "backend-only"
@@ -682,7 +665,6 @@
           "description": "Redis cache and BullMQ jobs on Node or Bun.",
           "depends": {
             "conflicts": [
-              "runtime.workers",
               "runtime.python"
             ]
           }
@@ -691,7 +673,7 @@
           "id": "upstash",
           "label": "Upstash Redis",
           "status": "experimental",
-          "description": "Serverless Redis, including Workers."
+          "description": "Serverless Redis."
         },
         {
           "id": "pgboss",
@@ -723,13 +705,13 @@
       "options": [
         {
           "id": "s3",
-          "label": "S3",
+          "label": "AWS S3",
           "status": "experimental",
           "description": "Object storage on Amazon S3."
         },
         {
           "id": "r2",
-          "label": "R2",
+          "label": "Cloudflare R2",
           "status": "experimental",
           "description": "Object storage on Cloudflare R2."
         },
@@ -769,16 +751,10 @@
           "description": "Transactional email through Resend."
         },
         {
-          "id": "ses",
-          "label": "SES",
+          "id": "sendgrid",
+          "label": "SendGrid",
           "status": "experimental",
-          "description": "Transactional email through Amazon SES."
-        },
-        {
-          "id": "postmark",
-          "label": "Postmark",
-          "status": "experimental",
-          "description": "Transactional email through Postmark."
+          "description": "Transactional email through SendGrid."
         },
         {
           "id": "none",
@@ -865,6 +841,7 @@
       "id": "monitoring",
       "label": "Monitoring",
       "group": "cloud",
+      "hidden": true,
       "options": [
         {
           "id": "sentry",
@@ -910,6 +887,12 @@
           "description": "Build and test on GitLab CI."
         },
         {
+          "id": "jenkins",
+          "label": "Jenkins",
+          "status": "experimental",
+          "description": "Build and test on Jenkins."
+        },
+        {
           "id": "none",
           "label": "None",
           "status": "experimental",
@@ -950,13 +933,7 @@
           "id": "cloudflare",
           "label": "Cloudflare",
           "status": "experimental",
-          "description": "Deploy on Cloudflare, including Workers when that runtime is selected."
-        },
-        {
-          "id": "vercel",
-          "label": "Vercel + separate backend",
-          "status": "experimental",
-          "description": "Frontend on Vercel, with the API deployed beside it."
+          "description": "Deploy on Cloudflare."
         },
         {
           "id": "none",
@@ -979,15 +956,9 @@
         },
         {
           "id": "kubernetes",
-          "label": "Kubernetes",
+          "label": "Kubernetes + Helm",
           "status": "experimental",
-          "description": "Run the app on a Kubernetes cluster."
-        },
-        {
-          "id": "helm",
-          "label": "Helm",
-          "status": "experimental",
-          "description": "Package the cluster deploy as Helm charts."
+          "description": "Run the app on Kubernetes and package the deploy with Helm."
         },
         {
           "id": "none",
@@ -2261,7 +2232,7 @@
           "frontend.nextjs",
           "frontend.vite-react",
           "frontend.sveltekit",
-          "frontend.nuxt"
+          "frontend.react"
         ]
       },
       "preinstall": {
@@ -2333,7 +2304,7 @@
           "frontend.nextjs",
           "frontend.vite-react",
           "frontend.sveltekit",
-          "frontend.nuxt"
+          "frontend.react"
         ]
       },
       "preinstall": {
@@ -2402,7 +2373,9 @@
       "license": "MIT",
       "when": {
         "any": [
-          "frontend.nextjs"
+          "frontend.nextjs",
+          "frontend.vite-react",
+          "frontend.react"
         ]
       },
       "preinstall": {
@@ -2534,8 +2507,7 @@
       "license": "MIT",
       "when": {
         "any": [
-          "deploy.cloudflare",
-          "runtime.workers"
+          "deploy.cloudflare"
         ]
       },
       "preinstall": {
@@ -2602,7 +2574,7 @@
         "darwin": []
       },
       "name": "Cloudflare",
-      "description": "Deploy and Workers guidance for Cloudflare."
+      "description": "Deploy guidance for Cloudflare."
     },
     {
       "id": "nextjs",

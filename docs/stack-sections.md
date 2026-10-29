@@ -28,7 +28,7 @@ Testing None stays available on a Python or JavaScript stack. The other testing 
 
 Monitoring, CI/CD, cloud / deploy, and containers.
 
-Containers is Docker, Kubernetes, Helm, or None. It is recorded on the selection and does not install a skill.
+Containers is Docker, Kubernetes + Helm, or None. Kubernetes + Helm is one choice. It is recorded on the selection and does not install a skill. Cache and monitoring stay valid flags and are hidden on the stack form.
 
 ## Tools
 

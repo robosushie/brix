@@ -25,7 +25,7 @@ if (Object.keys(empty.disabled).length !== 0) {
   throw new Error(`blank form should disable nothing, got ${Object.keys(empty.disabled).join(", ")}`);
 }
 const openApp = selectOption(empty.selection, "appType", "frontend-backend");
-if (evaluate(openApp).disabled["dbProvider.supabase"] || evaluate(openApp).disabled["orm.django"] || evaluate(openApp).disabled["orm.mongoose"] || evaluate(openApp).disabled["backend.next-handlers"]) {
+if (evaluate(openApp).disabled["dbProvider.supabase"] || evaluate(openApp).disabled["orm.django"] || evaluate(openApp).disabled["orm.mongoose"]) {
   throw new Error("unanswered questions should not disable required options");
 }
 const mysql = selectOption(openApp, "database", "mysql");
@@ -36,9 +36,6 @@ const postgres = selectOption(openApp, "database", "postgres");
 if (evaluate(postgres).disabled["dbProvider.supabase"] || evaluate(postgres).disabled["dbProvider.postgres-docker"]) {
   throw new Error("postgres should leave supabase and postgres docker on");
 }
-const vite = selectOption(openApp, "frontend", "vite-react");
-if (!evaluate(vite).disabled["backend.next-handlers"]) throw new Error("vite should disable next route handlers");
-
 const sectionOrder = new Map(registry.sections.map((section, index) => [section.id, index]));
 for (const section of registry.sections) {
   for (const option of section.options) {
@@ -206,14 +203,6 @@ const withHono = pick(empty.selection, [
   ["package", "pnpm-turbo"],
   ["runtime", "node"],
 ]);
-const workers = selectOption(withHono, "runtime", "workers");
-if (workers.choices.runtime !== "workers") throw new Error("hono should allow workers");
-if (evaluate(workers).disabled["backend.express"]) throw new Error("a later runtime should not disable Express");
-const backToExpress = selectOption(workers, "backend", "express");
-if (backToExpress.choices.backend !== "express" || backToExpress.choices.runtime === "workers") {
-  throw new Error("express should replace workers");
-}
-
 const withPrisma = pick(empty.selection, [
   ["appType", "frontend-backend"],
   ["frontend", "vite-react"],

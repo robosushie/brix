@@ -29,6 +29,7 @@ export type StackSection = {
   id: string;
   label: string;
   group?: string;
+  hidden?: boolean;
   multi?: boolean;
   appliesTo?: string[];
   appliesWhen?: string[];

@@ -9,6 +9,13 @@ import {
   selectionFromFlags,
   type Selection,
 } from "./index";
+import { renderSkill, validateSkillCompositions } from "../../cli/src/skills.ts";
+
+validateSkillCompositions(registry.skills.filter((skill) => skill.kind === "local").map((skill) => skill.id));
+const postgresSkill = renderSkill("postgres");
+if (!postgresSkill.startsWith("---\nname: postgres\n") || !postgresSkill.includes("DATABASE_URL") || !postgresSkill.includes("postgres-docker")) {
+  throw new Error("postgres skill did not compose the shared database chunks");
+}
 
 function pick(start: Selection, pairs: Array<[string, string]>): Selection {
   return pairs.reduce((sel, [section, option]) => selectOption(sel, section, option), start);
@@ -68,6 +75,15 @@ if (!frontendOnlyEval.disabled["workflows.prefect"]) throw new Error("frontend o
 if (!frontendOnlyEval.disabled["package.uv"]) throw new Error("frontend only should disable uv");
 if (!frontendOnlyEval.disabled["runtime.python"]) throw new Error("frontend only should disable the python runtime");
 if (frontendOnlyEval.disabled["appType.backend-only"]) throw new Error("backend only should stay enabled");
+if (frontendOnlyEval.skills.some((skill) => skill.id === "api-design")) {
+  throw new Error("frontend only should not install api design");
+}
+const viteOnly = evaluate(pick(frontendOnly, [["frontend", "vite-react"]]));
+const viteIds = viteOnly.skills.map((skill) => skill.id);
+if (!viteIds.includes("node-layout")) throw new Error("vite frontend should install the node layout");
+if (viteIds.includes("api-design") || viteIds.includes("python-layout")) {
+  throw new Error("vite frontend should not install api design or the python layout");
+}
 
 const backendOnly = selectOption(empty.selection, "appType", "backend-only");
 if (!evaluate(backendOnly).disabled["frontend.nextjs"]?.startsWith("Not used for")) {
@@ -108,9 +124,10 @@ const stack = pick(empty.selection, [
 const done = evaluate(stack);
 if (!done.valid) throw new Error(done.errors.join("\n"));
 const ids = done.skills.map((skill) => skill.id);
-for (const id of ["security-audit", "shadcn", "solid", "api-design", "nextjs", "hono", "drizzle"]) {
+for (const id of ["security-audit", "shadcn", "solid", "api-design", "node-layout", "nextjs", "hono", "drizzle"]) {
   if (!ids.includes(id)) throw new Error(`custom stack missing ${id}`);
 }
+if (ids.includes("python-layout")) throw new Error("a node API should not install the python layout");
 for (const id of ["codegraph", "graphify", "gitnexus", "caveman"]) {
   if (ids.includes(id)) throw new Error(`${id} should wait for a tool selection`);
 }
@@ -141,9 +158,10 @@ if (byId.has("graphify")) throw new Error("graphify should wait for its own sele
 if (!byId.has("security-audit")) throw new Error("security audit should stay on");
 const fastApi = evaluate(pick(emptySelection(), [["appType", "backend-only"], ["backend", "fastapi"]]));
 const fastApiIds = fastApi.skills.map((skill) => skill.id);
-for (const id of ["fastapi", "brix-architect", "brix-security", "brix-verify", "security-audit"]) {
+for (const id of ["fastapi", "python-layout", "api-design", "brix-architect", "brix-security", "brix-verify", "security-audit"]) {
   if (!fastApiIds.includes(id)) throw new Error(`fastapi selection missing ${id}`);
 }
+if (fastApiIds.includes("node-layout")) throw new Error("fastapi should not install the node layout");
 const memOnly = evaluate(selectOption(done.selection, "memory", "mem0"));
 if (memOnly.skills.some((skill) => skill.id === "mem0")) throw new Error("mem0 is recorded only");
 if (!done.disabled["workflows.prefect"]) throw new Error("prefect should wait for a Python stack");

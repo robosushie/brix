@@ -1200,7 +1200,10 @@
       "kind": "local",
       "license": "MIT",
       "when": {
-        "always": true
+        "any": [
+          "appType.frontend-backend",
+          "appType.backend-only"
+        ]
       },
       "preinstall": {
         "windows": [],
@@ -2577,6 +2580,71 @@
       "description": "Deploy guidance for Cloudflare."
     },
     {
+      "id": "node-layout",
+      "kind": "local",
+      "license": "MIT",
+      "when": {
+        "any": [
+          "runtime.node",
+          "runtime.bun",
+          "frontend.nextjs",
+          "frontend.vite-react",
+          "frontend.sveltekit",
+          "frontend.react",
+          "backend.hono",
+          "backend.express",
+          "backend.fastify"
+        ]
+      },
+      "preinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "install": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "postinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "name": "Node layout",
+      "description": "Folder tree for a Node or Bun app."
+    },
+    {
+      "id": "python-layout",
+      "kind": "local",
+      "license": "MIT",
+      "when": {
+        "any": [
+          "runtime.python",
+          "backend.fastapi",
+          "backend.flask",
+          "backend.django"
+        ]
+      },
+      "preinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "install": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "postinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "name": "Python layout",
+      "description": "Folder tree for a Python API."
+    },
+    {
       "id": "nextjs",
       "kind": "local",
       "license": "MIT",
@@ -2656,6 +2724,33 @@
       },
       "name": "Express",
       "description": "Scaffold an Express API."
+    },
+    {
+      "id": "fastify",
+      "kind": "local",
+      "license": "MIT",
+      "when": {
+        "any": [
+          "backend.fastify"
+        ]
+      },
+      "preinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "install": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "postinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "name": "Fastify",
+      "description": "Scaffold a Fastify API."
     },
     {
       "id": "fastapi",

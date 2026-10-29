@@ -74,4 +74,4 @@ Written by `brix init`:
 
 ## Skill resolution
 
-`registry/registry.json` is the catalog. Each entry is `local` (a template in `packages/cli/src/skills.ts`) or `upstream` (an install command for Windows, Linux, and macOS). `when.always` installs on every stack. `when.any` installs when one of those `section.option` ids is selected. A choice does not auto-fill later sections; it disables conflicts and clears a choice that became illegal.
+`registry/registry.json` is the catalog. Each entry is `local` or `upstream` (an install command for Windows, Linux, and macOS). A local skill is not one string in `packages/cli/src/skills.ts`. `packages/cli/skills/compositions.ts` lists the chunk ids for that skill, and `packages/cli/skills/chunks/` holds the markdown. Shared chunks (for example `common/database-url`) are reused across skills. `brix init` joins the parts into one `SKILL.md` in the generated project. `when.always` installs on every stack. `when.any` installs when one of those `section.option` ids is selected. A choice does not auto-fill later sections; it disables conflicts and clears a choice that became illegal.

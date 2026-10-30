@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Check, ChevronDown, Copy } from "lucide-react";
+import { Check, ChevronDown, Copy, Eye } from "lucide-react";
 import {
   choiceLabel,
   evaluate,
@@ -12,7 +12,6 @@ import {
   type Selection,
 } from "@brix/core";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { chosenValues, Question } from "@/components/stack/question";
 import { SkillsModal } from "@/components/stack/skills-modal";
@@ -157,37 +156,38 @@ export function StackBuilder() {
               </ul>
             ) : null}
             {showCommand ? (
-              <div className="relative rounded-[4px] border border-stone bg-taupe">
-                <button
-                  type="button"
-                  aria-label={copied ? "Copied" : "Copy command"}
-                  className="absolute top-2 left-2 inline-flex size-6 cursor-pointer items-center justify-center rounded-md text-ink transition-colors duration-200 hover:bg-eggshell"
-                  onClick={async () => {
-                    await navigator.clipboard.writeText(command);
-                    setCopied(true);
-                    window.setTimeout(() => setCopied(false), 1500);
-                  }}
-                >
-                  {copied ? (
-                    <Check className="size-3.5" />
-                  ) : (
-                    <Copy className="size-3.5" />
-                  )}
-                </button>
-                <pre className="whitespace-pre-wrap break-words px-3 pt-9 pb-3 font-mono text-[13px] leading-relaxed text-ink">
+              <div className="rounded-[4px] border border-stone bg-taupe">
+                <div className="flex items-center gap-1 px-2 pt-2">
+                  <button
+                    type="button"
+                    aria-label={copied ? "Copied" : "Copy command"}
+                    className="inline-flex size-6 shrink-0 cursor-pointer items-center justify-center rounded-md text-ink transition-colors duration-200 hover:bg-eggshell"
+                    onClick={async () => {
+                      await navigator.clipboard.writeText(command);
+                      setCopied(true);
+                      window.setTimeout(() => setCopied(false), 1500);
+                    }}
+                  >
+                    {copied ? (
+                      <Check className="size-3.5" />
+                    ) : (
+                      <Copy className="size-3.5" />
+                    )}
+                  </button>
+                  <button
+                    type="button"
+                    className="inline-flex h-6 cursor-pointer items-center gap-1 rounded-md px-1.5 text-xs text-ink transition-colors duration-200 hover:bg-eggshell"
+                    onClick={() => setSkillsOpen(true)}
+                  >
+                    <Eye className="size-3.5" />
+                    View Skills
+                  </button>
+                </div>
+                <pre className="whitespace-pre-wrap break-words px-3 pt-2 pb-3 font-mono text-[13px] leading-relaxed text-ink">
                   {command}
                 </pre>
               </div>
             ) : null}
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              className="w-full"
-              onClick={() => setSkillsOpen(true)}
-            >
-              View skills
-            </Button>
           </CardContent>
         </Card>
         {skillsOpen ? (

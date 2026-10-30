@@ -187,15 +187,21 @@ git commit -m "chore: add MIT license"
 
 ## Publish usebrix
 
-`usebrix@0.1.0` is already on npm. The next publish has to be a new version, such as `0.1.1`. npm will not replace `0.1.0`.
+`usebrix` is on npm. Each publish must be a new version. npm will not replace an existing one.
 
 1. Create a granular npm access token that can publish `usebrix`.
 2. In this GitHub repo, add it as the Actions secret `NPM_TOKEN`.
 3. Open Actions → Publish usebrix → Run workflow.
-4. Choose the branch and enter the version.
+4. Enter the version (for example `0.1.5`). The branch picker does not matter; the workflow always starts from `main`.
 
-That run sets `packages/cli/package.json` to the version, commits `Release usebrix <version>` on that branch when the version changed, publishes with the `latest` tag, and opens a GitHub Release `v<version>`. The release notes link to that version on npm and include `npx usebrix@<version> init`.
+That run does **not** push to `main`. It opens a PR:
 
-The run stops before that commit if the version is already on npm as `usebrix@<version>`, or if the git tag `v<version>` already exists. npm will not replace a published version. A failed npm lookup, other than “version not found”, also stops the run.
+- branch `release/usebrix-<version>`
+- title and commit `chore: release usebrix <version>`
+- body explaining the follow-up publish
 
-`npx usebrix` and `npx usebrix@latest` both follow `latest`. Run the button only for a commit you want the world to install. The selected branch must allow the Actions bot to push the version commit and the release.
+Merge that PR through the normal review rules. After it merges, the same workflow publishes `usebrix@<version>` with the `latest` tag and opens GitHub Release `v<version>`. The release notes link to that version on npm and include `npx usebrix@<version> init`.
+
+The open-PR run stops if the version is already on npm, if tag `v<version>` exists, if `packages/cli/package.json` on `main` already has that version, or if the release branch already exists. The post-merge publish job only runs for PRs titled exactly `chore: release usebrix <version>`.
+
+`npx usebrix` and `npx usebrix@latest` both follow `latest`. Run the button only for a version you intend to ship.

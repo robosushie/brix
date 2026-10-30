@@ -139,7 +139,51 @@ pnpm brix init --help
 
 `pnpm dev` starts the site at http://localhost:3000. Open `/stack` to build a command. `pnpm brix` builds the CLI and runs the local `brix` bin.
 
-Pull requests run typecheck, the CLI bundle, and the Next.js production build.
+Pull requests run typecheck, the CLI bundle, and the Next.js production build. A separate check enforces Conventional Commits on the PR title and the single commit on the branch.
+
+## Contributing
+
+### Pull request title
+
+The title must look like:
+
+```text
+type: subject
+```
+
+Allowed types: `feat`, `fix`, `refactor`, `chore`, `docs`, `test`, `style`.
+
+The subject must:
+
+- start with a lowercase letter
+- stay within 72 characters
+- not end with a period
+- be an imperative summary (`add`, `fix`, `update`, not `Added` or `Fixes`)
+
+Examples:
+
+```text
+chore: add MIT license
+feat: nest frontend and backend runtimes
+fix: keep stack summary on one line
+docs: document contributing rules
+```
+
+Bad titles (these fail CI): `License ci`, `Add MIT license.`, `chore: Add MIT license`.
+
+### Commit message
+
+Use the same shape as the PR title. When the PR has a single commit, that commit message must match the PR title. Prefer one focused commit per PR.
+
+```bash
+git commit -m "chore: add MIT license"
+```
+
+### Before you open a PR
+
+1. Run `pnpm install`.
+2. Run `pnpm exec tsc --noEmit`, `pnpm --filter usebrix build`, and `pnpm build` locally when you can.
+3. Set the PR title to `type: subject` before or right after opening the PR so the semantic check passes.
 
 ## Publish usebrix
 

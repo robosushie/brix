@@ -7,19 +7,13 @@ on:
         description: npm version to publish, for example 0.1.1
         required: true
         type: string
-  pull_request:
-    types:
-      - closed
-    paths:
-      - packages/cli/package.json
 
 permissions:
   contents: write
   pull-requests: write
 
 jobs:
-  open-pr:
-    if: github.event_name == 'workflow_dispatch'
+  publish:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -27,9 +21,14 @@ jobs:
           ref: main
           fetch-depth: 0
 
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.12.1
+
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: pnpm
           registry-url: https://registry.npmjs.org
 
       - name: Check version
@@ -59,90 +58,16 @@ jobs:
             echo "::error::packages/cli/package.json is already ${VERSION} on main."
             exit 1
           fi
-
-      - name: Open release PR
-        env:
-          VERSION: ${{ inputs.version }}
-          GH_TOKEN: ${{ github.token }}
-          HUSKY: "0"
-        run: |
           branch="release/usebrix-${VERSION}"
-          title="chore: release usebrix ${VERSION}"
           if git ls-remote --exit-code --heads origin "$branch" >/dev/null 2>&1; then
             echo "::error::Branch ${branch} already exists."
             exit 1
           fi
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git checkout -b "$branch"
-          npm pkg set "version=${VERSION}" --prefix packages/cli
-          git add packages/cli/package.json
-          git commit -m "$title"
-          git push -u origin "$branch"
-          gh pr create \
-            --base main \
-            --head "$branch" \
-            --title "$title" \
-            --body "$(printf '%s\n' \
-              "Bumps \`usebrix\` to \`${VERSION}\`." \
-              "" \
-              "After this PR merges, the publish job publishes \`usebrix@${VERSION}\` to npm and opens GitHub Release \`v${VERSION}\`." \
-              "" \
-              "- https://www.npmjs.com/package/usebrix" \
-              "- \`npx usebrix@${VERSION} init\`")"
-
-  publish:
-    if: >
-      github.event_name == 'pull_request' &&
-      github.event.pull_request.merged == true &&
-      github.event.pull_request.base.ref == 'main' &&
-      startsWith(github.event.pull_request.title, 'chore: release usebrix ')
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.merge_commit_sha }}
-          fetch-depth: 0
-
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 10.12.1
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: pnpm
-          registry-url: https://registry.npmjs.org
-
-      - name: Read and check version
-        id: version
-        run: |
-          VERSION=$(node -p "require('./packages/cli/package.json').version")
           echo "VERSION=${VERSION}" >> "$GITHUB_ENV"
-          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
-          expected="chore: release usebrix ${VERSION}"
-          if [ "${{ github.event.pull_request.title }}" != "$expected" ]; then
-            echo "::error::PR title must be exactly: ${expected}"
-            exit 1
-          fi
-          if ! [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-            echo "::error::Version must be strict semver like 0.1.1"
-            exit 1
-          fi
-          if npm_out=$(npm view "usebrix@${VERSION}" version 2>&1); then
-            echo "::error::Version ${VERSION} already exists on npm as usebrix@${VERSION}."
-            exit 1
-          fi
-          if ! printf '%s' "$npm_out" | grep -q 'E404'; then
-            echo "::error::Could not check npm for usebrix@${VERSION}."
-            printf '%s\n' "$npm_out"
-            exit 1
-          fi
-          tag_ref=$(git ls-remote --tags origin "refs/tags/v${VERSION}")
-          if [ -n "$tag_ref" ]; then
-            echo "::error::Version ${VERSION} already exists on GitHub as tag v${VERSION}."
-            exit 1
-          fi
+
+      - name: Set package version
+        working-directory: packages/cli
+        run: npm pkg set "version=${VERSION}"
 
       - run: pnpm install --frozen-lockfile
       - run: pnpm --filter usebrix build
@@ -153,9 +78,33 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: npm publish --tag latest
 
+      - name: Open version PR
+        env:
+          GH_TOKEN: ${{ github.token }}
+          HUSKY: "0"
+        run: |
+          branch="release/usebrix-${VERSION}"
+          title="chore: release usebrix ${VERSION}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$branch"
+          git add packages/cli/package.json
+          git commit -m "$title"
+          git push -u origin "$branch"
+          gh pr create \
+            --base main \
+            --head "$branch" \
+            --title "$title" \
+            --body "$(printf '%s\n' \
+              "\`usebrix@${VERSION}\` is already on npm (\`latest\`)." \
+              "" \
+              "This PR only syncs \`packages/cli/package.json\` on \`main\` to that version." \
+              "" \
+              "- https://www.npmjs.com/package/usebrix/v/${VERSION}" \
+              "- \`npx usebrix@${VERSION} init\`")"
+
       - name: Create GitHub Release
         env:
-          VERSION: ${{ env.VERSION }}
           GH_TOKEN: ${{ github.token }}
         run: |
           gh release create "v${VERSION}" \

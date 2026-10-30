@@ -33,6 +33,10 @@ export function initCommand(sel: Selection): string {
     }
     const value = normalized.choices[section.id];
     if (!value || value === "none") continue;
+    if (section.id === "turbo") {
+      if (value === "turborepo") parts.push("--turbo");
+      continue;
+    }
     parts.push(flag, value);
   }
   return parts.join(" ");

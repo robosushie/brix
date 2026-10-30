@@ -1,5 +1,5 @@
 {
-  "registryVersion": "2026.10.3",
+  "registryVersion": "2026.10.6",
   "preset": null,
   "agents": [
     "cursor"
@@ -9,8 +9,8 @@
     "frontend": "vite-react",
     "ui": "tailwind",
     "backend": "fastapi",
+    "frontendRuntime": "node",
     "package": "npm",
-    "runtime": "node",
     "database": "postgres",
     "dbProvider": "postgres-docker",
     "orm": "sqlalchemy",

@@ -27,7 +27,7 @@ export function sectionUse(section: StackSection, sel: Selection): "open" | "unu
 function unusedReason(section: StackSection, sel: Selection): string {
   const app = sel.choices.appType;
   if (section.appliesTo && app && !section.appliesTo.includes(app)) {
-    return `Not used for ${optionLabel("appType", app)}`;
+    return `Not used for ${optionLabel("appType", app)} Stack`;
   }
   return "Not used for this stack";
 }

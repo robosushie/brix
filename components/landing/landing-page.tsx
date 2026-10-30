@@ -34,7 +34,7 @@ const files = [
 const groups = [
   {
     label: "Core",
-    body: "Frontend, UI, backend, package manager, runtime, database, ORM, and coding agents.",
+    body: "Frontend, UI, backend, package manager, Turborepo, database, ORM, and coding agents.",
   },
   {
     label: "Services",

@@ -27,7 +27,7 @@ Solo builders and small teams who already work in Claude Code, Codex, or Cursor 
 
 ## Choices
 
-There is no preset. App type is Frontend + Backend, Backend Only, Frontend Only, or None. Frontend Only turns off the backend, database, cache, storage, and email, and it requires a frontend. Backend Only turns off the frontend and UI. A Backend Only Python service leaves uv, Python, and pytest, and None stays available on those questions. A Frontend + Backend app can keep a JavaScript package manager beside a Python API.
+There is no preset. App type is Frontend + Backend, Backend Only, Frontend Only, or None. Frontend Only turns off the backend, database, cache, storage, and email, and it requires a frontend. Backend Only turns off the frontend and UI. A Backend Only Python service leaves uv, Python, and pytest, and None stays available on those questions. It turns off npm, pnpm, bun, Turborepo, Node, and Bun. A Frontend + Backend app keeps a JavaScript package manager beside a Python API, and uv stays off.
 
 ## Principles
 

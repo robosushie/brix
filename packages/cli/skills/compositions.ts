@@ -46,12 +46,12 @@ export const compositions: Record<string, SkillComposition> = {
   },
   "node-layout": {
     name: "node-layout",
-    description: "Places a Node or Bun app in src, or in packages/web and packages/api. Use when the stack runtime is Node or Bun, or the frontend or JS API is selected.",
+    description: "Places a Node or Bun app in src, or in packages/web and packages/api. Use when a JS frontend or JS API is selected.",
     parts: ["node-layout/body", "common/infra"],
   },
   "python-layout": {
     name: "python-layout",
-    description: "Places a Python API in a uv src layout, with Django on the official project layout. Use when the stack runtime or backend is Python.",
+    description: "Places a Python API in a uv src layout, with Django on the official project layout. Use when the backend is FastAPI, Flask, or Django.",
     parts: ["python-layout/body", "common/infra"],
   },
   nextjs: {

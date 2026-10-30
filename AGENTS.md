@@ -8,8 +8,8 @@ Built with Brix. This file is the source of truth for coding agents.
 - Frontend: Vite + React
 - UI: Tailwind only
 - Backend: FastAPI
+- Frontend runtime: Node
 - Package manager: npm workspaces
-- Runtime: Node
 - Database: Postgres
 - DB provider: Postgres Docker
 - ORM: SQLAlchemy

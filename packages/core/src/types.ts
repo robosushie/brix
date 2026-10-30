@@ -31,6 +31,8 @@ export type StackSection = {
   group?: string;
   hidden?: boolean;
   multi?: boolean;
+  /** Render under this section in the same block, with no separator. */
+  nestUnder?: string;
   appliesTo?: string[];
   appliesWhen?: string[];
   options: StackOption[];

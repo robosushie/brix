@@ -25,8 +25,13 @@ export function parseArgs(argv: string[]): ParsedArgs {
     else if (arg === "--yes" || arg === "-y") flags.yes = true;
     else if (arg === "--config") flags.config = argv[(i += 1)] ?? "";
     else if (arg.startsWith("--")) {
-      const sectionId = sectionIdForFlag(arg.slice(2));
+      const name = arg.slice(2);
+      const sectionId = sectionIdForFlag(name);
       const value = argv[i + 1] ?? "";
+      if (name === "turbo" && sectionId && (!value || value.startsWith("-"))) {
+        flags.pairs.push([sectionId, "turborepo"]);
+        continue;
+      }
       if (!sectionId || !value || value.startsWith("-")) {
         errors.push(sectionId ? `Missing value for ${arg}.` : `Unknown argument "${arg}".`);
         if (value && !value.startsWith("-")) i += 1;

@@ -8,7 +8,7 @@ Required choices for Brix:
 - App Router (`--app`)
 - Source directory (`--src-dir`) so routes live in `src/app`
 - UI kit from `stack.json`: Tailwind when `tailwind` or `tailwind-shadcn`; skip Tailwind when `mui`, `mantine`, or `plain`
-- Package manager flag matching `stack.json` (`--use-pnpm`, `--use-npm`, `--use-bun`)
+- Package manager from `stack.json` `package`: `npm` uses `--use-npm`, `pnpm` uses `--use-pnpm`, `bun` uses `--use-bun`
 
 Example:
 

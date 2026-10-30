@@ -9,6 +9,7 @@ import {
   selectionFromFlags,
   type Selection,
 } from "./index";
+import { parseArgs } from "../../cli/src/args.ts";
 import { renderSkill, validateSkillCompositions } from "../../cli/src/skills.ts";
 
 validateSkillCompositions(registry.skills.filter((skill) => skill.kind === "local").map((skill) => skill.id));
@@ -40,14 +41,21 @@ function pick(start: Selection, pairs: Array<[string, string]>): Selection {
 const empty = evaluate(emptySelection());
 if (!empty.valid) throw new Error(`empty selection should be valid, got ${empty.errors.join("; ")}`);
 if (empty.selection.agents.length !== 0) throw new Error("empty selection should not pick an agent");
-if (initCommand(empty.selection) !== "npx usebrix@latest init") throw new Error("empty command should have no flags");
+if (empty.selection.choices.appType !== "frontend-backend") {
+  throw new Error("empty selection should default to frontend + backend");
+}
+if (initCommand(empty.selection) !== "npx usebrix@latest init --app-type frontend-backend") {
+  throw new Error(`empty command should only set app type: ${initCommand(empty.selection)}`);
+}
 for (const id of ["frontend-backend", "backend-only", "frontend-only"]) {
   if (empty.disabled[`appType.${id}`]) throw new Error(`${id} should stay enabled`);
 }
-if (Object.keys(empty.disabled).length !== 0) {
-  throw new Error(`blank form should disable nothing, got ${Object.keys(empty.disabled).join(", ")}`);
+if (!empty.disabled["package.uv"]) throw new Error("frontend + backend default should disable uv");
+const unexpectedDisabled = Object.keys(empty.disabled).filter((id) => id !== "package.uv");
+if (unexpectedDisabled.length !== 0) {
+  throw new Error(`default form disabled unexpected options: ${unexpectedDisabled.join(", ")}`);
 }
-const openApp = selectOption(empty.selection, "appType", "frontend-backend");
+const openApp = empty.selection;
 if (evaluate(openApp).disabled["dbProvider.supabase"] || evaluate(openApp).disabled["orm.django"] || evaluate(openApp).disabled["orm.mongoose"]) {
   throw new Error("unanswered questions should not disable required options");
 }
@@ -81,15 +89,18 @@ if (mongoBadges) throw new Error("mongo should not declare dependencies");
 
 const frontendOnly = selectOption(empty.selection, "appType", "frontend-only");
 const frontendOnlyEval = evaluate(frontendOnly);
-if (!frontendOnlyEval.disabled["backend.fastapi"]?.startsWith("Not used for")) {
-  throw new Error("frontend only should disable FastAPI");
+if (!frontendOnlyEval.disabled["backend.fastapi"]?.startsWith("Not used for") || !frontendOnlyEval.disabled["backend.fastapi"]?.includes("Stack")) {
+  throw new Error("frontend only should disable FastAPI for Frontend Only Stack");
 }
 if (frontendOnly.choices.backend) throw new Error("frontend only should clear the backend");
 if (frontendOnlyEval.disabled["testing.none"]) throw new Error("none should stay available for testing");
 if (frontendOnlyEval.disabled["workflows.trigger"]) throw new Error("frontend only should allow Trigger.dev");
 if (!frontendOnlyEval.disabled["workflows.prefect"]) throw new Error("frontend only should disable Prefect");
 if (!frontendOnlyEval.disabled["package.uv"]) throw new Error("frontend only should disable uv");
-if (!frontendOnlyEval.disabled["runtime.python"]) throw new Error("frontend only should disable the python runtime");
+if (frontendOnlyEval.disabled["frontendRuntime.node"]) throw new Error("frontend only should leave the frontend runtime enabled");
+if (!frontendOnlyEval.disabled["backendRuntime.node"]?.startsWith("Not used for") || !frontendOnlyEval.disabled["backendRuntime.node"]?.includes("Stack")) {
+  throw new Error("frontend only should unused the backend runtime for Frontend Only Stack");
+}
 if (frontendOnlyEval.disabled["appType.backend-only"]) throw new Error("backend only should stay enabled");
 if (frontendOnlyEval.skills.some((skill) => skill.id === "api-design")) {
   throw new Error("frontend only should not install api design");
@@ -105,8 +116,8 @@ if (viteIds.includes("crewai") || !viteOnly.disabled["aiFramework.crewai"]) {
 }
 
 const backendOnly = selectOption(empty.selection, "appType", "backend-only");
-if (!evaluate(backendOnly).disabled["frontend.nextjs"]?.startsWith("Not used for")) {
-  throw new Error("backend only should disable Next.js");
+if (!evaluate(backendOnly).disabled["frontend.nextjs"]?.startsWith("Not used for") || !evaluate(backendOnly).disabled["frontend.nextjs"]?.includes("Stack")) {
+  throw new Error("backend only should disable Next.js for Backend Only Stack");
 }
 
 const flask = pick(backendOnly, [
@@ -114,9 +125,21 @@ const flask = pick(backendOnly, [
   ["package", "uv"],
 ]);
 const flaskEval = evaluate(flask);
-if (!flaskEval.disabled["runtime.node"]) throw new Error("backend-only flask should disable node");
-if (flaskEval.disabled["runtime.python"]) throw new Error("backend-only flask should leave python enabled");
+if (!flaskEval.disabled["backendRuntime.node"]?.startsWith("Conflicts with")) {
+  throw new Error("backend-only flask should disable the JS backend runtime");
+}
+if (!flaskEval.disabled["frontendRuntime.node"]?.startsWith("Not used for") || !flaskEval.disabled["frontendRuntime.node"]?.includes("Stack")) {
+  throw new Error("backend-only flask should unused the frontend runtime for Backend Only Stack");
+}
 if (!flaskEval.disabled["package.npm"]) throw new Error("backend-only flask should disable npm");
+if (!flaskEval.disabled["package.pnpm"] || !flaskEval.disabled["package.bun"]) {
+  throw new Error("backend-only flask should disable pnpm and bun");
+}
+if (flaskEval.disabled["package.uv"]) throw new Error("backend-only flask should leave uv enabled");
+if (!flaskEval.disabled["turbo.turborepo"]) throw new Error("backend-only flask should disable Turborepo");
+if (selectOption(flask, "turbo", "turborepo").choices.turbo) {
+  throw new Error("python-only should refuse Turborepo");
+}
 if (!flaskEval.disabled["workflows.trigger"]) throw new Error("python stack should disable Trigger.dev");
 if (flaskEval.disabled["workflows.prefect"]) throw new Error("python stack should leave Prefect enabled");
 
@@ -125,8 +148,9 @@ const stack = pick(empty.selection, [
   ["frontend", "nextjs"],
   ["ui", "tailwind-shadcn"],
   ["backend", "hono"],
-  ["package", "pnpm-turbo"],
-  ["runtime", "node"],
+  ["frontendRuntime", "node"],
+  ["backendRuntime", "node"],
+  ["package", "pnpm"],
   ["database", "postgres"],
   ["dbProvider", "neon"],
   ["orm", "drizzle"],
@@ -154,6 +178,42 @@ if (initCommand(done.selection).includes("--cache") || initCommand(done.selectio
   throw new Error(`none and the hash token should stay off the command: ${initCommand(done.selection)}`);
 }
 if (!initCommand(done.selection).includes("--frontend nextjs")) throw new Error("command should include the frontend flag");
+const doneCommand = initCommand(done.selection);
+if (!doneCommand.includes("--frontend-runtime node") || !doneCommand.includes("--backend-runtime node") || !doneCommand.includes("--package pnpm")) {
+  throw new Error(`runtimes and package should be on the command: ${doneCommand}`);
+}
+if (doneCommand.indexOf("--frontend-runtime") > doneCommand.indexOf("--package") || doneCommand.indexOf("--backend-runtime") > doneCommand.indexOf("--package")) {
+  throw new Error(`runtimes should precede the package manager: ${doneCommand}`);
+}
+const withTurbo = selectOption(done.selection, "turbo", "turborepo");
+const turboCommand = initCommand(withTurbo);
+if (!turboCommand.includes("--package pnpm --turbo") || turboCommand.includes("--turbo turborepo")) {
+  throw new Error(`Turborepo should be a bare flag: ${turboCommand}`);
+}
+const workspacesOnly = selectOption(withTurbo, "turbo", "workspaces");
+if (workspacesOnly.choices.turbo !== "workspaces" || initCommand(workspacesOnly).includes("--turbo")) {
+  throw new Error("workspaces only should omit --turbo");
+}
+const parsedTurbo = parseArgs(["init", "--package", "pnpm", "--turbo", "--frontend-runtime", "node"]);
+const turboPair = parsedTurbo.flags.pairs.find((pair) => pair[0] === "turbo");
+if (
+  parsedTurbo.errors.length !== 0 ||
+  turboPair?.[1] !== "turborepo" ||
+  !parsedTurbo.flags.pairs.some((pair) => pair[0] === "frontendRuntime" && pair[1] === "node")
+) {
+  throw new Error(`bare --turbo should parse: ${parsedTurbo.errors.join("; ")} ${JSON.stringify(parsedTurbo.flags.pairs)}`);
+}
+const mixed = evaluate(pick(empty.selection, [
+  ["appType", "frontend-backend"],
+  ["frontend", "nextjs"],
+  ["backend", "fastapi"],
+]));
+if (!mixed.disabled["package.uv"]) throw new Error("frontend plus fastapi should disable uv");
+if (mixed.disabled["package.npm"]) throw new Error("frontend plus fastapi should leave npm enabled");
+if (!mixed.disabled["backendRuntime.node"]?.startsWith("Conflicts with")) {
+  throw new Error("frontend plus fastapi should disable the JS backend runtime");
+}
+if (mixed.disabled["frontendRuntime.node"]) throw new Error("frontend plus fastapi should leave the frontend runtime enabled");
 
 const withAgents = selectOption(selectOption(done.selection, "agents", "cursor"), "agents", "codex");
 const withIndex = selectOption(withAgents, "codeIndex", "codegraph");
@@ -246,8 +306,9 @@ const withHono = pick(empty.selection, [
   ["frontend", "vite-react"],
   ["ui", "tailwind"],
   ["backend", "hono"],
-  ["package", "pnpm-turbo"],
-  ["runtime", "node"],
+  ["frontendRuntime", "node"],
+  ["backendRuntime", "node"],
+  ["package", "pnpm"],
 ]);
 const withPrisma = pick(empty.selection, [
   ["appType", "frontend-backend"],

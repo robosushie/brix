@@ -23,7 +23,7 @@ These are not choices. Every generated project includes them:
 - `AGENTS.md`
 - Verification gate
 
-Base skills: `brix/architect`, `brix/security`, `brix/verify`, and SOLID. `node-layout` installs for a Node or Bun app, a JavaScript frontend, or a Hono, Express, or Fastify API. `python-layout` installs for a Python runtime or a FastAPI, Flask, or Django backend. API design installs for Frontend + Backend and Backend only. A frontend-only app does not get an API skill. `infra/` is created only when Docker, Kubernetes + Helm, or Postgres Docker is selected.
+Base skills: `brix/architect`, `brix/security`, `brix/verify`, and SOLID. `node-layout` installs for a Node or Bun app, a JavaScript frontend, or a Hono, Express, or Fastify API. `python-layout` installs for a FastAPI, Flask, or Django backend. API design installs for Frontend + Backend and Backend only. A frontend-only app does not get an API skill. `infra/` is created only when Docker, Kubernetes + Helm, or Postgres Docker is selected.
 
 ## User flow
 

@@ -65,7 +65,7 @@ export function emptySelection(notes = ""): Selection {
     registryVersion: registry.version,
     preset: null,
     agents: [],
-    choices: {},
+    choices: { appType: "frontend-backend" },
     notes,
   });
 }

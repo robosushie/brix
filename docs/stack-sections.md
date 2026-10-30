@@ -10,7 +10,7 @@ Frontend Only turns off the backend, database, cache, storage, and email. Backen
 
 ## Core
 
-Frontend, UI, backend, package manager, runtime, database, DB provider, ORM, and coding agents. None of these questions has a None pill. Leaving one unset adds no flag.
+Frontend, UI, backend, package manager, Turborepo, database, DB provider, ORM, and coding agents. None of these questions has a None pill. Leaving one unset adds no flag. Runtime sits under Frontend and under Backend, with no separator: Node or Bun for the JavaScript side. A FastAPI, Flask, or Django backend disables the backend runtime pills. The package manager is npm workspaces, pnpm workspaces, bun workspaces, or uv. uv is only for a Python-only backend. Turborepo is Turborepo or Workspaces only. Turborepo adds `--turbo`. Workspaces only adds no flag. The Turborepo question is hidden when the package manager is uv.
 
 Coding agents (`claude-code`, `codex`, `cursor`) are multi-select. Repeat `--agent` once per agent. Clicking the last agent clears it.
 

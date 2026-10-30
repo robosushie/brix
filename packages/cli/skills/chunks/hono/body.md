@@ -1,6 +1,6 @@
 # Hono
 
-Scaffold with the official starter when starting from empty: `npm create hono@latest` (or pnpm / bun) and choose the `nodejs` or `bun` template to match `stack.json` runtime. Place the result in the API root from `folder-structure` (`packages/api` or the repo root).
+Scaffold with the official starter when starting from empty: `npm create hono@latest` (or pnpm / bun) and choose the `nodejs` or `bun` template to match `stack.json` `backendRuntime`. Place the result in the API root from `folder-structure` (`packages/api` or the repo root).
 
 ## Files
 

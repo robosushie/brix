@@ -1,5 +1,5 @@
 {
-  "version": "2026.10.5",
+  "version": "2026.10.6",
   "agents": {
     "claude-code": {
       "skills": "claude-code",
@@ -49,11 +49,15 @@
         "backend.django"
       ],
       "disable": [
-        "package.bun-turbo",
-        "package.pnpm-turbo",
+        "package.bun",
+        "package.pnpm",
         "package.npm",
-        "runtime.node",
-        "runtime.bun",
+        "turbo.turborepo",
+        "turbo.workspaces",
+        "frontendRuntime.node",
+        "backendRuntime.node",
+        "frontendRuntime.bun",
+        "backendRuntime.bun",
         "testing.vitest-playwright",
         "testing.jest-cypress",
         "workflows.trigger",
@@ -84,8 +88,29 @@
         "appType.frontend-only"
       ],
       "disable": [
-        "package.uv",
-        "runtime.python"
+        "package.uv"
+      ]
+    },
+    {
+      "id": "frontend-backend-uv",
+      "reason": "Not used beside a JavaScript frontend",
+      "whenAll": [
+        "appType.frontend-backend"
+      ],
+      "disable": [
+        "package.uv"
+      ]
+    },
+    {
+      "id": "javascript-backend-uv",
+      "reason": "Not used for a JavaScript stack",
+      "whenAny": [
+        "backend.hono",
+        "backend.express",
+        "backend.fastify"
+      ],
+      "disable": [
+        "package.uv"
       ]
     },
     {
@@ -169,6 +194,30 @@
           "label": "React",
           "status": "experimental",
           "description": "A React app that is not Next.js, Vite, or SvelteKit."
+        }
+      ]
+    },
+    {
+      "id": "frontendRuntime",
+      "label": "Frontend runtime",
+      "group": "core",
+      "nestUnder": "frontend",
+      "appliesTo": [
+        "frontend-backend",
+        "frontend-only"
+      ],
+      "options": [
+        {
+          "id": "node",
+          "label": "Node",
+          "status": "proven",
+          "description": "Node.js for the frontend tooling and app."
+        },
+        {
+          "id": "bun",
+          "label": "Bun",
+          "status": "experimental",
+          "description": "Bun for the frontend tooling and app."
         }
       ]
     },
@@ -281,65 +330,95 @@
       ]
     },
     {
-      "id": "package",
-      "label": "Package manager",
+      "id": "backendRuntime",
+      "label": "Backend runtime",
       "group": "core",
-      "options": [
-        {
-          "id": "bun-turbo",
-          "label": "bun + Turborepo",
-          "status": "experimental",
-          "description": "Bun workspaces orchestrated by Turborepo."
-        },
-        {
-          "id": "pnpm-turbo",
-          "label": "pnpm + Turborepo",
-          "status": "proven",
-          "description": "pnpm workspaces orchestrated by Turborepo."
-        },
-        {
-          "id": "npm",
-          "label": "npm workspaces",
-          "status": "experimental",
-          "description": "npm workspaces, with no Turborepo."
-        },
-        {
-          "id": "uv",
-          "label": "uv (Python)",
-          "status": "proven",
-          "description": "Python project and package manager."
-        }
-      ]
-    },
-    {
-      "id": "runtime",
-      "label": "Runtime",
-      "group": "core",
+      "nestUnder": "backend",
+      "appliesTo": [
+        "frontend-backend",
+        "backend-only"
+      ],
       "options": [
         {
           "id": "node",
           "label": "Node",
           "status": "proven",
-          "description": "Node.js for the JavaScript parts of the stack."
+          "description": "Node.js for the JavaScript API.",
+          "depends": {
+            "conflicts": [
+              "backend.fastapi",
+              "backend.flask",
+              "backend.django"
+            ]
+          }
         },
         {
           "id": "bun",
           "label": "Bun",
           "status": "experimental",
-          "description": "Bun as the JavaScript runtime and package runner."
-        },
-        {
-          "id": "python",
-          "label": "Python",
-          "status": "proven",
-          "description": "Python runtime for a Python API.",
+          "description": "Bun for the JavaScript API.",
           "depends": {
             "conflicts": [
-              "backend.hono",
-              "backend.express",
-              "backend.fastify"
+              "backend.fastapi",
+              "backend.flask",
+              "backend.django"
             ]
           }
+        }
+      ]
+    },
+    {
+      "id": "package",
+      "label": "Package manager",
+      "group": "core",
+      "options": [
+        {
+          "id": "npm",
+          "label": "npm workspaces",
+          "status": "experimental",
+          "description": "Installs the JavaScript workspace with npm."
+        },
+        {
+          "id": "pnpm",
+          "label": "pnpm workspaces",
+          "status": "proven",
+          "description": "Installs the JavaScript workspace with pnpm."
+        },
+        {
+          "id": "bun",
+          "label": "bun workspaces",
+          "status": "experimental",
+          "description": "Installs the JavaScript workspace with Bun."
+        },
+        {
+          "id": "uv",
+          "label": "uv",
+          "status": "proven",
+          "description": "Python project and package manager for a Python-only API."
+        }
+      ]
+    },
+    {
+      "id": "turbo",
+      "label": "Turborepo",
+      "group": "core",
+      "appliesWhen": [
+        "package.npm",
+        "package.pnpm",
+        "package.bun"
+      ],
+      "options": [
+        {
+          "id": "turborepo",
+          "label": "Turborepo",
+          "status": "proven",
+          "description": "Orchestrate the JavaScript workspace with Turborepo."
+        },
+        {
+          "id": "workspaces",
+          "label": "Workspaces only",
+          "status": "proven",
+          "description": "Workspace installs, with no Turborepo."
         }
       ]
     },
@@ -479,7 +558,6 @@
           "depends": {
             "conflicts": [
               "database.mongo",
-              "runtime.python",
               "backend.django",
               "backend.fastapi",
               "backend.flask"
@@ -496,7 +574,6 @@
           "depends": {
             "conflicts": [
               "database.mongo",
-              "runtime.python",
               "backend.django",
               "backend.fastapi",
               "backend.flask"
@@ -512,7 +589,8 @@
           "description": "Python SQL toolkit for a FastAPI or Flask API on a SQL database.",
           "depends": {
             "requires": [
-              "runtime.python"
+              "backend.fastapi",
+              "backend.flask"
             ],
             "conflicts": [
               "database.mongo",
@@ -669,7 +747,9 @@
           "description": "Redis cache and BullMQ jobs on Node or Bun.",
           "depends": {
             "conflicts": [
-              "runtime.python"
+              "backend.fastapi",
+              "backend.flask",
+              "backend.django"
             ]
           }
         },
@@ -2683,8 +2763,10 @@
       "license": "MIT",
       "when": {
         "any": [
-          "runtime.node",
-          "runtime.bun",
+          "frontendRuntime.node",
+          "backendRuntime.node",
+          "frontendRuntime.bun",
+          "backendRuntime.bun",
           "frontend.nextjs",
           "frontend.vite-react",
           "frontend.sveltekit",
@@ -2718,7 +2800,6 @@
       "license": "MIT",
       "when": {
         "any": [
-          "runtime.python",
           "backend.fastapi",
           "backend.flask",
           "backend.django"
@@ -3017,11 +3098,25 @@
       "kind": "local",
       "license": "MIT",
       "when": {
-        "any": ["aiFramework.baml"]
+        "any": [
+          "aiFramework.baml"
+        ]
       },
-      "preinstall": { "windows": [], "linux": [], "darwin": [] },
-      "install": { "windows": [], "linux": [], "darwin": [] },
-      "postinstall": { "windows": [], "linux": [], "darwin": [] },
+      "preinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "install": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "postinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
       "name": "Boundary ML",
       "description": "Typed prompts in baml_src."
     },
@@ -3030,11 +3125,25 @@
       "kind": "local",
       "license": "Apache-2.0",
       "when": {
-        "any": ["aiFramework.mastra"]
+        "any": [
+          "aiFramework.mastra"
+        ]
       },
-      "preinstall": { "windows": [], "linux": [], "darwin": [] },
-      "install": { "windows": [], "linux": [], "darwin": [] },
-      "postinstall": { "windows": [], "linux": [], "darwin": [] },
+      "preinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "install": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "postinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
       "name": "Mastra",
       "description": "TypeScript agents under src/mastra."
     },
@@ -3043,11 +3152,25 @@
       "kind": "local",
       "license": "MIT",
       "when": {
-        "any": ["aiFramework.langchain"]
+        "any": [
+          "aiFramework.langchain"
+        ]
       },
-      "preinstall": { "windows": [], "linux": [], "darwin": [] },
-      "install": { "windows": [], "linux": [], "darwin": [] },
-      "postinstall": { "windows": [], "linux": [], "darwin": [] },
+      "preinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "install": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "postinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
       "name": "LangChain",
       "description": "Model and tool calls in services/agent."
     },
@@ -3056,11 +3179,25 @@
       "kind": "local",
       "license": "MIT",
       "when": {
-        "any": ["aiFramework.langgraph"]
+        "any": [
+          "aiFramework.langgraph"
+        ]
       },
-      "preinstall": { "windows": [], "linux": [], "darwin": [] },
-      "install": { "windows": [], "linux": [], "darwin": [] },
-      "postinstall": { "windows": [], "linux": [], "darwin": [] },
+      "preinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "install": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "postinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
       "name": "LangGraph",
       "description": "A stateful graph of agent steps."
     },
@@ -3069,11 +3206,25 @@
       "kind": "local",
       "license": "MIT",
       "when": {
-        "any": ["aiFramework.crewai"]
+        "any": [
+          "aiFramework.crewai"
+        ]
       },
-      "preinstall": { "windows": [], "linux": [], "darwin": [] },
-      "install": { "windows": [], "linux": [], "darwin": [] },
-      "postinstall": { "windows": [], "linux": [], "darwin": [] },
+      "preinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "install": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "postinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
       "name": "CrewAI",
       "description": "Role-based Python agents."
     },
@@ -3082,11 +3233,25 @@
       "kind": "local",
       "license": "Apache-2.0",
       "when": {
-        "any": ["aiFramework.ai-sdk"]
+        "any": [
+          "aiFramework.ai-sdk"
+        ]
       },
-      "preinstall": { "windows": [], "linux": [], "darwin": [] },
-      "install": { "windows": [], "linux": [], "darwin": [] },
-      "postinstall": { "windows": [], "linux": [], "darwin": [] },
+      "preinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "install": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "postinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
       "name": "Vercel AI SDK",
       "description": "Streaming model calls from a TypeScript React app."
     },
@@ -3095,11 +3260,25 @@
       "kind": "local",
       "license": "MIT",
       "when": {
-        "any": ["aiFramework.pydantic-ai"]
+        "any": [
+          "aiFramework.pydantic-ai"
+        ]
       },
-      "preinstall": { "windows": [], "linux": [], "darwin": [] },
-      "install": { "windows": [], "linux": [], "darwin": [] },
-      "postinstall": { "windows": [], "linux": [], "darwin": [] },
+      "preinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "install": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "postinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
       "name": "PydanticAI",
       "description": "A typed Python agent with Pydantic results."
     },

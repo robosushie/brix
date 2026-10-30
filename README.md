@@ -50,7 +50,7 @@ brix doctor
 
 ## Questions and options
 
-Flag names are the section ids in kebab case. `--agent` is the one exception, and it can be repeated. A missing answer and `none` both omit the flag. An unknown id, or a pair the rules reject, exits before any file is written.
+Flag names are the section ids in kebab case. `--agent` is the one exception, and it can be repeated. `--turbo` is the other: it takes no value. A missing answer and `none` both omit the flag. An unknown id, or a pair the rules reject, exits before any file is written.
 
 App type sits above the other groups. Core has no None. Every other question does.
 
@@ -69,14 +69,16 @@ Frontend + Backend is a browser app and a separate API. Backend Only turns off t
 | `--frontend` | `nextjs`, `vite-react`, `sveltekit`, `react` |
 | `--ui` | `tailwind-shadcn`, `tailwind`, `mui`, `mantine`, `plain` |
 | `--backend` | `hono`, `express`, `fastify`, `fastapi`, `flask`, `django` |
-| `--package` | `bun-turbo`, `pnpm-turbo`, `npm`, `uv` |
-| `--runtime` | `node`, `bun`, `python` |
+| `--frontend-runtime` | `node`, `bun` |
+| `--backend-runtime` | `node`, `bun` |
+| `--package` | `npm`, `pnpm`, `bun`, `uv` |
+| `--turbo` | no value. Present means Turborepo. Workspaces only omits the flag. |
 | `--database` | `postgres`, `mysql`, `sqlite`, `mongo` |
 | `--db-provider` | `neon`, `supabase`, `railway`, `render`, `rds`, `postgres-docker` |
 | `--orm` | `drizzle`, `prisma`, `sqlalchemy`, `django`, `mongoose` |
 | `--agent` | `claude-code`, `codex`, `cursor` |
 
-DB provider and ORM apply after a real database is chosen. A Frontend + Backend app can keep a JavaScript package manager beside a Python API.
+DB provider and ORM apply after a real database is chosen. Frontend and backend runtimes come before the package manager. A FastAPI, Flask, or Django backend omits `--backend-runtime`. A Frontend + Backend app keeps a JavaScript package manager beside a Python API. uv is only for a Python-only backend. `--turbo` is a bare flag.
 
 ### Services
 
@@ -118,8 +120,9 @@ CodeGraph is a live code graph over MCP. Graphify indexes code plus docs and oth
 
 ## Combinations the checker rejects
 
-- A Python-only API (`fastapi`, `flask`, or `django` with Backend Only) cannot take a JavaScript package manager, Node, Bun, Vitest, Jest, or Trigger.dev.
-- A JavaScript stack cannot take pytest or Prefect.
+- A Python-only API (`fastapi`, `flask`, or `django` with Backend Only) cannot take a JavaScript package manager, Turborepo, Node, Bun, Vitest, Jest, or Trigger.dev.
+- A JavaScript stack cannot take pytest, Prefect, or uv.
+- Frontend + Backend cannot take uv.
 - Frontend Only cannot take uv or Python.
 - Clerk cannot be used on Backend Only.
 - Better Auth and Auth.js cannot be used on Frontend Only, because they need a database.

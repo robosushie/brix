@@ -66,7 +66,7 @@ export function StackBuilder() {
           <h1 className="display mt-3 text-[48px] text-ink">Build a stack</h1>
           <p className="mt-3 max-w-xl text-base text-smoke">
             App type sets the shape of the app. Core is the frontend, UI, backend,
-            database, and coding agents. Services adds auth, payments, files,
+            package manager, Turborepo, database, and coding agents. Services adds auth, payments, files,
             email, workflows, AI, and testing. Cloud adds delivery and
             containers. Tools adds a code index, how the agent writes, memory, and a skill
             pack.
@@ -93,7 +93,7 @@ export function StackBuilder() {
 
         {registry.groups.map((group) => {
           const sections = registry.sections.filter(
-            (section) => section.group === group.id && !section.hidden,
+            (section) => section.group === group.id && !section.hidden && !section.nestUnder,
           );
           const expanded = open[group.id] ?? false;
           return (
@@ -114,19 +114,34 @@ export function StackBuilder() {
               {expanded ? (
                 <div className="pb-2">
                   <Separator />
-                  {sections.map((section, index) => (
-                    <div key={section.id}>
-                      {index > 0 ? <Separator /> : null}
-                      <div className="px-8 py-6">
-                        <Question
-                          section={section}
-                          selection={selection}
-                          disabled={result.disabled}
-                          onSelect={choose}
-                        />
+                  {sections.map((section, index) => {
+                    const nested = registry.sections.filter(
+                      (item) => item.nestUnder === section.id && !item.hidden,
+                    );
+                    return (
+                      <div key={section.id}>
+                        {index > 0 ? <Separator /> : null}
+                        <div className="px-8 py-6">
+                          <Question
+                            section={section}
+                            selection={selection}
+                            disabled={result.disabled}
+                            onSelect={choose}
+                          />
+                          {nested.map((child) => (
+                            <div key={child.id} className="mt-4">
+                              <Question
+                                section={child}
+                                selection={selection}
+                                disabled={result.disabled}
+                                onSelect={choose}
+                              />
+                            </div>
+                          ))}
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               ) : null}
             </Card>

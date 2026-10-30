@@ -5,6 +5,7 @@ import { Check, Copy, X } from "lucide-react";
 import { registry, type AgentId, type SkillRef } from "@brix/core";
 import {
   commandPreview,
+  groupSkills,
   skillFilePaths,
   skillSources,
   visitorPlatform,
@@ -76,6 +77,7 @@ export function SkillsModal({ skills, agents, onClose }: SkillsModalProps) {
     setCopied(false);
   }, [selected?.id]);
 
+  const groups = useMemo(() => groupSkills(skills), [skills]);
   const preview = selected ? previewFor(selected, agents, platform, bodies, bodiesError) : null;
 
   return (
@@ -104,39 +106,52 @@ export function SkillsModal({ skills, agents, onClose }: SkillsModalProps) {
           </button>
         </div>
         <div className="flex min-h-0 flex-1">
-          <ul className="w-60 shrink-0 overflow-y-auto border-r border-stone">
-            {skills.map((skill) => {
-              const active = skill.id === selected?.id;
-              return (
-                <li key={skill.id}>
-                  <button
-                    type="button"
-                    className={`w-full cursor-pointer px-4 py-3 text-left text-sm break-words ${
-                      active ? "bg-ink text-eggshell" : "text-ink hover:bg-taupe"
-                    }`}
-                    aria-current={active ? "true" : undefined}
-                    onClick={() => setSelectedId(skill.id)}
-                  >
-                    {names.get(skill.id) ?? skill.id}
-                  </button>
-                </li>
-              );
-            })}
-          </ul>
+          <div className="w-60 shrink-0 overflow-y-auto border-r border-stone">
+            {groups.map((group) => (
+              <section key={group.id}>
+                <h3 className="flex items-center gap-2 px-4 pt-3 pb-1 text-[10px] tracking-wide text-ash uppercase">
+                  <span className="shrink-0">{group.label}</span>
+                  <span className="h-px min-w-4 flex-1 bg-stone" />
+                </h3>
+                <ul>
+                  {group.skills.map((skill) => {
+                    const active = skill.id === selected?.id;
+                    return (
+                      <li key={skill.id}>
+                        <button
+                          type="button"
+                          className={`w-full cursor-pointer px-4 py-2.5 text-left text-sm break-words ${
+                            active ? "bg-ink text-eggshell" : "text-ink hover:bg-taupe"
+                          }`}
+                          aria-current={active ? "true" : undefined}
+                          onClick={() => setSelectedId(skill.id)}
+                        >
+                          {names.get(skill.id) ?? skill.id}
+                        </button>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </section>
+            ))}
+          </div>
           <div className="flex min-h-0 min-w-0 flex-1 flex-col gap-3 p-4">
             {preview?.sources.length ? (
               <ul className="space-y-1 text-sm">
                 {preview.sources.map((source) => (
                   <li key={source.label} className="break-words">
                     {source.href ? (
-                      <a
-                        href={source.href}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="text-ink underline underline-offset-2"
-                      >
-                        {source.label}
-                      </a>
+                      <>
+                        <span className="text-smoke">Link: </span>
+                        <a
+                          href={source.href}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="text-ink underline underline-offset-2"
+                        >
+                          {source.label}
+                        </a>
+                      </>
                     ) : (
                       <span className="text-ink">{source.label}</span>
                     )}

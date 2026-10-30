@@ -1,4 +1,4 @@
-import { expandArgv, type AgentId, type SkillRef } from "@brix/core";
+import { expandArgv, registry, type AgentId, type SkillRef } from "@brix/core";
 
 export type SkillPlatform = "windows" | "linux" | "darwin";
 
@@ -10,6 +10,37 @@ export function visitorPlatform(): SkillPlatform {
   if (/Windows/i.test(ua)) return "windows";
   if (/Mac OS|Macintosh/i.test(ua)) return "darwin";
   return "linux";
+}
+
+const skillGroups = [
+  { id: "common", label: "Common" },
+  { id: "appType", label: "App type" },
+  { id: "core", label: "Core" },
+  { id: "services", label: "Services" },
+  { id: "cloud", label: "Cloud" },
+  { id: "tools", label: "Tools" },
+] as const;
+
+function groupForSkill(id: string): (typeof skillGroups)[number]["id"] {
+  const entry = registry.skills.find((skill) => skill.id === id);
+  if (!entry || entry.when.always) return "common";
+  const groups = new Set<string>();
+  for (const optionId of entry.when.any ?? []) {
+    const sectionId = optionId.slice(0, optionId.indexOf("."));
+    const section = registry.sections.find((item) => item.id === sectionId);
+    if (!section) continue;
+    groups.add(section.id === "appType" ? "appType" : (section.group ?? "common"));
+  }
+  return skillGroups.find((group) => groups.has(group.id))?.id ?? "common";
+}
+
+export function groupSkills(skills: SkillRef[]): Array<{ id: string; label: string; skills: SkillRef[] }> {
+  return skillGroups
+    .map((group) => ({
+      ...group,
+      skills: skills.filter((skill) => groupForSkill(skill.id) === group.id),
+    }))
+    .filter((group) => group.skills.length > 0);
 }
 
 export function skillFilePaths(id: string, agents: AgentId[]): string[] {

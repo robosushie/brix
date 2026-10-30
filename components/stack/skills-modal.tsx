@@ -3,6 +3,7 @@
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { Check, Copy, X } from "lucide-react";
 import { registry, type AgentId, type SkillRef } from "@brix/core";
+import { highlightSkill, type HighlightToken } from "@/lib/skill-highlight";
 import {
   commandPreview,
   groupSkills,
@@ -163,6 +164,7 @@ export function SkillsModal({ skills, agents, onClose }: SkillsModalProps) {
               <EditorFrame
                 title={preview.title}
                 body={preview.body}
+                language={preview.language}
                 copied={copied}
                 onCopy={async () => {
                   await navigator.clipboard.writeText(preview.body);
@@ -192,7 +194,7 @@ function previewFor(
       : bodies
         ? (bodies[skill.id] ?? `No composed skill for ${skill.id}.`)
         : "Loading skill text…";
-    return { title: paths.join("\n"), body, sources: [] as ReturnType<typeof skillSources> };
+    return { title: paths.join("\n"), body, sources: [] as ReturnType<typeof skillSources>, language: "markdown" as const };
   }
   const sources = skillSources(skill, platform);
   const commands = commandPreview(skill, agents, platform);
@@ -200,20 +202,25 @@ function previewFor(
     title: "commands",
     body: commands || "No commands for this platform.",
     sources,
+    language: commands ? ("shell" as const) : ("plain" as const),
   };
 }
 
 function EditorFrame({
   title,
   body,
+  language,
   copied,
   onCopy,
 }: {
   title: string;
   body: string;
+  language: "markdown" | "shell" | "plain";
   copied: boolean;
   onCopy: () => void;
 }) {
+  const tokens: HighlightToken[] =
+    language === "plain" ? [{ text: body }] : highlightSkill(body, language);
   return (
     <div className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-xl bg-[#1e1e1e] text-[#d4d4d4]">
       <div className="flex items-start gap-3 border-b border-white/10 px-4 py-3">
@@ -235,7 +242,15 @@ function EditorFrame({
         </button>
       </div>
       <pre className="editor-scroll min-h-0 flex-1 overflow-x-hidden overflow-y-auto px-4 py-3 font-mono text-[13px] leading-relaxed break-words whitespace-pre-wrap">
-        {body}
+        {tokens.map((token, index) =>
+          token.color ? (
+            <span key={index} style={{ color: token.color }}>
+              {token.text}
+            </span>
+          ) : (
+            <span key={index}>{token.text}</span>
+          ),
+        )}
       </pre>
     </div>
   );

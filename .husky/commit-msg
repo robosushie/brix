@@ -1,0 +1,33 @@
+#!/usr/bin/env sh
+message=$(head -n 1 "$1" | tr -d '\r')
+
+case "$message" in
+  Merge\ *) exit 0 ;;
+esac
+
+types='feat|fix|refactor|chore|docs|test|style'
+header="^($types)(\\([^)]+\\))?\!?: .+"
+
+if ! printf '%s\n' "$message" | grep -Eq "$header"; then
+  echo "Commit message must match: <type>(optional-scope): <subject>"
+  echo "Types: feat, fix, refactor, chore, docs, test, style"
+  echo "Example: feat(ci): add semantic pull request check"
+  exit 1
+fi
+
+subject=$(printf '%s\n' "$message" | sed -E "s/^($types)(\\([^)]+\\))?\!?: //")
+
+if printf '%s\n' "$subject" | grep -Eq '^[A-Z]'; then
+  echo "Subject must start with a lowercase letter"
+  exit 1
+fi
+
+if printf '%s\n' "$subject" | grep -Eq '\.$'; then
+  echo "Subject must not end with a period"
+  exit 1
+fi
+
+if [ "${#subject}" -gt 72 ]; then
+  echo "Subject must be 72 characters or fewer (got ${#subject})"
+  exit 1
+fi

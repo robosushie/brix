@@ -1,0 +1,21 @@
+When generating a Git commit message, output only the message.
+
+Line 1 is exactly: <type>(optional-scope): <subject>
+Types: feat, fix, refactor, chore, docs, test, style
+
+The subject is only the text after the colon.
+- Start it with a lowercase letter. Write "add", not "Add".
+- 72 characters or fewer.
+- Do not end it with a period.
+- Use an imperative verb.
+
+If more detail is needed, leave one blank line, then a body.
+Never put the body on line 1.
+
+Good:
+feat(ci): add semantic commit check
+
+The hook rejects a subject written as a full sentence.
+
+Bad:
+feat: Add a husky hook so generated commit messages follow the repo format.

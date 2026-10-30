@@ -13,6 +13,7 @@
   "bugs": {
     "url": "https://github.com/robosushie/brix/issues"
   },
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/robosushie/brix.git",
@@ -25,6 +26,7 @@
   "files": [
     "dist",
     "skills",
+    "LICENSE",
     "README.md"
   ],
   "engines": {

@@ -31,6 +31,39 @@ Built with Brix. This file is the source of truth for coding agents.
 3. Always keep security, Docker for local deps, lint, `/health`, `.env.example`, and the verification gate.
 4. Run the gate in `brix/verify` and fix failures before stopping.
 
+## Git commits
+
+Only commit when the user asks. A pull request title uses the same first line.
+
+Line 1 is exactly: `<type>(optional-scope): <subject>`
+
+Types: `feat` | `fix` | `refactor` | `chore` | `docs` | `test` | `style`
+
+The subject is only the text after the colon.
+
+- Start it with a lowercase letter. Write "add", not "Add".
+- 72 characters or fewer.
+- Do not end it with a period.
+- Imperative verb.
+- One logical change. Pass the message via HEREDOC.
+- No `--no-verify`, and no amend of a pushed commit, unless the user asks.
+
+If more detail is needed, leave one blank line, then a body that says why. Never put the body on line 1.
+
+Good:
+
+```text
+feat(ci): add semantic commit check
+
+The commit-msg hook rejects subjects that do not match this format.
+```
+
+Bad:
+
+```text
+feat: Add a husky hook so generated commit messages follow the repo format.
+```
+
 <!-- CODEGRAPH_START -->
 ## CodeGraph
 

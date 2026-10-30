@@ -97,3 +97,33 @@ body {
   }
 }
 
+.editor-scroll {
+  color-scheme: dark;
+  scrollbar-color: #3a3a3a #1e1e1e;
+  scrollbar-width: thin;
+}
+
+.editor-scroll::-webkit-scrollbar {
+  width: 10px;
+}
+
+.editor-scroll::-webkit-scrollbar-track {
+  background: #1e1e1e;
+}
+
+.editor-scroll::-webkit-scrollbar-thumb {
+  background: #3a3a3a;
+  border: 2px solid #1e1e1e;
+  border-radius: 999px;
+}
+
+.editor-scroll::-webkit-scrollbar-thumb:hover {
+  background: #525252;
+}
+
+.editor-scroll::-webkit-scrollbar-button {
+  display: none;
+  height: 0;
+  width: 0;
+}
+

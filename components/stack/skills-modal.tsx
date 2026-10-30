@@ -219,7 +219,7 @@ function EditorFrame({
           {copied ? <Check className="size-3.5" /> : <Copy className="size-3.5" />}
         </button>
       </div>
-      <pre className="min-h-0 flex-1 overflow-x-hidden overflow-y-auto px-4 py-3 font-mono text-[13px] leading-relaxed break-words whitespace-pre-wrap">
+      <pre className="editor-scroll min-h-0 flex-1 overflow-x-hidden overflow-y-auto px-4 py-3 font-mono text-[13px] leading-relaxed break-words whitespace-pre-wrap">
         {body}
       </pre>
     </div>

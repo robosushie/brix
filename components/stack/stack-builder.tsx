@@ -12,12 +12,15 @@ import {
   type Selection,
 } from "@brix/core";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { chosenValues, Question } from "@/components/stack/question";
+import { SkillsModal } from "@/components/stack/skills-modal";
 
 export function StackBuilder() {
   const [selection, setSelection] = useState<Selection>(emptySelection);
   const [copied, setCopied] = useState(false);
+  const [skillsOpen, setSkillsOpen] = useState(false);
   const [open, setOpen] = useState<Record<string, boolean>>({ core: true });
 
   useEffect(() => {
@@ -176,8 +179,24 @@ export function StackBuilder() {
                 </pre>
               </div>
             ) : null}
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              className="w-full"
+              onClick={() => setSkillsOpen(true)}
+            >
+              View skills
+            </Button>
           </CardContent>
         </Card>
+        {skillsOpen ? (
+          <SkillsModal
+            skills={result.skills}
+            agents={result.selection.agents}
+            onClose={() => setSkillsOpen(false)}
+          />
+        ) : null}
       </aside>
     </div>
   );

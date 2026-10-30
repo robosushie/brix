@@ -20,6 +20,7 @@ export { fullId, getOption, registry, skillAgentMap } from "./registry.ts";
 export { disableReason, optionRelations } from "./rules.ts";
 export { emptySelection, normalizeSelection, selectionFromPreset, selectOption } from "./selection.ts";
 export { resolveSkills } from "./skills.ts";
+export { expandArgv } from "./expand.ts";
 export { evaluate } from "./evaluate.ts";
 export { decodeConfig, encodeConfig } from "./codec.ts";
 export { choiceLabel, flagName, initCommand, sectionIdForFlag, selectionFromFlags } from "./command.ts";

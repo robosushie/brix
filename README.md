@@ -4,6 +4,8 @@ You pick the stack. The command installs the skills into an empty folder and rej
 
 There is no account. The CLI does not phone home.
 
+[![Brix demo: pick a stack, copy one command, review the skills](https://img.youtube.com/vi/ARW5s2vQQP4/sddefault.jpg)](https://www.youtube-nocookie.com/embed/ARW5s2vQQP4?rel=0)
+
 ## What you do
 
 1. Open `/stack` on the site, or write the flags yourself.

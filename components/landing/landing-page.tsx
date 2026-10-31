@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Star } from "lucide-react";
+import { DemoVideoSection } from "@/components/landing/demo-video-section";
 import { DownloadsSection } from "@/components/landing/downloads-section";
 import { StackDemo } from "@/components/landing/stack-demo";
 import { SiteFooter } from "@/components/site/site-footer";
@@ -100,6 +101,8 @@ export function LandingPage() {
             <StackDemo />
           </div>
         </section>
+
+        <DemoVideoSection />
 
         <DownloadsSection />
 

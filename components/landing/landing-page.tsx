@@ -86,6 +86,14 @@ export function LandingPage() {
               <Link href="/#how" className={cn(buttonVariants({ variant: "outline" }))}>
                 How it works
               </Link>
+              <a
+                href="https://github.com/robosushie/brix"
+                className={cn(buttonVariants({ variant: "outline" }))}
+                target="_blank"
+                rel="noreferrer"
+              >
+                GitHub
+              </a>
             </div>
           </div>
           <div className="relative">

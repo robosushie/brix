@@ -2,9 +2,7 @@
 
 You pick the stack. The command installs the skills into an empty folder and rejects pairs that cannot sit together. It does not generate the app. You add a prompt with your app details. Claude Code, Codex, or Cursor uses the skills to build the repo.
 
-There is no account. The CLI does not phone home.
-
-[![Brix demo: pick a stack, copy one command, review the skills](https://img.youtube.com/vi/ARW5s2vQQP4/sddefault.jpg)](https://www.youtube-nocookie.com/embed/ARW5s2vQQP4?rel=0)
+<a href="https://youtu.be/ARW5s2vQQP4" target="_blank" rel="noopener noreferrer"><img src="https://img.youtube.com/vi/ARW5s2vQQP4/sddefault.jpg" alt="Brix demo: pick a stack, copy one command, review the skills"></a>
 
 ## What you do
 

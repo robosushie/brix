@@ -25,6 +25,9 @@ packages/cli/dist
 .DS_Store
 *.pem
 
+# rendered demo captures
+/demo/
+
 # debug
 npm-debug.log*
 yarn-debug.log*

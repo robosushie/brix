@@ -64,6 +64,25 @@ body {
   }
 }
 
+@keyframes brix-demo-progress {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes brix-demo-dot {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.2;
+  }
+}
+
 @keyframes brix-rise {
   from {
     opacity: 0;
@@ -94,6 +113,15 @@ body {
 
   .brix-rise-3 {
     animation-delay: 0.24s;
+  }
+
+  .brix-demo-progress {
+    transform-origin: left;
+    animation: brix-demo-progress 3.6s linear;
+  }
+
+  .brix-demo-dot {
+    animation: brix-demo-dot 1.4s ease-in-out infinite;
   }
 }
 

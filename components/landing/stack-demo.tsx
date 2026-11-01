@@ -45,6 +45,7 @@ function commandFor(scene: (typeof scenes)[number]) {
 }
 
 const longest = scenes.map(commandFor).sort((a, b) => b.length - a.length)[0];
+const sceneMs = 3600;
 
 export function StackDemo() {
   const [index, setIndex] = useState(0);
@@ -54,7 +55,7 @@ export function StackDemo() {
     if (media.matches) return;
     const timer = window.setInterval(() => {
       setIndex((current) => (current + 1) % scenes.length);
-    }, 3600);
+    }, sceneMs);
     return () => window.clearInterval(timer);
   }, []);
 
@@ -63,11 +64,18 @@ export function StackDemo() {
 
   return (
     <div
-      className="relative rounded-[20px] bg-eggshell px-8 py-8 shadow-whisper"
+      className="relative cursor-default rounded-[20px] bg-eggshell px-8 py-8 shadow-whisper select-none"
       role="img"
-      aria-label={`Stack summary. Current command: ${command}`}
+      aria-label={`Preview of a stack summary. It plays on its own. Current command: ${command}`}
     >
-      <p className="mono-label text-muted-foreground">Summary</p>
+      <div className="pointer-events-none">
+      <div className="flex items-center justify-between gap-4">
+        <p className="mono-label text-muted-foreground">Preview</p>
+        <p className="mono-label flex items-center gap-2 text-ash">
+          <span className="brix-demo-dot size-1.5 rounded-full bg-ink motion-safe:animate-[brix-demo-dot_1.4s_ease-in-out_infinite]" aria-hidden />
+          Playing
+        </p>
+      </div>
       <div className="mt-6 flex flex-col gap-4">
         {rows.map((row) => (
           <div key={row.label}>
@@ -99,6 +107,22 @@ export function StackDemo() {
         <pre className="absolute inset-0 font-mono text-[13px] leading-relaxed whitespace-pre-wrap break-words text-ink">
           {command}
         </pre>
+      </div>
+      <div className="mt-6" aria-hidden>
+        <div className="h-px w-full overflow-hidden bg-stone">
+          <div key={index} className="brix-demo-progress h-full w-full origin-left bg-ink motion-safe:animate-[brix-demo-progress_3.6s_linear]" />
+        </div>
+        <div className="mt-3 flex items-center gap-1.5">
+          {scenes.map((_, sceneIndex) => (
+            <span
+              key={sceneIndex}
+              className={`h-1 rounded-full ${
+                sceneIndex === index ? "w-6 bg-ink" : "w-1.5 bg-stone"
+              }`}
+            />
+          ))}
+        </div>
+      </div>
       </div>
     </div>
   );

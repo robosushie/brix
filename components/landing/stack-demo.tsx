@@ -109,8 +109,8 @@ export function StackDemo() {
         </pre>
       </div>
       <div className="mt-6" aria-hidden>
-        <div className="h-px w-full overflow-hidden bg-stone">
-          <div key={index} className="brix-demo-progress h-full w-full origin-left bg-ink motion-safe:animate-[brix-demo-progress_3.6s_linear]" />
+        <div className="h-[3px] w-full overflow-hidden rounded-full bg-stone">
+          <div key={index} className="brix-demo-progress h-full w-full origin-left rounded-full bg-ink motion-safe:animate-[brix-demo-progress_3.6s_linear]" />
         </div>
         <div className="mt-3 flex items-center gap-1.5">
           {scenes.map((_, sceneIndex) => (

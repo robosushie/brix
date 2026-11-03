@@ -162,6 +162,7 @@ export function SkillsModal({ skills, agents, onClose }: SkillsModalProps) {
             ) : null}
             {preview ? (
               <EditorFrame
+                key={selected?.id}
                 title={preview.title}
                 body={preview.body}
                 language={preview.language}

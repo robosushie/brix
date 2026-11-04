@@ -106,8 +106,8 @@ export function SkillsModal({ skills, agents, onClose }: SkillsModalProps) {
             <X className="size-4" />
           </button>
         </div>
-        <div className="flex min-h-0 flex-1">
-          <div className="w-60 shrink-0 overflow-y-auto border-r border-stone">
+        <div className="flex min-h-0 flex-1 flex-col sm:flex-row">
+          <div className="max-h-40 w-full shrink-0 overflow-y-auto border-b border-stone sm:max-h-none sm:w-60 sm:border-b-0 sm:border-r">
             {groups.map((group) => (
               <section key={group.id}>
                 <h3 className="flex items-center gap-2 px-4 pt-3 pb-1 text-[10px] tracking-wide text-ash uppercase">

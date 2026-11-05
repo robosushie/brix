@@ -27,7 +27,7 @@ export function StackBuilder() {
   const [selection, setSelection] = useState<Selection>(emptySelection);
   const [copied, setCopied] = useState(false);
   const [skillsOpen, setSkillsOpen] = useState(false);
-  const [open, setOpen] = useState<Record<string, boolean>>({ core: true, layout: true });
+  const [open, setOpen] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     if (window.location.hash) {

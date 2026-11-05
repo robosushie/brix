@@ -9,12 +9,14 @@
     "start": "next start",
     "lint": "eslint",
     "prepare": "husky",
-    "brix": "pnpm --filter usebrix build && pnpm --filter usebrix exec brix"
+    "brix": "pnpm --filter usebrix build && pnpm --filter usebrix exec brix",
+    "check:usage": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/check-usage.mts"
   },
   "dependencies": {
     "@brix/core": "workspace:*",
     "@radix-ui/react-separator": "^1.2.0",
     "@radix-ui/react-slot": "^1.5.0",
+    "axios": "^1.21.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^1.63.0",

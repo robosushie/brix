@@ -89,3 +89,6 @@ export async function downloadReport(): Promise<{
     return { total, week, points: [] };
   }
 }
+
+
+export {lifetimePeriod};

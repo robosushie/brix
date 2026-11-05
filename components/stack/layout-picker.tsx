@@ -67,77 +67,84 @@ export function LayoutPicker({
   const [openId, setOpenId] = useState<string | null>(null);
 
   return (
-    <div className="grid items-start gap-4 md:grid-cols-2">
+    <div className="flex flex-col gap-4">
       {section.options.map((option) => {
         const reason = disabled[`${section.id}.${option.id}`];
         const selected = selection.choices[section.id] === option.id;
         const showSuggested = suggested === option.id && !selected;
         const expanded = openId === option.id;
+        const points = (option.description ?? "").split(/(?<=\.)\s+/).map((point) => point.trim()).filter(Boolean);
         return (
-          <span key={option.id} className="group relative flex" style={{ alignSelf: "start" }}>
-            <button
-              type="button"
-              aria-pressed={selected}
-              aria-expanded={expanded}
-              aria-disabled={Boolean(reason) || undefined}
-              onClick={() => {
-                setOpenId((current) => (current === option.id ? null : option.id));
-                if (!reason) onSelect(section.id, option.id);
-              }}
-              className={cn(
-                "flex w-full cursor-pointer flex-col rounded-[20px] border bg-eggshell text-left transition-colors duration-200",
-                selected ? "border-ink" : "border-stone",
-                reason ? "" : "hover:border-ink",
-              )}
-              style={{ padding: 28 }}
-            >
-              <span className="flex items-center gap-3">
-                <span
-                  aria-hidden
-                  className={cn(
-                    "flex size-4 shrink-0 items-center justify-center rounded-full border",
-                    selected ? "border-ink" : reason ? "border-ash" : "border-stone",
-                  )}
-                >
-                  {selected ? <span className="size-2 rounded-full bg-ink" /> : null}
-                </span>
-                <span className={cn("text-sm font-medium", reason ? "text-ash" : "text-ink")}>
-                  {option.label}
-                </span>
-                {showSuggested ? <span className="mono-label ml-auto text-smoke">Suggested</span> : null}
-                <ChevronDown
-                  className={cn("size-4 shrink-0 text-ink transition-transform", showSuggested ? "" : "ml-auto", expanded && "rotate-180")}
-                />
-              </span>
-              {expanded && option.tree ? (
-                <div>
-                  <span className="block border-t border-stone" style={{ margin: "16px 0" }} />
-                  {folderRows(option.tree).map((row, index) => (
-                    <div
-                      key={`${row.name}-${index}`}
-                      className="flex items-stretch font-mono text-xs leading-5 text-ink"
-                      style={{ fontSize: 11 }}
-                    >
-                      {row.guides.map((guide, guideIndex) => (
-                        <TreeGuide key={guideIndex} guide={guide} />
-                      ))}
-                      <span className="pl-1">{row.name}</span>
-                    </div>
-                  ))}
-                </div>
-              ) : null}
-            </button>
-            {option.description || reason ? (
+          <button
+            key={option.id}
+            type="button"
+            aria-pressed={selected}
+            aria-expanded={expanded}
+            aria-disabled={Boolean(reason) || undefined}
+            onClick={() => {
+              setOpenId((current) => (current === option.id ? null : option.id));
+              if (!reason) onSelect(section.id, option.id);
+            }}
+            className={cn(
+              "flex w-full cursor-pointer flex-col rounded-[20px] border bg-eggshell text-left transition-colors duration-200",
+              selected ? "border-ink" : "border-stone",
+              reason ? "" : "hover:border-ink",
+            )}
+            style={{ padding: 28 }}
+          >
+            <span className="flex items-center gap-3">
               <span
-                role="tooltip"
-                className="pointer-events-none absolute bottom-full left-4 z-10 mb-2 hidden rounded-[4px] border border-stone bg-eggshell text-left text-xs leading-relaxed text-ink group-hover:block"
-                style={{ width: 340, padding: "14px 16px" }}
+                aria-hidden
+                className={cn(
+                  "flex size-4 shrink-0 items-center justify-center rounded-full border",
+                  selected ? "border-ink" : reason ? "border-ash" : "border-stone",
+                )}
               >
-                {reason ? <span className="mb-1 block font-medium">{reason}</span> : null}
-                {option.description ? <span className="block">{option.description}</span> : null}
+                {selected ? <span className="size-2 rounded-full bg-ink" /> : null}
+              </span>
+              <span className={cn("text-sm font-medium", reason ? "text-ash" : "text-ink")}>
+                {option.label}
+              </span>
+              {showSuggested ? <span className="mono-label text-smoke">Suggested</span> : null}
+              <ChevronDown
+                className={cn("ml-auto size-4 shrink-0 text-ink transition-transform", expanded && "rotate-180")}
+              />
+            </span>
+            {expanded ? (
+              <span className="block">
+                <span className="block border-t border-stone" style={{ margin: "16px 0" }} />
+                <span className="grid items-start gap-6 md:grid-cols-2">
+                  {option.tree ? (
+                    <span className="min-w-0">
+                      {folderRows(option.tree).map((row, index) => (
+                        <span
+                          key={`${row.name}-${index}`}
+                          className="flex items-stretch font-mono text-xs leading-5 text-ink"
+                          style={{ fontSize: 11 }}
+                        >
+                          {row.guides.map((guide, guideIndex) => (
+                            <TreeGuide key={guideIndex} guide={guide} />
+                          ))}
+                          <span className="pl-1">{row.name}</span>
+                        </span>
+                      ))}
+                    </span>
+                  ) : null}
+                  {points.length > 0 || reason ? (
+                    <span className="flex flex-col gap-2 text-sm leading-relaxed text-smoke">
+                      {reason ? <span className="font-medium text-ink">{reason}</span> : null}
+                      {points.map((point) => (
+                        <span key={point} className="flex gap-2">
+                          <span aria-hidden className="text-ink">•</span>
+                          <span>{point}</span>
+                        </span>
+                      ))}
+                    </span>
+                  ) : null}
+                </span>
               </span>
             ) : null}
-          </span>
+          </button>
         );
       })}
     </div>

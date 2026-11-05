@@ -1,12 +1,28 @@
 # Stack sections
 
-App type stays above the accordions. Core has no None. Every other question has None, and None stays off the `npx usebrix@latest init` command.
+App type stays above the accordions. Layout sits between App type and Core. Core has no None. Every other question has None, and None stays off the `npx usebrix@latest init` command.
 
 ## App type
 
 `frontend-backend`, `backend-only`, `frontend-only`, `none`.
 
 Frontend Only turns off the backend, database, cache, storage, and email. Backend Only turns off the frontend and UI.
+
+## Layout
+
+Seven trees, with no None pill: UI apps, API at root (`apps-src`), Monorepo (`apps-packages`), Flat workspace (`packages`), Fullstack app (`next-app`), Split folders (`split`), Single app (`single-src`), and Feature modules (`feature-modules`). A click stores `choices.layout` and adds `--layout`. The description sits on the card hover.
+
+A Suggested mark follows the stack and does not write the choice:
+
+- JavaScript UI plus a JavaScript API, with Turborepo: Monorepo
+- JavaScript UI plus a JavaScript API: Flat workspace
+- JavaScript UI plus FastAPI, Flask, or Django: UI apps, API at root
+- Next.js with no separate API: Fullstack app
+- Frontend only, or backend only: Single app
+
+Fullstack app stays available until a backend is chosen, or until the frontend is not Next.js. Single app stays off when both a UI and an API are selected. Flat workspace and Monorepo stay off a Python API. UI apps, API at root stays off unless both a UI and an API are selected. Feature modules stay off a frontend-only app and off a Python API. Split folders stays available.
+
+`brix init` without `--layout` still installs the suggested tree.
 
 ## Core
 

@@ -39,8 +39,8 @@ async function runCommands(
   return true;
 }
 
-async function writeLocalSkill(skill: SkillRef, targets: Set<string>): Promise<void> {
-  const body = renderSkill(skill.id);
+async function writeLocalSkill(skill: SkillRef, targets: Set<string>, layoutId?: string): Promise<void> {
+  const body = renderSkill(skill.id, skill.id === "folder-structure" ? layoutId : undefined);
   for (const target of targets) {
     const dest = resolve(target, skillFolder(skill.id));
     await mkdir(dest, { recursive: true });
@@ -48,7 +48,12 @@ async function writeLocalSkill(skill: SkillRef, targets: Set<string>): Promise<v
   }
 }
 
-export async function installSkills(skills: SkillRef[], agents: AgentId[], targets: Set<string>): Promise<string[]> {
+export async function installSkills(
+  skills: SkillRef[],
+  agents: AgentId[],
+  targets: Set<string>,
+  layoutId?: string,
+): Promise<string[]> {
   const platform = platformKey();
   const failures: string[] = [];
   let localCount = 0;
@@ -66,7 +71,7 @@ export async function installSkills(skills: SkillRef[], agents: AgentId[], targe
 
     if (skill.kind === "local") {
       try {
-        await writeLocalSkill(skill, targets);
+        await writeLocalSkill(skill, targets, layoutId);
         localCount += 1;
       } catch (error) {
         console.error(`Command failed: ${skill.id} install`);

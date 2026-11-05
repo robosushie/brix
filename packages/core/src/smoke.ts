@@ -7,6 +7,7 @@ import {
   registry,
   selectOption,
   selectionFromFlags,
+  suggestedLayout,
   type Selection,
 } from "./index";
 import { parseArgs } from "../../cli/src/args.ts";
@@ -18,14 +19,28 @@ if (!postgresSkill.startsWith("---\nname: postgres\n") || !postgresSkill.include
   throw new Error("postgres skill did not compose the shared database chunks");
 }
 const folderSkill = renderSkill("folder-structure");
+for (const id of ["apps-src", "apps-packages", "packages", "next-app", "split", "single-src", "feature-modules"]) {
+  if (!folderSkill.includes(`\`${id}\``)) throw new Error(`folder skill is missing layout ${id}`);
+}
 if (!folderSkill.includes("apps/web") || !folderSkill.includes("packages/web")) {
   throw new Error("folder skill is missing the apps and packages trees");
 }
-if (folderSkill.includes("frontend/") || folderSkill.includes("backend/")) {
-  throw new Error("folder skill still names frontend/ or backend/");
+if (!folderSkill.includes("frontend/") || !folderSkill.includes("backend/")) {
+  throw new Error("folder skill is missing the split tree");
+}
+const splitSkill = renderSkill("folder-structure", "split");
+const packagesSkill = renderSkill("folder-structure", "packages");
+if (!splitSkill.includes("frontend/") || !splitSkill.includes("backend/") || splitSkill.includes("packages/web")) {
+  throw new Error("split layout should install the role folders, not packages/web");
+}
+if (!packagesSkill.includes("packages/web") || packagesSkill.includes("frontend/") || packagesSkill.includes("backend/")) {
+  throw new Error("packages layout should install packages/web and leave the split names out");
 }
 if (!folderSkill.includes("src/agent/") || folderSkill.includes("src/services/agent/")) {
   throw new Error("folder skill should keep the agent library out of services");
+}
+if (!splitSkill.includes("src/agent/") || splitSkill.includes("src/services/agent/")) {
+  throw new Error("installed layout should keep the agent library out of services");
 }
 const crewSkill = renderSkill("crewai");
 if (!crewSkill.includes("FastAPI")) throw new Error("crewai should name FastAPI");
@@ -51,7 +66,10 @@ for (const id of ["frontend-backend", "backend-only", "frontend-only"]) {
   if (empty.disabled[`appType.${id}`]) throw new Error(`${id} should stay enabled`);
 }
 if (!empty.disabled["package.uv"]) throw new Error("frontend + backend default should disable uv");
-const unexpectedDisabled = Object.keys(empty.disabled).filter((id) => id !== "package.uv");
+if (empty.disabled["layout.next-app"]) throw new Error("Next.js fullstack should stay available until a backend is chosen");
+if (!empty.disabled["layout.single-src"]) throw new Error("two apps should disable the single app layout");
+const allowedOnEmpty = new Set(["package.uv", "layout.single-src"]);
+const unexpectedDisabled = Object.keys(empty.disabled).filter((id) => !allowedOnEmpty.has(id));
 if (unexpectedDisabled.length !== 0) {
   throw new Error(`default form disabled unexpected options: ${unexpectedDisabled.join(", ")}`);
 }
@@ -93,6 +111,9 @@ if (!frontendOnlyEval.disabled["backend.fastapi"]?.startsWith("Not used for") ||
   throw new Error("frontend only should disable FastAPI for Frontend Only Stack");
 }
 if (frontendOnly.choices.backend) throw new Error("frontend only should clear the backend");
+if (!frontendOnlyEval.disabled["layout.feature-modules"]) {
+  throw new Error("frontend only should disable feature modules");
+}
 if (frontendOnlyEval.disabled["testing.none"]) throw new Error("none should stay available for testing");
 if (frontendOnlyEval.disabled["workflows.trigger"]) throw new Error("frontend only should allow Trigger.dev");
 if (!frontendOnlyEval.disabled["workflows.prefect"]) throw new Error("frontend only should disable Prefect");
@@ -178,6 +199,40 @@ if (initCommand(done.selection).includes("--cache") || initCommand(done.selectio
   throw new Error(`none and the hash token should stay off the command: ${initCommand(done.selection)}`);
 }
 if (!initCommand(done.selection).includes("--frontend nextjs")) throw new Error("command should include the frontend flag");
+if (initCommand(done.selection).includes("--layout")) throw new Error("an unpicked layout should stay off the command");
+if (suggestedLayout(done.selection) !== "packages") throw new Error("next plus hono should suggest packages");
+if (done.disabled["layout.next-app"] !== "A separate API needs its own folder") {
+  throw new Error("a selected API should disable the Next.js fullstack layout");
+}
+const nextFullstack = pick(empty.selection, [["frontend", "nextjs"], ["layout", "next-app"]]);
+if (nextFullstack.choices.layout !== "next-app") {
+  throw new Error("Next.js fullstack should stay selectable before a backend is chosen");
+}
+if (selectOption(nextFullstack, "backend", "hono").choices.layout) {
+  throw new Error("a separate API should clear the Next.js fullstack layout");
+}
+if (suggestedLayout(pick(empty.selection, [["frontend", "nextjs"]])) !== "next-app") {
+  throw new Error("Next.js with no separate API should suggest the fullstack layout");
+}
+const withLayout = selectOption(done.selection, "layout", "split");
+if (withLayout.choices.layout !== "split" || !initCommand(withLayout).includes("--layout split")) {
+  throw new Error("a chosen layout should be a flag");
+}
+const splitInstalled = renderSkill("folder-structure", withLayout.choices.layout);
+if (!splitInstalled.includes("frontend/") || splitInstalled.includes("packages/web")) {
+  throw new Error("next plus hono with split should install the split tree");
+}
+const pickedPackages = selectOption(done.selection, "layout", "packages");
+const clearedLayout = selectOption(pickedPackages, "backend", "fastapi");
+if (clearedLayout.choices.layout) throw new Error("a python backend should clear the packages layout");
+if (suggestedLayout(selectOption(done.selection, "turbo", "turborepo")) !== "apps-packages") {
+  throw new Error("turborepo should suggest apps and packages");
+}
+if (suggestedLayout(frontendOnly) !== "single-src") throw new Error("frontend only should suggest single source");
+if (suggestedLayout(pick(frontendOnly, [["frontend", "nextjs"]])) !== "next-app") {
+  throw new Error("frontend only next should suggest the Next.js app layout");
+}
+if (suggestedLayout(backendOnly) !== "single-src") throw new Error("backend only should suggest single source");
 const doneCommand = initCommand(done.selection);
 if (!doneCommand.includes("--frontend-runtime node") || !doneCommand.includes("--backend-runtime node") || !doneCommand.includes("--package pnpm")) {
   throw new Error(`runtimes and package should be on the command: ${doneCommand}`);
@@ -214,6 +269,21 @@ if (!mixed.disabled["backendRuntime.node"]?.startsWith("Conflicts with")) {
   throw new Error("frontend plus fastapi should disable the JS backend runtime");
 }
 if (mixed.disabled["frontendRuntime.node"]) throw new Error("frontend plus fastapi should leave the frontend runtime enabled");
+if (!mixed.disabled["layout.packages"] || !mixed.disabled["layout.apps-packages"]) {
+  throw new Error("frontend plus fastapi should disable npm workspace layouts");
+}
+if (mixed.disabled["layout.apps-src"] || mixed.disabled["layout.split"]) {
+  throw new Error("frontend plus fastapi should leave apps and source, and the split layout, enabled");
+}
+if (!mixed.disabled["layout.feature-modules"]) {
+  throw new Error("a python API should disable feature modules");
+}
+if (selectOption(mixed.selection, "layout", "packages").choices.layout === "packages") {
+  throw new Error("fastapi should refuse the packages layout");
+}
+if (suggestedLayout(mixed.selection) !== "apps-src") {
+  throw new Error("frontend plus fastapi should suggest apps and source");
+}
 
 const withAgents = selectOption(selectOption(done.selection, "agents", "cursor"), "agents", "codex");
 const withIndex = selectOption(withAgents, "codeIndex", "codegraph");

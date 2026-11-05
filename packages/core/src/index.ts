@@ -24,3 +24,4 @@ export { expandArgv } from "./expand.ts";
 export { evaluate } from "./evaluate.ts";
 export { decodeConfig, encodeConfig } from "./codec.ts";
 export { choiceLabel, flagName, initCommand, sectionIdForFlag, selectionFromFlags } from "./command.ts";
+export { suggestedLayout } from "./layout.ts";

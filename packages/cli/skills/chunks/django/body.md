@@ -1,6 +1,6 @@
 # Django
 
-Use `uv` and the official project layout. Do not rewrite Django into `src/`.
+Use `uv` and the official project layout. Run the commands below in the API root named by the `folder-structure` skill for `choices.layout`. Do not rewrite Django into `src/`.
 
 ```
 uv init

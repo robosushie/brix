@@ -13,6 +13,7 @@ import {
 } from "@brix/core";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { LayoutPicker } from "@/components/stack/layout-picker";
 import { chosenValues, Question } from "@/components/stack/question";
 import { SkillsModal } from "@/components/stack/skills-modal";
 
@@ -32,6 +33,7 @@ export function StackBuilder() {
   const command = initCommand(result.selection);
   const showCommand = Boolean(result.selection.choices.appType);
   const appType = registry.sections.find((section) => section.id === "appType");
+  const layout = registry.sections.find((section) => section.id === "layout");
   const summary = registry.sections.flatMap((section) => {
     if (section.multi) {
       const values = chosenValues(section, result.selection);
@@ -65,11 +67,11 @@ export function StackBuilder() {
           <p className="mono-label text-muted-foreground">Stack</p>
           <h1 className="display mt-3 text-[48px] text-ink">Build a stack</h1>
           <p className="mt-3 max-w-xl text-base text-smoke">
-            App type sets the shape of the app. Core is the frontend, UI, backend,
-            package manager, Turborepo, database, and coding agents. Services adds auth, payments, files,
-            email, workflows, AI, and testing. Cloud adds delivery and
-            containers. Tools adds a code index, how the agent writes, memory, and a skill
-            pack.
+            App type sets which sides exist. Layout is the folder tree, and you pick it.
+            Core is the frontend, UI, backend, package manager, Turborepo, database, and
+            coding agents. Services adds auth, payments, files, email, workflows, AI, and
+            testing. Cloud adds delivery and containers. Tools adds a code index, how the
+            agent writes, memory, and a skill pack.
           </p>
         </div>
 
@@ -86,6 +88,26 @@ export function StackBuilder() {
                 disabled={result.disabled}
                 onSelect={choose}
                 hideLabel
+              />
+            </div>
+          </Card>
+        ) : null}
+
+        {layout ? (
+          <Card>
+            <div className="px-8 pb-6 pt-8">
+              <p className="text-lg font-medium text-ink">{layout.label}</p>
+              <p className="mt-2 max-w-xl text-sm text-smoke">
+                Suggested follows the frontend and backend. A click keeps your choice.
+              </p>
+            </div>
+            <Separator />
+            <div className="px-8 py-6">
+              <LayoutPicker
+                section={layout}
+                selection={selection}
+                disabled={result.disabled}
+                onSelect={choose}
               />
             </div>
           </Card>

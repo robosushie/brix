@@ -21,12 +21,22 @@ export function skillFolder(id: string): string {
   return id.startsWith("brix-") ? `brix/${id.slice("brix-".length)}` : id;
 }
 
-export function renderSkill(id: string): string {
+export function renderSkill(id: string, layoutId?: string): string {
   const composition = compositions[id];
   if (!composition) {
     throw new Error(`No skill composition for "${id}".`);
   }
-  const body = composition.parts.map(readChunk).join("\n\n");
+  let parts = composition.parts;
+  if (id === "folder-structure" && layoutId) {
+    const layoutPart = `folder/${layoutId}`;
+    if (!composition.parts.includes(layoutPart)) {
+      throw new Error(`Unknown layout "${layoutId}".`);
+    }
+    parts = composition.parts.filter(
+      (part) => part === "folder/rules" || part === "folder/infra" || part === layoutPart,
+    );
+  }
+  const body = parts.map(readChunk).join("\n\n");
   const rendered = `---\nname: ${composition.name}\ndescription: ${JSON.stringify(composition.description)}\n---\n\n${body}\n`;
   return rendered;
 }

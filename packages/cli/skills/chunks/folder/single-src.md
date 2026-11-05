@@ -10,10 +10,12 @@ scripts/bootstrap/
 infra/                         only when Docker, Helm, or Postgres Docker is selected
 ```
 
+<!-- interior:nextjs -->
 Next.js, when this app is the frontend, uses this interior at the repo root. `src/app` is the only App Router tree. Do not also keep a root `app/` directory. `src/app/api` is allowed, because this layout has no separate API.
 
 ```
 src/app/
+src/app/api/
 src/components/ui/
 src/components/layout/
 src/components/shared/
@@ -24,7 +26,9 @@ src/styles/
 src/types/
 public/
 ```
+<!-- /interior -->
 
+<!-- interior:vite -->
 Vite, React, or SvelteKit:
 
 ```
@@ -41,7 +45,9 @@ public/
 ```
 
 SvelteKit keeps the `src/routes` tree its CLI emits. Do not add a parallel `pages/` tree.
+<!-- /interior -->
 
+<!-- interior:node -->
 Hono, Express, or Fastify:
 
 ```
@@ -55,7 +61,9 @@ src/types/
 src/lib/
 src/middleware/
 ```
+<!-- /interior -->
 
+<!-- interior:python -->
 FastAPI or Flask. `pyproject.toml` stays at the repo root.
 
 ```
@@ -73,7 +81,9 @@ docs/
 scripts/bootstrap/
 pyproject.toml
 ```
+<!-- /interior -->
 
+<!-- interior:django -->
 Django keeps the official layout at the repo root. Do not move Django into `src/`.
 
 ```
@@ -86,3 +96,4 @@ scripts/bootstrap/
 ```
 
 When an AI framework is selected, the Django library lives in `<app>/agent/`. `<app>/services/` is only the runner that views call.
+<!-- /interior -->

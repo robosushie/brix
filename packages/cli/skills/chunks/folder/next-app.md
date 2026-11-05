@@ -3,7 +3,8 @@
 `choices.layout` is `next-app`. One Next.js app sits at the repo root. There is no second service folder.
 
 ```
-src/app/                         pages and route handlers
+src/app/                         pages
+src/app/api/                     route handlers
 src/components/ui/
 src/components/layout/
 src/components/shared/

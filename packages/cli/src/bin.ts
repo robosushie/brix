@@ -105,7 +105,10 @@ async function init(flags: Flags) {
 
   console.log(`Wrote stack.json, AGENTS.md, CLAUDE.md, PROMPT.md`);
   const layoutId = result.selection.choices.layout ?? suggestedLayout(result.selection) ?? null;
-  const failures = await installSkills(result.skills, result.selection.agents, targets, layoutId);
+  const failures = await installSkills(result.skills, result.selection.agents, targets, layoutId, {
+    frontend: result.selection.choices.frontend,
+    backend: result.selection.choices.backend,
+  });
   if (failures.length === 0) return;
   console.error("\nRequired skill steps failed:");
   for (const failure of failures) console.error(`- ${failure}`);

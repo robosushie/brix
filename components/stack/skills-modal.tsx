@@ -17,10 +17,12 @@ type SkillsModalProps = {
   skills: SkillRef[];
   agents: AgentId[];
   layoutId?: string;
+  frontend?: string;
+  backend?: string;
   onClose: () => void;
 };
 
-export function SkillsModal({ skills, agents, layoutId, onClose }: SkillsModalProps) {
+export function SkillsModal({ skills, agents, layoutId, frontend, backend, onClose }: SkillsModalProps) {
   const titleId = useId();
   const platform = visitorPlatform();
   const names = useMemo(() => {
@@ -58,7 +60,11 @@ export function SkillsModal({ skills, agents, layoutId, onClose }: SkillsModalPr
 
   useEffect(() => {
     let cancelled = false;
-    const query = layoutId ? `?layout=${encodeURIComponent(layoutId)}` : "?layout=";
+    const params = new URLSearchParams();
+    params.set("layout", layoutId ?? "");
+    params.set("frontend", frontend ?? "");
+    params.set("backend", backend ?? "");
+    const query = `?${params.toString()}`;
     fetch(`/api/skill-bodies${query}`)
       .then(async (response) => {
         const payload = (await response.json()) as Record<string, string> & { error?: string };
@@ -74,7 +80,7 @@ export function SkillsModal({ skills, agents, layoutId, onClose }: SkillsModalPr
     return () => {
       cancelled = true;
     };
-  }, [layoutId]);
+  }, [layoutId, frontend, backend]);
 
   useEffect(() => {
     setCopied(false);

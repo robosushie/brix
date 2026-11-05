@@ -9,6 +9,8 @@ When `choices.layout` is missing, use this suggestion:
 - A JavaScript UI plus FastAPI, Flask, or Django: `apps-src`.
 - Next.js with no separate API: `next-app`.
 - Frontend only, or backend only: `single-src`.
+- None of the matches above: `split`.
+- A JavaScript API grouped by feature, rather than by routes and services: `feature-modules`. This does not replace an earlier match.
 
 Use generic folder names: `src`, `app`, `components`, `hooks`, `lib`, `services`, `models`, `schemas`, `types`, `styles`, `routes`, `pages`, `docs`, `public`, `scripts`. Do not create a top-level folder named after a product feature or a sample app. Feature URLs live inside `app/`, `pages/`, or `routes/`.
 

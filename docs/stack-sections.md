@@ -19,6 +19,8 @@ A disabled card stays closed. The `folder-structure` skill installs only the cho
 - JavaScript UI plus FastAPI, Flask, or Django: UI apps, API at root
 - Next.js with no separate API: Fullstack app
 - Frontend only, or backend only: Single app
+- None of those matches: Split folders
+- A JavaScript API grouped by feature, when the routes-and-services shape is the wrong fit: Feature modules
 
 Fullstack app stays available until a backend is chosen, or until the frontend is not Next.js. Single app stays off when both a UI and an API are selected. Flat workspace and Monorepo stay off a Python API. UI apps, API at root stays off unless both a UI and an API are selected. Feature modules stay off a frontend-only app and off a Python API. Split folders stays available.
 

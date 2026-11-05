@@ -11,6 +11,7 @@ infra/                         only when Docker, Helm, or Postgres Docker is sel
 
 The frontend interior goes in `apps/web` (and `apps/admin` for a second UI).
 
+<!-- interior:nextjs -->
 Next.js:
 
 ```
@@ -29,7 +30,9 @@ scripts/bootstrap/
 ```
 
 Do not add `src/app/api` in this layout. The separate API owns `/health` and `/v1`.
+<!-- /interior -->
 
+<!-- interior:vite -->
 Vite, React, or SvelteKit:
 
 ```
@@ -46,7 +49,9 @@ public/
 ```
 
 SvelteKit keeps the `src/routes` tree its CLI emits. Do not add a parallel `pages/` tree.
+<!-- /interior -->
 
+<!-- interior:node -->
 Hono, Express, or Fastify, at the repo root:
 
 ```
@@ -60,7 +65,9 @@ src/types/
 src/lib/
 src/middleware/
 ```
+<!-- /interior -->
 
+<!-- interior:python -->
 FastAPI or Flask. `pyproject.toml` stays at the repo root. The Python project is not an npm workspace member.
 
 ```
@@ -78,7 +85,9 @@ docs/
 scripts/bootstrap/
 pyproject.toml
 ```
+<!-- /interior -->
 
+<!-- interior:django -->
 Django keeps the official layout at the repo root, beside `apps/web`. Do not move Django into `src/`.
 
 ```
@@ -91,3 +100,4 @@ scripts/bootstrap/
 ```
 
 When an AI framework is selected, the Django library lives in `<app>/agent/`. `<app>/services/` is only the runner that views call.
+<!-- /interior -->

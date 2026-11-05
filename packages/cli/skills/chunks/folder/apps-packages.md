@@ -16,10 +16,45 @@ Workspace globs are `apps/*` and `packages/*`. The package that owns the databas
 
 The frontend interior goes in `apps/web`.
 
-Next.js uses `src/app` as the only App Router tree. Do not also keep a root `app/` directory, and do not add `src/app/api`. Also add `src/components/ui`, `src/components/layout`, `src/components/shared`, `src/hooks`, `src/lib`, `src/store`, `src/styles`, `src/types`, `public/`, `docs/`, and `scripts/bootstrap/`.
+<!-- interior:nextjs -->
+Next.js uses `src/app` as the only App Router tree. Do not also keep a root `app/` directory, and do not add `src/app/api`. The API in `apps/api` owns `/health` and `/v1`.
 
-Vite, React, or SvelteKit uses `src/components/ui`, `src/components/layout`, `src/components/shared`, `src/hooks`, `src/lib`, `src/pages` or `src/routes`, `src/styles`, `src/types`, `src/assets`, and `public/`. SvelteKit keeps `src/routes` and does not add a parallel `pages/` tree.
+```
+src/app/
+src/components/ui/
+src/components/layout/
+src/components/shared/
+src/hooks/
+src/lib/
+src/store/
+src/styles/
+src/types/
+public/
+docs/
+scripts/bootstrap/
+```
+<!-- /interior -->
 
+<!-- interior:vite -->
+Vite, React, or SvelteKit:
+
+```
+src/components/ui/
+src/components/layout/
+src/components/shared/
+src/hooks/
+src/lib/
+src/pages/                or src/routes/ when the router uses routes
+src/styles/
+src/types/
+src/assets/
+public/
+```
+
+SvelteKit keeps the `src/routes` tree its CLI emits. Do not add a parallel `pages/` tree.
+<!-- /interior -->
+
+<!-- interior:node -->
 The Node API interior goes in `apps/api`:
 
 ```
@@ -33,3 +68,4 @@ src/types/
 src/lib/
 src/middleware/
 ```
+<!-- /interior -->

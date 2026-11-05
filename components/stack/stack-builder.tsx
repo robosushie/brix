@@ -283,6 +283,8 @@ export function StackBuilder() {
             skills={result.skills}
             agents={result.selection.agents}
             layoutId={result.selection.choices.layout}
+            frontend={result.selection.choices.frontend}
+            backend={result.selection.choices.backend}
             onClose={() => setSkillsOpen(false)}
           />
         ) : null}

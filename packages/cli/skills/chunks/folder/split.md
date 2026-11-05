@@ -10,10 +10,45 @@ infra/                         only when Docker, Helm, or Postgres Docker is sel
 
 The frontend interior goes in `frontend/`.
 
-Next.js uses `src/app` as the only App Router tree. Do not also keep a root `app/` directory, and do not add `src/app/api`. The API in `backend/` owns `/health` and `/v1`. Also add `src/components/ui`, `src/components/layout`, `src/components/shared`, `src/hooks`, `src/lib`, `src/store`, `src/styles`, `src/types`, `public/`, `docs/`, and `scripts/bootstrap/`.
+<!-- interior:nextjs -->
+Next.js uses `src/app` as the only App Router tree. Do not also keep a root `app/` directory, and do not add `src/app/api`. The API in `backend/` owns `/health` and `/v1`.
 
-Vite, React, or SvelteKit uses `src/components/ui`, `src/components/layout`, `src/components/shared`, `src/hooks`, `src/lib`, `src/pages` or `src/routes`, `src/styles`, `src/types`, `src/assets`, and `public/`. SvelteKit keeps `src/routes` and does not add a parallel `pages/` tree.
+```
+src/app/
+src/components/ui/
+src/components/layout/
+src/components/shared/
+src/hooks/
+src/lib/
+src/store/
+src/styles/
+src/types/
+public/
+docs/
+scripts/bootstrap/
+```
+<!-- /interior -->
 
+<!-- interior:vite -->
+Vite, React, or SvelteKit:
+
+```
+src/components/ui/
+src/components/layout/
+src/components/shared/
+src/hooks/
+src/lib/
+src/pages/                or src/routes/ when the router uses routes
+src/styles/
+src/types/
+src/assets/
+public/
+```
+
+SvelteKit keeps the `src/routes` tree its CLI emits. Do not add a parallel `pages/` tree.
+<!-- /interior -->
+
+<!-- interior:node -->
 Hono, Express, or Fastify go in `backend/`:
 
 ```
@@ -27,7 +62,9 @@ src/types/
 src/lib/
 src/middleware/
 ```
+<!-- /interior -->
 
+<!-- interior:python -->
 FastAPI or Flask keep `pyproject.toml` inside `backend/`. The Python project is not an npm workspace member.
 
 ```
@@ -45,7 +82,9 @@ docs/
 scripts/bootstrap/
 pyproject.toml
 ```
+<!-- /interior -->
 
+<!-- interior:django -->
 Django keeps the official layout inside `backend/`. Do not move Django into `src/`.
 
 ```
@@ -58,5 +97,6 @@ scripts/bootstrap/
 ```
 
 When an AI framework is selected, the Django library lives in `<app>/agent/`. `<app>/services/` is only the runner that views call.
+<!-- /interior -->
 
 When both sides are JavaScript and a package manager is selected, the workspace members are `frontend` and `backend`. A Python API is not a workspace member.

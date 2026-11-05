@@ -4,11 +4,18 @@ import { renderSkill } from "../../../packages/cli/src/skills.ts";
 
 export function GET(request: Request) {
   try {
-    const layout = new URL(request.url).searchParams.get("layout");
+    const params = new URL(request.url).searchParams;
+    const layout = params.get("layout");
+    const frontend = params.get("frontend");
+    const backend = params.get("backend");
+    const focus =
+      frontend !== null || backend !== null
+        ? { frontend: frontend || undefined, backend: backend || undefined }
+        : undefined;
     const bodies: Record<string, string> = {};
     for (const id of Object.keys(compositions)) {
       const layoutId = id === "folder-structure" && layout !== null ? layout || null : undefined;
-      bodies[id] = renderSkill(id, layoutId);
+      bodies[id] = renderSkill(id, layoutId, id === "folder-structure" ? focus : undefined);
     }
     return NextResponse.json(bodies);
   } catch (error) {

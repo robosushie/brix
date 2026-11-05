@@ -46,6 +46,31 @@ if (!folderSkill.includes("src/agent/") || folderSkill.includes("src/services/ag
 if (!splitSkill.includes("src/agent/") || splitSkill.includes("src/services/agent/")) {
   throw new Error("installed layout should keep the agent library out of services");
 }
+if (folderSkill.includes("<!-- interior:") || !folderSkill.includes("src/app/api/")) {
+  throw new Error("folder skill should keep every interior and show src/app/api");
+}
+if (!splitSkill.includes("Vite, React") || !splitSkill.includes("src/api/routes/")) {
+  throw new Error("a layout render with no frontend or backend should keep every interior");
+}
+const focusedSplit = renderSkill("folder-structure", "split", { frontend: "nextjs", backend: "hono" });
+if (!focusedSplit.includes("src/app/") || !focusedSplit.includes("src/index.ts")) {
+  throw new Error("next plus hono split should keep the Next.js and Hono interiors");
+}
+if (
+  focusedSplit.includes("Vite, React") ||
+  focusedSplit.includes("src/api/routes/") ||
+  focusedSplit.includes("manage.py")
+) {
+  throw new Error("next plus hono split should drop the React and FastAPI interiors");
+}
+const featureUi = renderSkill("folder-structure", "feature-modules", { frontend: "nextjs", backend: "hono" });
+if (!featureUi.includes("web/src/app/") || featureUi.includes("web/src/pages/")) {
+  throw new Error("feature modules with Next.js should add the web tree and leave the Vite tree out");
+}
+const featureApi = renderSkill("folder-structure", "feature-modules", { backend: "hono" });
+if (featureApi.includes("web/src/app/")) {
+  throw new Error("feature modules without a frontend should leave the web tree out");
+}
 const crewSkill = renderSkill("crewai");
 if (!crewSkill.includes("FastAPI")) throw new Error("crewai should name FastAPI");
 const bamlSkill = renderSkill("baml");

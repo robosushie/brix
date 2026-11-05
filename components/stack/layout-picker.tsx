@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
-import { suggestedLayout, type Selection, type StackSection } from "@brix/core";
+import { type Selection, type StackSection } from "@brix/core";
 import { cn } from "@/lib/utils";
 
 type TreeNode = { name: string; depth: number; children: TreeNode[] };
@@ -36,17 +36,18 @@ function folderRows(lines: string[]): TreeRow[] {
 }
 
 const line = "1px solid #44403b";
+const guideWidth = 32;
 
 function TreeGuide({ guide }: { guide: Guide }) {
-  if (guide === "blank") return <span className="inline-block shrink-0" style={{ width: 16 }} />;
+  if (guide === "blank") return <span className="inline-block shrink-0" style={{ width: guideWidth }} />;
   return (
-    <span className="relative inline-block shrink-0 self-stretch" style={{ width: 16 }}>
+    <span className="relative inline-block shrink-0 self-stretch" style={{ width: guideWidth }}>
       <span
         className="absolute"
-        style={{ left: 7, top: 0, height: guide === "last" ? "50%" : "100%", borderLeft: line }}
+        style={{ left: 12, top: 0, height: guide === "last" ? "50%" : "100%", borderLeft: line }}
       />
       {guide === "pipe" ? null : (
-        <span className="absolute" style={{ left: 7, top: "50%", width: 9, borderTop: line }} />
+        <span className="absolute" style={{ left: 12, top: "50%", width: 16, borderTop: line }} />
       )}
     </span>
   );
@@ -63,7 +64,6 @@ export function LayoutPicker({
   disabled: Record<string, string>;
   onSelect: (sectionId: string, optionId: string) => void;
 }) {
-  const suggested = suggestedLayout(selection);
   const [openId, setOpenId] = useState<string | null>(null);
 
   return (
@@ -71,8 +71,7 @@ export function LayoutPicker({
       {section.options.map((option) => {
         const reason = disabled[`${section.id}.${option.id}`];
         const selected = selection.choices[section.id] === option.id;
-        const showSuggested = suggested === option.id && !selected;
-        const expanded = openId === option.id;
+        const expanded = openId === option.id && !reason;
         const points = (option.description ?? "").split(/(?<=\.)\s+/).map((point) => point.trim()).filter(Boolean);
         return (
           <button
@@ -82,11 +81,13 @@ export function LayoutPicker({
             aria-expanded={expanded}
             aria-disabled={Boolean(reason) || undefined}
             onClick={() => {
+              if (reason) return;
               setOpenId((current) => (current === option.id ? null : option.id));
-              if (!reason) onSelect(section.id, option.id);
+              onSelect(section.id, option.id);
             }}
             className={cn(
-              "flex w-full cursor-pointer flex-col rounded-[20px] border bg-eggshell text-left transition-colors duration-200",
+              "flex w-full flex-col rounded-[20px] border bg-eggshell text-left transition-colors duration-200",
+              reason ? "cursor-default" : "cursor-pointer",
               selected ? "border-ink" : "border-stone",
               reason ? "" : "hover:border-ink",
             )}
@@ -105,17 +106,18 @@ export function LayoutPicker({
               <span className={cn("text-sm font-medium", reason ? "text-ash" : "text-ink")}>
                 {option.label}
               </span>
-              {showSuggested ? <span className="mono-label text-smoke">Suggested</span> : null}
-              <ChevronDown
-                className={cn("ml-auto size-4 shrink-0 text-ink transition-transform", expanded && "rotate-180")}
-              />
+              {reason ? null : (
+                <ChevronDown
+                  className={cn("ml-auto size-4 shrink-0 text-ink transition-transform", expanded && "rotate-180")}
+                />
+              )}
             </span>
             {expanded ? (
               <span className="block">
                 <span className="block border-t border-stone" style={{ margin: "16px 0" }} />
                 <span className="grid items-start gap-6 md:grid-cols-2">
                   {option.tree ? (
-                    <span className="min-w-0">
+                    <span className="min-w-0 rounded-[4px] border border-stone" style={{ padding: "12px 18px" }}>
                       {folderRows(option.tree).map((row, index) => (
                         <span
                           key={`${row.name}-${index}`}
@@ -125,14 +127,13 @@ export function LayoutPicker({
                           {row.guides.map((guide, guideIndex) => (
                             <TreeGuide key={guideIndex} guide={guide} />
                           ))}
-                          <span className="pl-1">{row.name}</span>
+                          <span style={{ paddingLeft: 6 }}>{row.name}</span>
                         </span>
                       ))}
                     </span>
                   ) : null}
-                  {points.length > 0 || reason ? (
+                  {points.length > 0 ? (
                     <span className="flex flex-col gap-2 text-sm leading-relaxed text-smoke">
-                      {reason ? <span className="font-medium text-ink">{reason}</span> : null}
                       {points.map((point) => (
                         <span key={point} className="flex gap-2">
                           <span aria-hidden className="text-ink">•</span>

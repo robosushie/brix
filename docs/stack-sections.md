@@ -12,7 +12,7 @@ Frontend Only turns off the backend, database, cache, storage, and email. Backen
 
 Seven trees, with no None pill: UI apps, API at root (`apps-src`), Monorepo (`apps-packages`), Flat workspace (`packages`), Fullstack app (`next-app`), Split folders (`split`), Single app (`single-src`), and Feature modules (`feature-modules`). The Layout section collapses like Core. A card starts closed. Opening it shows that tree and stores `choices.layout`, which adds `--layout`. Opening a card shows the tree on the left and the description on the right as bullet points.
 
-A Suggested mark follows the stack and does not write the choice:
+A disabled card stays closed. `brix init` without `--layout` still picks a tree from the stack:
 
 - JavaScript UI plus a JavaScript API, with Turborepo: Monorepo
 - JavaScript UI plus a JavaScript API: Flat workspace
@@ -21,8 +21,6 @@ A Suggested mark follows the stack and does not write the choice:
 - Frontend only, or backend only: Single app
 
 Fullstack app stays available until a backend is chosen, or until the frontend is not Next.js. Single app stays off when both a UI and an API are selected. Flat workspace and Monorepo stay off a Python API. UI apps, API at root stays off unless both a UI and an API are selected. Feature modules stay off a frontend-only app and off a Python API. Split folders stays available.
-
-`brix init` without `--layout` still installs the suggested tree.
 
 ## Core
 

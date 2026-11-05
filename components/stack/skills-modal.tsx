@@ -115,7 +115,28 @@ export function SkillsModal({ skills, agents, layoutId, frontend, backend, onClo
           </button>
         </div>
         <div className="flex min-h-0 flex-1 flex-col sm:flex-row">
-          <div className="max-h-40 w-full shrink-0 overflow-y-auto border-b border-stone sm:max-h-none sm:w-60 sm:border-b-0 sm:border-r">
+          <div className="border-b border-stone p-4 sm:hidden">
+            <label htmlFor={`${titleId}-selector`} className="sr-only">
+              Select a skill
+            </label>
+            <select
+              id={`${titleId}-selector`}
+              value={selected?.id ?? ""}
+              onChange={(event) => setSelectedId(event.target.value)}
+              className="w-full rounded-lg border border-stone bg-eggshell px-3 py-2.5 text-sm text-ink"
+            >
+              {groups.map((group) => (
+                <optgroup key={group.id} label={group.label}>
+                  {group.skills.map((skill) => (
+                    <option key={skill.id} value={skill.id}>
+                      {names.get(skill.id) ?? skill.id}
+                    </option>
+                  ))}
+                </optgroup>
+              ))}
+            </select>
+          </div>
+          <div className="hidden max-h-40 w-full shrink-0 overflow-y-auto border-b border-stone sm:block sm:max-h-none sm:w-60 sm:border-b-0 sm:border-r">
             {groups.map((group) => (
               <section key={group.id}>
                 <h3 className="flex items-center gap-2 px-4 pt-3 pb-1 text-[10px] tracking-wide text-ash uppercase">

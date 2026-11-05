@@ -13,8 +13,6 @@ function help() {
 
   brix init [--yes] [--app-type <id>] [--frontend <id>] [--agent <id>] [--code-index <id>] ...
   brix init --config <stack.json>
-  brix add
-  brix doctor
 
 Repeat --agent once per coding agent. A missing flag, or None, adds nothing.
 Inside this repo, pnpm brix runs the local build. From an empty folder: npx usebrix@latest init
@@ -127,14 +125,6 @@ async function main() {
   }
   if (command === "init") {
     await init(flags);
-    return;
-  }
-  if (command === "add") {
-    console.log("brix add is not implemented yet. Re-run brix init with a new --config hash.");
-    return;
-  }
-  if (command === "doctor") {
-    console.log("brix doctor is not implemented yet. Follow the checklist the CLI writes into brix/verify.");
     return;
   }
   help();

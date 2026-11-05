@@ -40,13 +40,11 @@ These skills are always installed: `architect`, `security`, `verify`, `solid`, `
 ```bash
 brix init [--yes] [--app-type <id>] [--frontend <id>] [--agent <id>] ...
 brix init --config stack.json
-brix add
-brix doctor
 ```
 
 `init` reads the flags, or `--config <stack.json>`. With neither, it reads `./stack.json` in the current directory if that file exists. Do not pass section flags and `--config` together. `--yes` skips the confirm prompt.
 
-`add` and `doctor` are reserved. They print that they are not implemented yet. To change a stack, run `init` again.
+To change a stack, run `init` again with the new selection.
 
 ## Questions and options
 

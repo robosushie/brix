@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+import { ChevronDown } from "lucide-react";
 import { suggestedLayout, type Selection, type StackSection } from "@brix/core";
 import { cn } from "@/lib/utils";
 
@@ -62,27 +64,32 @@ export function LayoutPicker({
   onSelect: (sectionId: string, optionId: string) => void;
 }) {
   const suggested = suggestedLayout(selection);
+  const [openId, setOpenId] = useState<string | null>(null);
 
   return (
-    <div className="grid gap-4 md:grid-cols-2">
+    <div className="grid items-start gap-4 md:grid-cols-2">
       {section.options.map((option) => {
         const reason = disabled[`${section.id}.${option.id}`];
         const selected = selection.choices[section.id] === option.id;
         const showSuggested = suggested === option.id && !selected;
+        const expanded = openId === option.id;
         return (
-          <span key={option.id} className="group relative flex">
+          <span key={option.id} className="group relative flex" style={{ alignSelf: "start" }}>
             <button
               type="button"
               aria-pressed={selected}
+              aria-expanded={expanded}
               aria-disabled={Boolean(reason) || undefined}
               onClick={() => {
+                setOpenId((current) => (current === option.id ? null : option.id));
                 if (!reason) onSelect(section.id, option.id);
               }}
               className={cn(
-                "flex w-full cursor-pointer flex-col rounded-[20px] border bg-eggshell p-5 text-left transition-colors duration-200",
+                "flex w-full cursor-pointer flex-col rounded-[20px] border bg-eggshell text-left transition-colors duration-200",
                 selected ? "border-ink" : "border-stone",
-                reason ? "cursor-not-allowed" : "hover:border-ink",
+                reason ? "" : "hover:border-ink",
               )}
+              style={{ padding: 28 }}
             >
               <span className="flex items-center gap-3">
                 <span
@@ -98,9 +105,13 @@ export function LayoutPicker({
                   {option.label}
                 </span>
                 {showSuggested ? <span className="mono-label ml-auto text-smoke">Suggested</span> : null}
+                <ChevronDown
+                  className={cn("size-4 shrink-0 text-ink transition-transform", showSuggested ? "" : "ml-auto", expanded && "rotate-180")}
+                />
               </span>
-              {option.tree ? (
-                <div className="mt-4 rounded-[20px] bg-white px-4 py-3" style={{ backgroundColor: "#ffffff" }}>
+              {expanded && option.tree ? (
+                <div>
+                  <span className="block border-t border-stone" style={{ margin: "16px 0" }} />
                   {folderRows(option.tree).map((row, index) => (
                     <div
                       key={`${row.name}-${index}`}
@@ -119,7 +130,8 @@ export function LayoutPicker({
             {option.description || reason ? (
               <span
                 role="tooltip"
-                className="pointer-events-none absolute bottom-full left-4 z-10 mb-2 hidden w-72 rounded-[4px] border border-stone bg-eggshell px-3 py-2 text-left text-xs leading-relaxed text-ink group-hover:block"
+                className="pointer-events-none absolute bottom-full left-4 z-10 mb-2 hidden rounded-[4px] border border-stone bg-eggshell text-left text-xs leading-relaxed text-ink group-hover:block"
+                style={{ width: 340, padding: "14px 16px" }}
               >
                 {reason ? <span className="mb-1 block font-medium">{reason}</span> : null}
                 {option.description ? <span className="block">{option.description}</span> : null}

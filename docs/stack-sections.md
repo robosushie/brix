@@ -10,7 +10,7 @@ Frontend Only turns off the backend, database, cache, storage, and email. Backen
 
 ## Layout
 
-Seven trees, with no None pill: UI apps, API at root (`apps-src`), Monorepo (`apps-packages`), Flat workspace (`packages`), Fullstack app (`next-app`), Split folders (`split`), Single app (`single-src`), and Feature modules (`feature-modules`). A click stores `choices.layout` and adds `--layout`. The description sits on the card hover.
+Seven trees, with no None pill: UI apps, API at root (`apps-src`), Monorepo (`apps-packages`), Flat workspace (`packages`), Fullstack app (`next-app`), Split folders (`split`), Single app (`single-src`), and Feature modules (`feature-modules`). The Layout section collapses like Core. A card starts closed. Opening it shows that tree and stores `choices.layout`, which adds `--layout`. The longer description sits on the card hover.
 
 A Suggested mark follows the stack and does not write the choice:
 

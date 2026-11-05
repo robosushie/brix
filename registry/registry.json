@@ -515,7 +515,7 @@
           "id": "apps-src",
           "label": "UI apps, API at root",
           "status": "proven",
-          "description": "JavaScript UIs live in apps/. The API stays at the repo root.",
+          "description": "JavaScript UIs live in apps/web and apps/admin. The API stays at the repo root, with routes, services, and lib under src/. Use this when the API is Python, or when the API should not be an npm workspace package. Deployment files stay in infra/.",
           "tree": [
             "apps/",
             "  web/",
@@ -531,7 +531,7 @@
           "id": "apps-packages",
           "label": "Monorepo",
           "status": "proven",
-          "description": "Deployable apps live in apps/. Shared libraries live in packages/. An app does not import another app.",
+          "description": "Deployable apps live in apps/web, apps/admin, and apps/api. Shared libraries live in packages/ui and packages/shared. An app does not import another app. Use this with a JavaScript API and Turborepo. A Python API stays outside this workspace.",
           "tree": [
             "apps/",
             "  web/",
@@ -547,7 +547,7 @@
           "id": "packages",
           "label": "Flat workspace",
           "status": "proven",
-          "description": "Every app and library is one workspace package. There is no apps/ folder.",
+          "description": "Every app and library is one workspace package: packages/web, packages/admin, packages/api, and packages/shared. There is no apps/ folder. Use this for a JavaScript UI plus a JavaScript API when Turborepo is off. A Python API stays outside this workspace.",
           "tree": [
             "packages/",
             "  web/",
@@ -561,7 +561,7 @@
           "id": "next-app",
           "label": "Fullstack app",
           "status": "proven",
-          "description": "One app at the repo root. Pages live in src/app and route handlers live in src/app/api.",
+          "description": "One app at the repo root. Pages live in src/app, route handlers live in src/app/api, and shared code lives in src/components and src/lib. Use this when that app owns the API and no separate backend is selected. A separate API needs its own folder.",
           "tree": [
             "src/",
             "  app/",
@@ -575,7 +575,7 @@
           "id": "split",
           "label": "Split folders",
           "status": "proven",
-          "description": "One folder per role. The web app, the API, and deployment files do not share a root.",
+          "description": "One folder per role. frontend/src is the web app, backend/src is the API, and infra/ holds deployment files. The three roots do not share a package workspace. Use this for any frontend paired with any backend.",
           "tree": [
             "frontend/",
             "  src/",
@@ -588,7 +588,7 @@
           "id": "single-src",
           "label": "Single app",
           "status": "proven",
-          "description": "One deployable at the repo root. Frontend only or backend only.",
+          "description": "One deployable at the repo root. Routes, services, and lib live under src/, with tests/ beside them and infra/ for deployment. Use this for a frontend-only app or a backend-only API. It stays off when both a UI and a separate API are selected.",
           "tree": [
             "src/",
             "  routes/",
@@ -602,15 +602,15 @@
           "id": "feature-modules",
           "label": "Feature modules",
           "status": "proven",
-          "description": "Nest-style API. Each feature keeps its module, controller, service, and DTOs together.",
+          "description": "An API grouped by feature. Each feature folder holds its module, controller, service, and DTOs together. The entry and root module sit in src/, and tests live beside it. There are no top-level controllers/ or services/ folders. Use this for a JavaScript API. A UI, if you add one, sits beside src/.",
           "tree": [
             "src/",
-            "  main.ts",
-            "  app.module.ts",
+            "  <entry>",
+            "  <app-module>",
             "  users/",
-            "    users.module.ts",
-            "    users.controller.ts",
-            "    users.service.ts",
+            "    users-<module>",
+            "    users-<controller>",
+            "    users-<service>",
             "    dto/",
             "test/"
           ]

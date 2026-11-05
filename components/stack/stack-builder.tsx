@@ -21,7 +21,7 @@ export function StackBuilder() {
   const [selection, setSelection] = useState<Selection>(emptySelection);
   const [copied, setCopied] = useState(false);
   const [skillsOpen, setSkillsOpen] = useState(false);
-  const [open, setOpen] = useState<Record<string, boolean>>({ core: true });
+  const [open, setOpen] = useState<Record<string, boolean>>({ core: true, layout: true });
 
   useEffect(() => {
     if (window.location.hash) {
@@ -95,21 +95,30 @@ export function StackBuilder() {
 
         {layout ? (
           <Card>
-            <div className="px-8 pb-6 pt-8">
-              <p className="text-lg font-medium text-ink">{layout.label}</p>
-              <p className="mt-2 max-w-xl text-sm text-smoke">
-                Suggested follows the frontend and backend. A click keeps your choice.
-              </p>
-            </div>
-            <Separator />
-            <div className="px-8 py-6">
-              <LayoutPicker
-                section={layout}
-                selection={selection}
-                disabled={result.disabled}
-                onSelect={choose}
+            <button
+              type="button"
+              className="flex w-full cursor-pointer items-center justify-between px-8 py-6 text-left"
+              aria-expanded={open.layout ?? false}
+              onClick={() => setOpen((current) => ({ ...current, layout: !current.layout }))}
+            >
+              <span className="text-lg font-medium text-ink">{layout.label}</span>
+              <ChevronDown
+                className={`size-4 text-ink transition-transform ${open.layout ? "rotate-180" : ""}`}
               />
-            </div>
+            </button>
+            {open.layout ? (
+              <div className="pb-2">
+                <Separator />
+                <div className="px-8 py-6">
+                  <LayoutPicker
+                    section={layout}
+                    selection={selection}
+                    disabled={result.disabled}
+                    onSelect={choose}
+                  />
+                </div>
+              </div>
+            ) : null}
           </Card>
         ) : null}
 

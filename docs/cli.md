@@ -34,14 +34,6 @@ brix init --config <stack.json>
 
 `--agent` chooses where skills are installed: Claude Code, Codex, or Cursor. Repeat it for more than one. With no agent flag, no agent folder is targeted.
 
-## `brix add`
-
-Reserved. Prints that adding an option to an existing repo is not implemented yet.
-
-## `brix doctor`
-
-Reserved. Prints that drift checks against the verification gate are not implemented yet.
-
 ## Outputs
 
 `PROMPT.md` tells the agent to read `stack.json`, scaffold with official CLIs, apply the installed skills, ship a thin vertical slice, and run the verification gate before stopping.

@@ -21,15 +21,15 @@ export function skillFolder(id: string): string {
   return id.startsWith("brix-") ? `brix/${id.slice("brix-".length)}` : id;
 }
 
-export function renderSkill(id: string, layoutId?: string): string {
+export function renderSkill(id: string, layoutId?: string | null): string {
   const composition = compositions[id];
   if (!composition) {
     throw new Error(`No skill composition for "${id}".`);
   }
   let parts = composition.parts;
-  if (id === "folder-structure" && layoutId) {
-    const layoutPart = `folder/${layoutId}`;
-    if (!composition.parts.includes(layoutPart)) {
+  if (id === "folder-structure" && layoutId !== undefined) {
+    const layoutPart = layoutId ? `folder/${layoutId}` : "";
+    if (layoutPart && !composition.parts.includes(layoutPart)) {
       throw new Error(`Unknown layout "${layoutId}".`);
     }
     parts = composition.parts.filter(

@@ -104,7 +104,7 @@ async function init(flags: Flags) {
   await writeFile("PROMPT.md", renderPrompt(result.selection));
 
   console.log(`Wrote stack.json, AGENTS.md, CLAUDE.md, PROMPT.md`);
-  const layoutId = result.selection.choices.layout ?? suggestedLayout(result.selection) ?? undefined;
+  const layoutId = result.selection.choices.layout ?? suggestedLayout(result.selection) ?? null;
   const failures = await installSkills(result.skills, result.selection.agents, targets, layoutId);
   if (failures.length === 0) return;
   console.error("\nRequired skill steps failed:");

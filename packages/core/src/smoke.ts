@@ -28,6 +28,10 @@ if (!folderSkill.includes("apps/web") || !folderSkill.includes("packages/web")) 
 if (!folderSkill.includes("frontend/") || !folderSkill.includes("backend/")) {
   throw new Error("folder skill is missing the split tree");
 }
+const unsetLayout = renderSkill("folder-structure", null);
+if (unsetLayout.includes("packages/web") || unsetLayout.includes("## Split folders") || unsetLayout.includes("## Fullstack app")) {
+  throw new Error("a missing layout should not install a folder tree");
+}
 const splitSkill = renderSkill("folder-structure", "split");
 const packagesSkill = renderSkill("folder-structure", "packages");
 if (!splitSkill.includes("frontend/") || !splitSkill.includes("backend/") || splitSkill.includes("packages/web")) {

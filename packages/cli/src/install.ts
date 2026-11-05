@@ -39,7 +39,7 @@ async function runCommands(
   return true;
 }
 
-async function writeLocalSkill(skill: SkillRef, targets: Set<string>, layoutId?: string): Promise<void> {
+async function writeLocalSkill(skill: SkillRef, targets: Set<string>, layoutId?: string | null): Promise<void> {
   const body = renderSkill(skill.id, skill.id === "folder-structure" ? layoutId : undefined);
   for (const target of targets) {
     const dest = resolve(target, skillFolder(skill.id));
@@ -52,7 +52,7 @@ export async function installSkills(
   skills: SkillRef[],
   agents: AgentId[],
   targets: Set<string>,
-  layoutId?: string,
+  layoutId?: string | null,
 ): Promise<string[]> {
   const platform = platformKey();
   const failures: string[] = [];

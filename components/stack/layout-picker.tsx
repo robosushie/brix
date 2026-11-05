@@ -98,7 +98,7 @@ export function LayoutPicker({
                 aria-hidden
                 className={cn(
                   "flex size-4 shrink-0 items-center justify-center rounded-full border",
-                  selected ? "border-ink" : reason ? "border-ash" : "border-stone",
+                  reason ? "border-stone" : "border-ink",
                 )}
               >
                 {selected ? <span className="size-2 rounded-full bg-ink" /> : null}

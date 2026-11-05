@@ -14,6 +14,8 @@ export type StackOption = {
   skill?: string;
   license?: string;
   description?: string;
+  /** Top-level folder lines for the layout picker. */
+  tree?: string[];
   depends?: StackDepends;
 };
 

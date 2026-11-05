@@ -2,7 +2,7 @@ import { mkdir, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { type AgentId, type SkillRef } from "@brix/core";
 import { commandExists, expandArgv, platformKey, runArgv } from "./runner.ts";
-import { renderSkill, skillFolder } from "./skills.ts";
+import { renderSkill, skillFolder, type FolderFocus } from "./skills.ts";
 
 type Phase = "preinstall" | "install" | "postinstall";
 
@@ -39,8 +39,17 @@ async function runCommands(
   return true;
 }
 
-async function writeLocalSkill(skill: SkillRef, targets: Set<string>): Promise<void> {
-  const body = renderSkill(skill.id);
+async function writeLocalSkill(
+  skill: SkillRef,
+  targets: Set<string>,
+  layoutId?: string | null,
+  focus?: FolderFocus,
+): Promise<void> {
+  const body = renderSkill(
+    skill.id,
+    skill.id === "folder-structure" ? layoutId : undefined,
+    skill.id === "folder-structure" ? focus : undefined,
+  );
   for (const target of targets) {
     const dest = resolve(target, skillFolder(skill.id));
     await mkdir(dest, { recursive: true });
@@ -48,7 +57,13 @@ async function writeLocalSkill(skill: SkillRef, targets: Set<string>): Promise<v
   }
 }
 
-export async function installSkills(skills: SkillRef[], agents: AgentId[], targets: Set<string>): Promise<string[]> {
+export async function installSkills(
+  skills: SkillRef[],
+  agents: AgentId[],
+  targets: Set<string>,
+  layoutId?: string | null,
+  focus?: FolderFocus,
+): Promise<string[]> {
   const platform = platformKey();
   const failures: string[] = [];
   let localCount = 0;
@@ -66,7 +81,7 @@ export async function installSkills(skills: SkillRef[], agents: AgentId[], targe
 
     if (skill.kind === "local") {
       try {
-        await writeLocalSkill(skill, targets);
+        await writeLocalSkill(skill, targets, layoutId, focus);
         localCount += 1;
       } catch (error) {
         console.error(`Command failed: ${skill.id} install`);

@@ -1,31 +1,21 @@
-import { existsSync, readFileSync } from "node:fs";
-import { join } from "node:path";
 import { NextResponse } from "next/server";
 import { compositions } from "../../../packages/cli/skills/compositions.ts";
+import { renderSkill } from "../../../packages/cli/src/skills.ts";
 
-function renderSkill(id: string): string {
-  const composition = compositions[id];
-  if (!composition) {
-    throw new Error(`No skill composition for "${id}".`);
-  }
-  const root = join(process.cwd(), "packages", "cli", "skills", "chunks");
-  const body = composition.parts
-    .map((part) => {
-      const file = join(root, `${part}.md`);
-      if (!existsSync(file)) {
-        throw new Error(`Missing skill chunk "${part}" (${file}).`);
-      }
-      return readFileSync(file, "utf8").trim();
-    })
-    .join("\n\n");
-  return `---\nname: ${composition.name}\ndescription: ${JSON.stringify(composition.description)}\n---\n\n${body}\n`;
-}
-
-export function GET() {
+export function GET(request: Request) {
   try {
+    const params = new URL(request.url).searchParams;
+    const layout = params.get("layout");
+    const frontend = params.get("frontend");
+    const backend = params.get("backend");
+    const focus =
+      frontend !== null || backend !== null
+        ? { frontend: frontend || undefined, backend: backend || undefined }
+        : undefined;
     const bodies: Record<string, string> = {};
     for (const id of Object.keys(compositions)) {
-      bodies[id] = renderSkill(id);
+      const layoutId = id === "folder-structure" && layout !== null ? layout || null : undefined;
+      bodies[id] = renderSkill(id, layoutId, id === "folder-structure" ? focus : undefined);
     }
     return NextResponse.json(bodies);
   } catch (error) {

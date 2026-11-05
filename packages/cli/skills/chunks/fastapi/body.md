@@ -1,6 +1,6 @@
 # FastAPI
 
-Use `uv` at the repo root from `python-layout`. Prefer `uv init`, then move the app modules to the `src/` tree in `folder-structure` and `uv add fastapi uvicorn[standard]` (and the ORM / driver packages from the other skills).
+Use `uv` in the API root named by the `folder-structure` skill for `choices.layout`. Prefer `uv init` there, then move the app modules into that root's `src/` tree and `uv add fastapi uvicorn[standard]` (and the ORM / driver packages from the other skills). `pyproject.toml` stays in that root.
 
 ## App shape (official bigger-applications + lifespan)
 

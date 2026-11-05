@@ -16,10 +16,13 @@ import {
 type SkillsModalProps = {
   skills: SkillRef[];
   agents: AgentId[];
+  layoutId?: string;
+  frontend?: string;
+  backend?: string;
   onClose: () => void;
 };
 
-export function SkillsModal({ skills, agents, onClose }: SkillsModalProps) {
+export function SkillsModal({ skills, agents, layoutId, frontend, backend, onClose }: SkillsModalProps) {
   const titleId = useId();
   const platform = visitorPlatform();
   const names = useMemo(() => {
@@ -57,7 +60,12 @@ export function SkillsModal({ skills, agents, onClose }: SkillsModalProps) {
 
   useEffect(() => {
     let cancelled = false;
-    fetch("/api/skill-bodies")
+    const params = new URLSearchParams();
+    params.set("layout", layoutId ?? "");
+    params.set("frontend", frontend ?? "");
+    params.set("backend", backend ?? "");
+    const query = `?${params.toString()}`;
+    fetch(`/api/skill-bodies${query}`)
       .then(async (response) => {
         const payload = (await response.json()) as Record<string, string> & { error?: string };
         if (!response.ok) throw new Error(payload.error ?? "Could not load skill text.");
@@ -72,7 +80,7 @@ export function SkillsModal({ skills, agents, onClose }: SkillsModalProps) {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [layoutId, frontend, backend]);
 
   useEffect(() => {
     setCopied(false);

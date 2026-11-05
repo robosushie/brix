@@ -1,6 +1,6 @@
 # Flask
 
-Use `uv` in the Python root from `python-layout`. Follow the official application-factory pattern.
+Use `uv` in the API root named by the `folder-structure` skill for `choices.layout`. Follow the official application-factory pattern.
 
 ## Factory
 
@@ -16,6 +16,6 @@ Use `uv` in the Python root from `python-layout`. Follow the official applicatio
 
 - Blueprints live in `src/api/routes`. `GET /health` is its own blueprint.
 - Mount product blueprints under `/v1`.
-- Run with `flask --app main:create_app run`. `uv run` from the repo root, with `src` on the path.
+- Run with `flask --app main:create_app run`. `uv run` from the API root the layout skill names, with `src` on the path.
 
 Use the ORM named in `stack.json`. When that ORM is SQLAlchemy, the session factory is in `src/lib/db.py` and the factory / teardown closes the session.

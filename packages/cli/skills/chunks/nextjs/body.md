@@ -16,7 +16,7 @@ Example:
 npx create-next-app@latest . --ts --app --src-dir --eslint --use-pnpm
 ```
 
-Run the CLI in the UI root from `folder-structure`: the repo root for a single app, `packages/web` when the API is Hono, Express, or Fastify, or `apps/web` when the API is Python.
+Run the CLI in the UI root named by the `folder-structure` skill for `choices.layout`.
 
 ## Layout rules (official)
 
@@ -27,4 +27,4 @@ Run the CLI in the UI root from `folder-structure`: the repo root for a single a
 
 ## Backend boundary
 
-Do not add a Node API inside `src/app/api` unless the stack has no separate backend. A selected Hono, Express, Fastify, or Python backend owns `/health` and `/v1`. The Next app calls that API over HTTP (or Hono RPC client when both sides are Hono and types are shared through `packages/`).
+Do not add a Node API inside `src/app/api` unless `choices.layout` is `next-app` or `single-src` with no separate backend. A selected Hono, Express, Fastify, or Python backend owns `/health` and `/v1`. The Next app calls that API over HTTP (or a Hono RPC client when both sides are Hono and types are shared through the shared package the layout skill names).

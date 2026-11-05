@@ -1,6 +1,6 @@
 # Fastify
 
-Create a Fastify server with TypeScript inside the API root from `node-layout`. Prefer `fastify-cli` generate when starting empty, then reshape to this tree.
+Create a Fastify server with TypeScript inside the API root named by the `folder-structure` skill for `choices.layout`. Prefer `fastify-cli` generate when starting empty, then reshape to this tree.
 
 ## Files
 

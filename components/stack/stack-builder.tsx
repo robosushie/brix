@@ -10,17 +10,24 @@ import {
   emptySelection,
   selectOption,
   type Selection,
+  type StackSection,
 } from "@brix/core";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { LayoutPicker } from "@/components/stack/layout-picker";
 import { chosenValues, Question } from "@/components/stack/question";
 import { SkillsModal } from "@/components/stack/skills-modal";
+
+function sectionUnused(section: StackSection, disabled: Record<string, string>): boolean {
+  const reasons = section.options.map((option) => disabled[`${section.id}.${option.id}`]);
+  return Boolean(reasons[0]?.startsWith("Not used") && reasons.every((reason) => reason === reasons[0]));
+}
 
 export function StackBuilder() {
   const [selection, setSelection] = useState<Selection>(emptySelection);
   const [copied, setCopied] = useState(false);
   const [skillsOpen, setSkillsOpen] = useState(false);
-  const [open, setOpen] = useState<Record<string, boolean>>({ core: true });
+  const [open, setOpen] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     if (window.location.hash) {
@@ -32,6 +39,7 @@ export function StackBuilder() {
   const command = initCommand(result.selection);
   const showCommand = Boolean(result.selection.choices.appType);
   const appType = registry.sections.find((section) => section.id === "appType");
+  const layout = registry.sections.find((section) => section.id === "layout");
   const summary = registry.sections.flatMap((section) => {
     if (section.multi) {
       const values = chosenValues(section, result.selection);
@@ -65,11 +73,12 @@ export function StackBuilder() {
           <p className="mono-label text-muted-foreground">Stack</p>
           <h1 className="display mt-3 text-[48px] text-ink">Build a stack</h1>
           <p className="mt-3 max-w-xl text-base text-smoke">
-            App type sets the shape of the app. Core is the frontend, UI, backend,
-            package manager, Turborepo, database, and coding agents. Services adds auth, payments, files,
-            email, workflows, AI, and testing. Cloud adds delivery and
-            containers. Tools adds a code index, how the agent writes, memory, and a skill
-            pack.
+            App type sets which sides exist, then you pick the frontend and backend.
+            Layout is the folder tree, and those choices decide which trees you can open.
+            Core is the UI, package manager, Turborepo, database, and coding agents.
+            Services adds auth, payments, files, email, workflows, AI, and testing.
+            Cloud adds delivery and containers. Tools adds a code index, how the agent
+            writes, memory, and a skill pack.
           </p>
         </div>
 
@@ -88,12 +97,76 @@ export function StackBuilder() {
                 hideLabel
               />
             </div>
+            {["frontend", "backend"].map((id) => {
+              const section = registry.sections.find((item) => item.id === id);
+              if (!section || sectionUnused(section, result.disabled)) return null;
+              const nested = registry.sections.filter(
+                (item) => item.nestUnder === section.id && !item.hidden,
+              );
+              return (
+                <div key={section.id}>
+                  <Separator />
+                  <div className="px-8 py-6">
+                    <Question
+                      section={section}
+                      selection={selection}
+                      disabled={result.disabled}
+                      onSelect={choose}
+                    />
+                    {nested.map((child) => (
+                      <div key={child.id} className="mt-4">
+                        <Question
+                          section={child}
+                          selection={selection}
+                          disabled={result.disabled}
+                          onSelect={choose}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
+          </Card>
+        ) : null}
+
+        {layout ? (
+          <Card>
+            <button
+              type="button"
+              className="flex w-full cursor-pointer items-center justify-between px-8 py-6 text-left"
+              aria-expanded={open.layout ?? false}
+              onClick={() => setOpen((current) => ({ ...current, layout: !current.layout }))}
+            >
+              <span className="text-lg font-medium text-ink">{layout.label}</span>
+              <ChevronDown
+                className={`size-4 text-ink transition-transform ${open.layout ? "rotate-180" : ""}`}
+              />
+            </button>
+            {open.layout ? (
+              <div className="pb-2">
+                <Separator />
+                <div className="px-8 py-6">
+                  <LayoutPicker
+                    section={layout}
+                    selection={selection}
+                    disabled={result.disabled}
+                    onSelect={choose}
+                  />
+                </div>
+              </div>
+            ) : null}
           </Card>
         ) : null}
 
         {registry.groups.map((group) => {
           const sections = registry.sections.filter(
-            (section) => section.group === group.id && !section.hidden && !section.nestUnder,
+            (section) =>
+              section.group === group.id &&
+              !section.hidden &&
+              !section.nestUnder &&
+              section.id !== "frontend" &&
+              section.id !== "backend",
           );
           const expanded = open[group.id] ?? false;
           return (
@@ -209,6 +282,9 @@ export function StackBuilder() {
           <SkillsModal
             skills={result.skills}
             agents={result.selection.agents}
+            layoutId={result.selection.choices.layout}
+            frontend={result.selection.choices.frontend}
+            backend={result.selection.choices.backend}
             onClose={() => setSkillsOpen(false)}
           />
         ) : null}

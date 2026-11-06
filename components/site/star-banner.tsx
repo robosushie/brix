@@ -26,7 +26,12 @@ function StarAsk() {
   return (
     <span className="text-center">
       If you like the project, please{" "}
-      <a href="https://github.com/robosushie/brix" className="underline underline-offset-2">
+      <a
+        href="https://github.com/robosushie/brix"
+        className="underline underline-offset-2"
+        target="_blank"
+        rel="noreferrer"
+      >
         give it a star
       </a>
       .

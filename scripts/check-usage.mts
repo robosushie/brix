@@ -11,6 +11,20 @@ function weekEnd(start: string) {
   return date.toISOString().slice(0, 10);
 }
 
+function currentWeekStart() {
+  const now = new Date();
+  const today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+  const sinceFriday = (today.getUTCDay() - 5 + 7) % 7;
+  today.setUTCDate(today.getUTCDate() - sinceFriday);
+  return today.toISOString().slice(0, 10);
+}
+
+function withCurrentWeek(points: DownloadPoint[]) {
+  const start = currentWeekStart();
+  if (points.some((point) => point.day === start)) return points;
+  return [...points, { day: start, downloads: 0 }].slice(-12);
+}
+
 function seriesOf(version: string) {
   const match = /^(\d+)\.(\d+)\./.exec(version);
   return match ? `${match[1]}.${match[2]}.x` : null;
@@ -54,7 +68,7 @@ async function usageCheck() {
   const downloads = versionsBody.downloads ?? {};
   const published = Object.keys(registry.versions ?? {});
 
-  const weeks = (points as DownloadPoint[]).map((point) => ({
+  const weeks = withCurrentWeek(points).map((point) => ({
     label: `${point.day} - ${weekEnd(point.day)}`,
     value: String(point.downloads),
   }));

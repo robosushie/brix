@@ -22,6 +22,8 @@ export function SiteFooter() {
           <a
             href="https://github.com/robosushie/brix"
             className="cursor-pointer text-ink no-underline transition-colors duration-200 hover:text-smoke"
+            target="_blank"
+            rel="noreferrer"
           >
             GitHub
           </a>

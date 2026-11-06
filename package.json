@@ -10,7 +10,7 @@
     "lint": "eslint",
     "prepare": "husky",
     "brix": "pnpm --filter usebrix build && pnpm --filter usebrix exec brix",
-    "check:usage": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/check-usage.mts"
+    "check:usage": "tsx scripts/check-usage.mts"
   },
   "dependencies": {
     "@brix/core": "workspace:*",
@@ -36,6 +36,7 @@
     "eslint-config-next": "16.4.3",
     "husky": "^9.1.7",
     "tailwindcss": "^4",
+    "tsx": "^4.23.15",
     "typescript": "^5"
   },
   "packageManager": "pnpm@10.12.1"

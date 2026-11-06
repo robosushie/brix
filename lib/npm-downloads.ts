@@ -14,14 +14,23 @@ function lifetimePeriod() {
 }
 
 const CHART_WEEKS = 12;
+const FRIDAY = 5;
 
-// Twelve Sunday–Saturday weeks, plus one extra so a trailing unpublished week can be dropped.
+// Enough days to cover twelve Friday–Thursday weeks, the buckets on the npm package page.
 function chartPeriod() {
   const end = new Date();
   const endUtc = new Date(Date.UTC(end.getUTCFullYear(), end.getUTCMonth(), end.getUTCDate()));
   const start = new Date(endUtc);
-  start.setUTCDate(start.getUTCDate() - start.getUTCDay() - CHART_WEEKS * 7);
+  start.setUTCDate(endUtc.getUTCDate() - (CHART_WEEKS + 1) * 7);
   return `${dayStamp(start)}:${dayStamp(endUtc)}`;
+}
+
+function weekStart(day: string) {
+  const date = new Date(`${day}T00:00:00Z`);
+  if (Number.isNaN(date.getTime())) return "";
+  const sinceFriday = (date.getUTCDay() - FRIDAY + 7) % 7;
+  date.setUTCDate(date.getUTCDate() - sinceFriday);
+  return date.toISOString().slice(0, 10);
 }
 
 async function readCount(url: string) {
@@ -35,14 +44,7 @@ async function readCount(url: string) {
   }
 }
 
-function weekStart(day: string) {
-  const date = new Date(`${day}T00:00:00Z`);
-  if (Number.isNaN(date.getTime())) return "";
-  date.setUTCDate(date.getUTCDate() - date.getUTCDay());
-  return date.toISOString().slice(0, 10);
-}
-
-// npm's package chart sums each Sunday–Saturday week across the last year.
+// npm's package page sums each Friday–Thursday week. The latest of those weeks is the Weekly Downloads number.
 export function weeklyPoints(days: DownloadPoint[]): DownloadPoint[] {
   const totals = new Map<string, number>();
   for (const point of days) {
@@ -56,6 +58,10 @@ export function weeklyPoints(days: DownloadPoint[]): DownloadPoint[] {
   let last = weeks.length - 1;
   while (last > 0 && weeks[last].downloads === 0) last -= 1;
   return weeks.slice(0, last + 1).slice(-CHART_WEEKS);
+}
+
+export async function loadWeeklyPoints(): Promise<DownloadPoint[]> {
+  return weeklyPoints(await readRange(chartPeriod()));
 }
 
 async function readRange(period: string): Promise<DownloadPoint[]> {
@@ -81,12 +87,12 @@ export async function downloadReport(): Promise<{
     `https://api.npmjs.org/downloads/point/${lifetimePeriod()}/usebrix`,
   );
   if (total <= 10) return null;
-  const week = await readCount("https://api.npmjs.org/downloads/point/last-week/usebrix");
 
   try {
-    return { total, week, points: weeklyPoints(await readRange(chartPeriod())) };
+    const points = weeklyPoints(await readRange(chartPeriod()));
+    return { total, week: points.at(-1)?.downloads ?? 0, points };
   } catch {
-    return { total, week, points: [] };
+    return { total, week: 0, points: [] };
   }
 }
 

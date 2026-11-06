@@ -2,7 +2,7 @@ import { access, readFile, writeFile } from "node:fs/promises";
 import { createInterface } from "node:readline/promises";
 import { resolve } from "node:path";
 import { stdin as input, stdout as output } from "node:process";
-import { evaluate, selectionFromFlags, type Selection } from "@brix/core";
+import { evaluate, selectionFromFlags, suggestedLayout, type Selection } from "@brix/core";
 import { parseArgs, type Flags } from "./args.ts";
 import { renderAgents, renderClaude, renderPrompt } from "./documents.ts";
 import { installSkills } from "./install.ts";
@@ -13,8 +13,6 @@ function help() {
 
   brix init [--yes] [--app-type <id>] [--frontend <id>] [--agent <id>] [--code-index <id>] ...
   brix init --config <stack.json>
-  brix add
-  brix doctor
 
 Repeat --agent once per coding agent. A missing flag, or None, adds nothing.
 Inside this repo, pnpm brix runs the local build. From an empty folder: npx usebrix@latest init
@@ -104,7 +102,11 @@ async function init(flags: Flags) {
   await writeFile("PROMPT.md", renderPrompt(result.selection));
 
   console.log(`Wrote stack.json, AGENTS.md, CLAUDE.md, PROMPT.md`);
-  const failures = await installSkills(result.skills, result.selection.agents, targets);
+  const layoutId = result.selection.choices.layout ?? suggestedLayout(result.selection) ?? null;
+  const failures = await installSkills(result.skills, result.selection.agents, targets, layoutId, {
+    frontend: result.selection.choices.frontend,
+    backend: result.selection.choices.backend,
+  });
   if (failures.length === 0) return;
   console.error("\nRequired skill steps failed:");
   for (const failure of failures) console.error(`- ${failure}`);
@@ -123,14 +125,6 @@ async function main() {
   }
   if (command === "init") {
     await init(flags);
-    return;
-  }
-  if (command === "add") {
-    console.log("brix add is not implemented yet. Re-run brix init with a new --config hash.");
-    return;
-  }
-  if (command === "doctor") {
-    console.log("brix doctor is not implemented yet. Follow the checklist the CLI writes into brix/verify.");
     return;
   }
   help();

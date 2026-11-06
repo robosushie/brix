@@ -15,13 +15,17 @@ export function visitorPlatform(): SkillPlatform {
 const skillGroups = [
   { id: "common", label: "Common" },
   { id: "appType", label: "App type" },
+  { id: "layout", label: "Layout" },
   { id: "core", label: "Core" },
   { id: "services", label: "Services" },
   { id: "cloud", label: "Cloud" },
   { id: "tools", label: "Tools" },
 ] as const;
 
+const appTypeSections = new Set(["appType", "frontend", "frontendRuntime", "backend", "backendRuntime"]);
+
 function groupForSkill(id: string): (typeof skillGroups)[number]["id"] {
+  if (id === "folder-structure") return "layout";
   const entry = registry.skills.find((skill) => skill.id === id);
   if (!entry || entry.when.always) return "common";
   const groups = new Set<string>();
@@ -29,7 +33,9 @@ function groupForSkill(id: string): (typeof skillGroups)[number]["id"] {
     const sectionId = optionId.slice(0, optionId.indexOf("."));
     const section = registry.sections.find((item) => item.id === sectionId);
     if (!section) continue;
-    groups.add(section.id === "appType" ? "appType" : (section.group ?? "common"));
+    if (appTypeSections.has(section.id)) groups.add("appType");
+    else if (section.id === "layout") groups.add("layout");
+    else groups.add(section.group ?? "common");
   }
   return skillGroups.find((group) => groups.has(group.id))?.id ?? "common";
 }

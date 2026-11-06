@@ -16,10 +16,13 @@ import {
 type SkillsModalProps = {
   skills: SkillRef[];
   agents: AgentId[];
+  layoutId?: string;
+  frontend?: string;
+  backend?: string;
   onClose: () => void;
 };
 
-export function SkillsModal({ skills, agents, onClose }: SkillsModalProps) {
+export function SkillsModal({ skills, agents, layoutId, frontend, backend, onClose }: SkillsModalProps) {
   const titleId = useId();
   const platform = visitorPlatform();
   const names = useMemo(() => {
@@ -57,7 +60,12 @@ export function SkillsModal({ skills, agents, onClose }: SkillsModalProps) {
 
   useEffect(() => {
     let cancelled = false;
-    fetch("/api/skill-bodies")
+    const params = new URLSearchParams();
+    params.set("layout", layoutId ?? "");
+    params.set("frontend", frontend ?? "");
+    params.set("backend", backend ?? "");
+    const query = `?${params.toString()}`;
+    fetch(`/api/skill-bodies${query}`)
       .then(async (response) => {
         const payload = (await response.json()) as Record<string, string> & { error?: string };
         if (!response.ok) throw new Error(payload.error ?? "Could not load skill text.");
@@ -72,7 +80,7 @@ export function SkillsModal({ skills, agents, onClose }: SkillsModalProps) {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [layoutId, frontend, backend]);
 
   useEffect(() => {
     setCopied(false);
@@ -106,8 +114,29 @@ export function SkillsModal({ skills, agents, onClose }: SkillsModalProps) {
             <X className="size-4" />
           </button>
         </div>
-        <div className="flex min-h-0 flex-1">
-          <div className="w-60 shrink-0 overflow-y-auto border-r border-stone">
+        <div className="flex min-h-0 flex-1 flex-col sm:flex-row">
+          <div className="border-b border-stone p-4 sm:hidden">
+            <label htmlFor={`${titleId}-selector`} className="sr-only">
+              Select a skill
+            </label>
+            <select
+              id={`${titleId}-selector`}
+              value={selected?.id ?? ""}
+              onChange={(event) => setSelectedId(event.target.value)}
+              className="w-full rounded-lg border border-stone bg-eggshell px-3 py-2.5 text-sm text-ink"
+            >
+              {groups.map((group) => (
+                <optgroup key={group.id} label={group.label}>
+                  {group.skills.map((skill) => (
+                    <option key={skill.id} value={skill.id}>
+                      {names.get(skill.id) ?? skill.id}
+                    </option>
+                  ))}
+                </optgroup>
+              ))}
+            </select>
+          </div>
+          <div className="hidden max-h-40 w-full shrink-0 overflow-y-auto border-b border-stone sm:block sm:max-h-none sm:w-60 sm:border-b-0 sm:border-r">
             {groups.map((group) => (
               <section key={group.id}>
                 <h3 className="flex items-center gap-2 px-4 pt-3 pb-1 text-[10px] tracking-wide text-ash uppercase">
@@ -162,6 +191,7 @@ export function SkillsModal({ skills, agents, onClose }: SkillsModalProps) {
             ) : null}
             {preview ? (
               <EditorFrame
+                key={selected?.id}
                 title={preview.title}
                 body={preview.body}
                 language={preview.language}

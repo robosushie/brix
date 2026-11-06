@@ -1,22 +1,38 @@
 # Brix
 
-You pick the stack. The command installs the skills into an empty folder and rejects pairs that cannot sit together. It does not generate the app. You add a prompt with your app details. Claude Code, Codex, or Cursor uses the skills to build the repo.
+You pick the stack. One command installs the skills into an empty folder and rejects pairs that cannot sit together. It does not generate the app. You add a prompt with your app details, and Claude Code, Codex, or Cursor uses the skills to build the repo.
+
+[![npm](https://img.shields.io/npm/v/usebrix?logo=npm&logoColor=white&label=npm)](https://www.npmjs.com/package/usebrix)
+[![downloads](https://img.shields.io/npm/dm/usebrix?logo=npm&logoColor=white)](https://www.npmjs.com/package/usebrix)
+[![node](https://img.shields.io/node/v/usebrix?logo=node.js&logoColor=white)](https://nodejs.org)
+[![license](https://img.shields.io/github/license/robosushie/brix)](LICENSE)
+[![ci](https://github.com/robosushie/brix/actions/workflows/ci.yml/badge.svg)](https://github.com/robosushie/brix/actions/workflows/ci.yml)
+[![conventional commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-fe5196?logo=conventionalcommits&logoColor=white)](https://www.conventionalcommits.org/en/v1.0.0/)
+[![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](#contributing)
 
 [![Brix demo: pick a stack, copy one command, review the skills](https://img.youtube.com/vi/ARW5s2vQQP4/sddefault.jpg)](https://youtu.be/ARW5s2vQQP4)
 
-## What you do
+Brix is for people who already work in Claude Code, Codex, or Cursor and want a pinned, reviewable skill set instead of a template repo for every combination.
 
-1. Open `/stack` on the site, or write the flags yourself.
-2. Pick an app type, then answer only the questions you care about. A partial stack is valid.
-3. Copy the command. None and unanswered questions stay off it.
-4. Run it in an empty directory. Review the skill list, or pass `--yes` to skip the prompt.
-5. Add a prompt with your app details in Claude Code, Codex, or Cursor. The agent reads the installed skills and builds the repo.
+## Quick start
+
+Node.js 20 or newer is required. `npx usebrix` installs the same release as `npx usebrix@latest`. After `npm install -g usebrix` the command is `brix`.
+
+1. Pick an app type, then only the options you care about. A partial stack is valid.
+2. Copy the command. `none` and unanswered questions stay off it.
+3. Run it in an empty directory. Review the skill list, or pass `--yes` to skip the prompt.
+4. Add a prompt with your app details in Claude Code, Codex, or Cursor. The agent reads the installed skills and builds the repo.
 
 ```bash
 npx usebrix@latest init --app-type frontend-backend --frontend nextjs --backend fastapi --agent cursor --code-index codegraph
 ```
 
-`npx usebrix` installs the same release as `npx usebrix@latest`. After `npm install -g usebrix` the command is `brix`. Node.js 20 or newer is required.
+A global install:
+
+```bash
+npm install -g usebrix
+brix init --help
+```
 
 ## What the command writes
 
@@ -40,15 +56,13 @@ These skills are always installed: `architect`, `security`, `verify`, `solid`, `
 ```bash
 brix init [--yes] [--app-type <id>] [--frontend <id>] [--agent <id>] ...
 brix init --config stack.json
-brix add
-brix doctor
 ```
 
 `init` reads the flags, or `--config <stack.json>`. With neither, it reads `./stack.json` in the current directory if that file exists. Do not pass section flags and `--config` together. `--yes` skips the confirm prompt.
 
-`add` and `doctor` are reserved. They print that they are not implemented yet. To change a stack, run `init` again.
+To change a stack, run `init` again with the new selection.
 
-## Questions and options
+## Options
 
 Flag names are the section ids in kebab case. `--agent` is the one exception, and it can be repeated. `--turbo` is the other: it takes no value. A missing answer and `none` both omit the flag. An unknown id, or a pair the rules reject, exits before any file is written.
 
@@ -127,21 +141,28 @@ CodeGraph is a live code graph over MCP. Graphify indexes code plus docs and oth
 - Clerk cannot be used on Backend Only.
 - Better Auth and Auth.js cannot be used on Frontend Only, because they need a database.
 
-## Develop this repo
+## Contributing
 
-Requires Node.js 20 or newer and pnpm 10.12.1.
+Issues and pull requests are welcome. Please open an issue before a large change so the direction is agreed first.
+
+### Local development
+
+Requires Node.js 20 or newer and [pnpm](https://pnpm.io) 10.12.1.
 
 ```bash
+git clone https://github.com/robosushie/brix.git
+cd brix
 pnpm install
 pnpm dev
+```
+
+`pnpm dev` starts the site at http://localhost:3000. Open `/stack` to build a command. `pnpm brix` builds the CLI and runs the local `brix` bin:
+
+```bash
 pnpm brix init --help
 ```
 
-`pnpm dev` starts the site at http://localhost:3000. Open `/stack` to build a command. `pnpm brix` builds the CLI and runs the local `brix` bin.
-
-Pull requests run typecheck, the CLI bundle, and the Next.js production build. A separate check enforces Conventional Commits on the PR title and the single commit on the branch.
-
-## Contributing
+Pull requests run typecheck, the CLI bundle, and the Next.js production build. A separate check enforces [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) on the PR title and the single commit on the branch.
 
 ### Pull request title
 
@@ -158,7 +179,7 @@ The subject must:
 - start with a lowercase letter
 - stay within 72 characters
 - not end with a period
-- be an imperative summary (`add`, `fix`, `update`, not `Added` or `Fixes`)
+- be an imperative summary (`add`, `fix`, `update`)
 
 Examples:
 
@@ -169,7 +190,7 @@ fix: keep stack summary on one line
 docs: document contributing rules
 ```
 
-Bad titles (these fail CI): `License ci`, `Add MIT license.`, `chore: Add MIT license`.
+Titles that fail CI: `License ci`, `Add MIT license.`, `chore: Add MIT license`.
 
 ### Commit message
 
@@ -185,25 +206,6 @@ git commit -m "chore: add MIT license"
 2. Run `pnpm exec tsc --noEmit`, `pnpm --filter usebrix build`, and `pnpm build` locally when you can.
 3. Set the PR title to `type: subject` before or right after opening the PR so the semantic check passes.
 
-## Publish usebrix
+## License
 
-`usebrix` is on npm. npm is the source of truth for the published version. Each publish must be a new version. npm will not replace an existing one.
-
-1. Create a granular npm access token that can publish `usebrix`.
-2. In this GitHub repo, add it as the Actions secret `NPM_TOKEN`.
-3. Open Actions → Publish usebrix → Run workflow.
-4. Enter the version (for example `0.1.5`). The branch picker does not matter; the workflow always starts from `main`.
-
-That run:
-
-1. Publishes `usebrix@<version>` to npm with the `latest` tag.
-2. Only if publish succeeds, opens a PR that bumps `packages/cli/package.json`:
-   - branch `release/usebrix-<version>`
-   - title and commit `chore: release usebrix <version>`
-3. Opens GitHub Release `v<version>`.
-
-Merge the PR to sync `main`. No second publish runs on merge.
-
-The run stops before publish if the version is already on npm, if tag `v<version>` exists, if `packages/cli/package.json` on `main` already has that version, or if the release branch already exists.
-
-`npx usebrix` and `npx usebrix@latest` both follow `latest`. Run the button only for a version you intend to ship. Enable **Allow GitHub Actions to create and approve pull requests** under Settings → Actions → General so the PR step can run after publish.
+[MIT](LICENSE) © 2026 robosushie

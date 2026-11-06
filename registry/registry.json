@@ -133,6 +133,91 @@
         "auth.better-auth",
         "auth.authjs"
       ]
+    },
+    {
+      "id": "layout-next-backend-only",
+      "reason": "Not used for Backend Only",
+      "whenAll": [
+        "appType.backend-only"
+      ],
+      "disable": [
+        "layout.next-app"
+      ]
+    },
+    {
+      "id": "layout-next-separate-api",
+      "reason": "A separate API needs its own folder",
+      "whenAny": [
+        "backend.hono",
+        "backend.express",
+        "backend.fastify",
+        "backend.fastapi",
+        "backend.flask",
+        "backend.django"
+      ],
+      "disable": [
+        "layout.next-app"
+      ]
+    },
+    {
+      "id": "layout-next-needs-next",
+      "reason": "Requires Next.js",
+      "whenAny": [
+        "frontend.vite-react",
+        "frontend.sveltekit",
+        "frontend.react"
+      ],
+      "disable": [
+        "layout.next-app"
+      ]
+    },
+    {
+      "id": "layout-single-one-app",
+      "reason": "Two apps need separate roots",
+      "whenAll": [
+        "appType.frontend-backend"
+      ],
+      "disable": [
+        "layout.single-src"
+      ]
+    },
+    {
+      "id": "layout-workspace-python",
+      "reason": "Python stays outside the npm workspace",
+      "whenAny": [
+        "backend.fastapi",
+        "backend.flask",
+        "backend.django",
+        "package.uv"
+      ],
+      "disable": [
+        "layout.packages",
+        "layout.apps-packages"
+      ]
+    },
+    {
+      "id": "layout-apps-src-needs-both",
+      "reason": "Needs a UI and an API",
+      "whenAny": [
+        "appType.frontend-only",
+        "appType.backend-only"
+      ],
+      "disable": [
+        "layout.apps-src"
+      ]
+    },
+    {
+      "id": "layout-feature-modules-js-api",
+      "reason": "Needs a JavaScript API",
+      "whenAny": [
+        "appType.frontend-only",
+        "backend.fastapi",
+        "backend.flask",
+        "backend.django"
+      ],
+      "disable": [
+        "layout.feature-modules"
+      ]
     }
   ],
   "sections": [
@@ -419,6 +504,116 @@
           "label": "Workspaces only",
           "status": "proven",
           "description": "Workspace installs, with no Turborepo."
+        }
+      ]
+    },
+    {
+      "id": "layout",
+      "label": "Layout",
+      "options": [
+        {
+          "id": "apps-src",
+          "label": "UI apps, API at root",
+          "status": "proven",
+          "description": "JavaScript UIs live in apps/web and apps/admin. The API stays at the repo root, with routes, services, and lib under src/. Use this when the API is Python, or when the API should not be an npm workspace package. Deployment files stay in infra/.",
+          "tree": [
+            "apps/",
+            "  web/",
+            "  admin/",
+            "src/",
+            "  routes/",
+            "  services/",
+            "  lib/",
+            "infra/"
+          ]
+        },
+        {
+          "id": "apps-packages",
+          "label": "Monorepo",
+          "status": "proven",
+          "description": "Deployable apps live in apps/web, apps/admin, and apps/api. Shared libraries live in packages/ui and packages/shared. An app does not import another app. Use this with a JavaScript API and Turborepo. A Python API stays outside this workspace.",
+          "tree": [
+            "apps/",
+            "  web/",
+            "  admin/",
+            "  api/",
+            "packages/",
+            "  ui/",
+            "  shared/",
+            "infra/"
+          ]
+        },
+        {
+          "id": "packages",
+          "label": "Flat workspace",
+          "status": "proven",
+          "description": "Every app and library is one workspace package: packages/web, packages/admin, packages/api, and packages/shared. There is no apps/ folder. Use this for a JavaScript UI plus a JavaScript API when Turborepo is off. A Python API stays outside this workspace.",
+          "tree": [
+            "packages/",
+            "  web/",
+            "  admin/",
+            "  api/",
+            "  shared/",
+            "infra/"
+          ]
+        },
+        {
+          "id": "next-app",
+          "label": "Fullstack app",
+          "status": "proven",
+          "description": "One app at the repo root. Pages live in src/app, route handlers live in src/app/api, and shared code lives in src/components and src/lib. Use this when that app owns the API and no separate backend is selected. A separate API needs its own folder.",
+          "tree": [
+            "src/",
+            "  app/",
+            "    api/",
+            "  components/",
+            "  lib/",
+            "public/"
+          ]
+        },
+        {
+          "id": "split",
+          "label": "Split folders",
+          "status": "proven",
+          "description": "One folder per role. frontend/src is the web app, backend/src is the API, and infra/ holds deployment files. The three roots do not share a package workspace. Use this for any frontend paired with any backend.",
+          "tree": [
+            "frontend/",
+            "  src/",
+            "backend/",
+            "  src/",
+            "infra/"
+          ]
+        },
+        {
+          "id": "single-src",
+          "label": "Single app",
+          "status": "proven",
+          "description": "One deployable at the repo root. Routes, services, and lib live under src/, with tests/ beside them and infra/ for deployment. Use this for a frontend-only app or a backend-only API. It stays off when both a UI and a separate API are selected.",
+          "tree": [
+            "src/",
+            "  routes/",
+            "  services/",
+            "  lib/",
+            "tests/",
+            "infra/"
+          ]
+        },
+        {
+          "id": "feature-modules",
+          "label": "Feature modules",
+          "status": "proven",
+          "description": "An API grouped by feature. Each feature folder holds its module, controller, service, and DTOs together. The entry and root module sit in src/, and tests live beside it. There are no top-level controllers/ or services/ folders. Use this for a JavaScript API. A UI, if you add one, sits beside src/.",
+          "tree": [
+            "src/",
+            "  <entry>",
+            "  <app-module>",
+            "  users/",
+            "    users-<module>",
+            "    users-<controller>",
+            "    users-<service>",
+            "    dto/",
+            "test/"
+          ]
         }
       ]
     },
@@ -1399,7 +1594,7 @@
         "darwin": []
       },
       "name": "Folder structure",
-      "description": "Opinionated folders for the selected frontend, API, and agent code."
+      "description": "The folder tree chosen in Layout."
     },
     {
       "id": "security-audit",

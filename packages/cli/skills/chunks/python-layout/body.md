@@ -1,5 +1,5 @@
 # Python layout
 
-The `folder-structure` skill is installed on every stack and owns the tree. Read `stack.json` and apply the Python API section, or the Django section when the backend is Django.
+The `folder-structure` skill is installed on every stack and owns the tree. Read `stack.json` `choices.layout` and place FastAPI, Flask, or Django in the API root that skill names.
 
-The Python root is the repo root, including when a JavaScript UI lives in `apps/web`. Create it with `uv init`. Do not describe a second tree in this skill, and do not list the Python project as an npm workspace member.
+Create the Python project with `uv init` in that root. Do not describe a second tree in this skill, and do not list the Python project as an npm workspace member.

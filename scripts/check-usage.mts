@@ -1,59 +1,78 @@
-// Package total, last 7 available days: https://api.npmjs.org/downloads/point/last-week/usebrix
-// Daily rows, so the printed range matches the response: https://api.npmjs.org/downloads/range/last-week/usebrix
-// Per version, last 7 available days: https://api.npmjs.org/versions/usebrix/last-week
-// Package total, last 18 months: https://api.npmjs.org/downloads/point/{start}:{end}/usebrix, with start 18 months before today in UTC. lib/npm-downloads.ts already builds that period in lifetimePeriod().
-// Version order: https://registry.npmjs.org/usebrix, time field, newest first, skip non-version keys such as created and modified. Take five.
+// Twelve Friday–Thursday weeks, same buckets as the landing plot: lib/npm-downloads.ts loadWeeklyPoints().
+// Per version, last 7 available days, then summed by minor series: https://api.npmjs.org/versions/usebrix/last-week
+// Published versions: https://registry.npmjs.org/usebrix versions field. 0.1.0 and 0.1.7 both count as 0.1.x.
+// Package total, last 18 months: https://api.npmjs.org/downloads/point/{start}:{end}/usebrix via lifetimePeriod().
 
-import { lifetimePeriod } from "../lib/npm-downloads.ts";
+import { lifetimePeriod, loadWeeklyPoints, type DownloadPoint } from "../lib/npm-downloads.ts";
 
-
-const endpoint_lst=[
-    "https://api.npmjs.org/downloads/point/last-week/usebrix", // last week total downloads and start and end dates
-    "https://api.npmjs.org/versions/usebrix/last-week", // version based no. of downloads
-    "https://registry.npmjs.org/usebrix", // lastest version
-];
-
-
-
-async function usage_check() {
-    try{
-        // retriving data via the endpoint list
-        const retrive= endpoint_lst.map((endpoint) => fetch(endpoint));
-        const responses= await Promise.all(retrive);
-
-        const datalst= await Promise.all(responses.map((response) => response.json()));
-
-        // getting last weeks downloads
-        const last_5_version_downloads= datalst[1]['downloads'];
-        const usage_output=`${datalst[0]['package']}\nLast 7 days\t\t${datalst[0]['start']} - ${datalst[0]['end']}\n\nAll versions\t\t${datalst[0]['downloads']}\n\nLast 5 version`;
-
-        const table_length=`All versions\t\t${datalst[0]['downloads']}`.length;
-        
-        console.log(usage_output)
-
-        // retriving version based downloads
-        for(const [key, val] of Object.entries(last_5_version_downloads)){
-            const space_length= table_length - (key.length + String(val).length);
-
-            const p= " ".repeat(space_length+9) ;
-            console.log(`${key}${p}${val}`);
-        }
-
-        // getting 18 months time period and total download
-        const test4=await fetch(`https://api.npmjs.org/downloads/point/${lifetimePeriod()}/usebrix`); // retrive 18 months time period and total download
-        const data= await test4.json();
-
-        console.log(`\nLast 18 months:\t\t${data['start']} - ${data['end']}`);
-        console.log(` All versions\t\t${data['downloads']}\n\n`)
-
-        // retriving latest version and creation timestamp
-        const data5= datalst[2];
-
-        console.log(`npms's newest finished day is ${data5['time'][data5['dist-tags']['latest']]}`);
-    }
-    catch(error){
-        console.log(error);
-    }
+function weekEnd(start: string) {
+  const date = new Date(`${start}T00:00:00Z`);
+  date.setUTCDate(date.getUTCDate() + 6);
+  return date.toISOString().slice(0, 10);
 }
 
-usage_check();
+function seriesOf(version: string) {
+  const match = /^(\d+)\.(\d+)\./.exec(version);
+  return match ? `${match[1]}.${match[2]}.x` : null;
+}
+
+function printRows(rows: { label: string; value: string }[]) {
+  const width = Math.max(...rows.map((row) => row.label.length + row.value.length + 2), 0);
+  for (const row of rows) {
+    const gap = width - row.label.length - row.value.length;
+    console.log(`${row.label}${" ".repeat(gap)}${row.value}`);
+  }
+}
+
+function versionRows(versions: string[], downloads: Record<string, number>) {
+  const totals = new Map<string, number>();
+  for (const version of versions) {
+    const series = seriesOf(version);
+    if (!series) continue;
+    totals.set(series, (totals.get(series) ?? 0) + (Number(downloads[version]) || 0));
+  }
+  return [...totals.entries()]
+    .sort(([left], [right]) => {
+      const [leftMajor, leftMinor] = left.split(".").map(Number);
+      const [rightMajor, rightMinor] = right.split(".").map(Number);
+      return leftMajor - rightMajor || leftMinor - rightMinor;
+    })
+    .map(([label, count]) => ({ label, value: String(count) }));
+}
+
+async function usageCheck() {
+  const [points, versionResponse, registryResponse, lifetimeResponse] = await Promise.all([
+    loadWeeklyPoints(),
+    fetch("https://api.npmjs.org/versions/usebrix/last-week"),
+    fetch("https://registry.npmjs.org/usebrix"),
+    fetch(`https://api.npmjs.org/downloads/point/${lifetimePeriod()}/usebrix`),
+  ]);
+
+  const versionsBody = (await versionResponse.json()) as { downloads?: Record<string, number> };
+  const registry = (await registryResponse.json()) as { name?: string; versions?: Record<string, unknown> };
+  const lifetime = (await lifetimeResponse.json()) as { start?: string; end?: string; downloads?: number };
+  const downloads = versionsBody.downloads ?? {};
+  const published = Object.keys(registry.versions ?? {});
+
+  const weeks = (points as DownloadPoint[]).map((point) => ({
+    label: `${point.day} - ${weekEnd(point.day)}`,
+    value: String(point.downloads),
+  }));
+
+  console.log(registry.name ?? "usebrix");
+  console.log();
+  console.log("Weekly downloads (last 12 weeks)");
+  console.log();
+  printRows(weeks);
+  console.log();
+  console.log("Version downloads");
+  console.log();
+  printRows(versionRows(published, downloads));
+  console.log();
+  console.log(`Total downloads (All versions)\t${lifetime.downloads}`);
+}
+
+usageCheck().catch((error: unknown) => {
+  console.error(error);
+  process.exitCode = 1;
+});

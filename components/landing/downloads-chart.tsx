@@ -5,8 +5,11 @@ import type { DownloadPoint } from "@/lib/npm-downloads";
 
 function emptyWeeks(): DownloadPoint[] {
   const today = new Date();
-  const start = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate()));
-  start.setUTCDate(start.getUTCDate() - start.getUTCDay());
+  const end = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate()));
+  end.setUTCDate(end.getUTCDate() - 1);
+  const sinceFriday = (end.getUTCDay() - 5 + 7) % 7;
+  const start = new Date(end);
+  start.setUTCDate(end.getUTCDate() - sinceFriday);
   const points: DownloadPoint[] = [];
   for (let offset = 11; offset >= 0; offset -= 1) {
     const date = new Date(start);
@@ -16,12 +19,26 @@ function emptyWeeks(): DownloadPoint[] {
   return points;
 }
 
-function weekRange(day: string) {
+const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+function weekBounds(day: string) {
   const start = new Date(`${day}T00:00:00Z`);
-  if (Number.isNaN(start.getTime())) return day;
+  if (Number.isNaN(start.getTime())) return null;
   const end = new Date(start);
   end.setUTCDate(start.getUTCDate() + 6);
-  return `${start.toISOString().slice(0, 10)} to ${end.toISOString().slice(0, 10)}`;
+  return { start, end };
+}
+
+function weekRange(day: string) {
+  const bounds = weekBounds(day);
+  if (!bounds) return day;
+  const { start, end } = bounds;
+  const startLabel = `${months[start.getUTCMonth()]} ${start.getUTCDate()}`;
+  const endLabel =
+    start.getUTCMonth() === end.getUTCMonth()
+      ? String(end.getUTCDate())
+      : `${months[end.getUTCMonth()]} ${end.getUTCDate()}`;
+  return `${startLabel}–${endLabel}`;
 }
 
 function WeekTooltip({
@@ -51,7 +68,7 @@ export function DownloadsChart({ points }: { points: DownloadPoint[] }) {
     <div className="mt-8 rounded-[20px] bg-taupe px-4 pt-6 pb-4 sm:px-8">
       <div className="h-64">
         <ResponsiveContainer width="100%" height="100%">
-          <AreaChart data={shown} margin={{ top: 16, right: 16, left: 0, bottom: 8 }}>
+          <AreaChart data={shown} margin={{ top: 16, right: 16, left: 0, bottom: 0 }}>
           <CartesianGrid stroke="#ebe8e4" vertical={false} />
           <XAxis dataKey="day" hide />
           <YAxis

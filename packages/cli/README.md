@@ -20,7 +20,7 @@ npm install -g usebrix
 brix init --help
 ```
 
-Run `brix init` in an empty directory. It writes `stack.json`, `AGENTS.md`, `CLAUDE.md`, and `PROMPT.md`, then installs skills for the flags you pass. Repeat `--agent` once per coding agent (`cursor`, `claude-code`, `codex`). `--yes` skips the confirm prompt.
+Run `brix init` in an empty directory. It writes `stack.json`, `AGENTS.md`, `CLAUDE.md`, and `PROMPT.md`, then installs skills for the flags you pass. With no `--agent`, skills install for Claude Code, Codex, Cursor, and Antigravity. Repeat `--agent` once per coding agent (`cursor`, `claude-code`, `codex`, `antigravity`) to install for a smaller set. `--yes` skips the confirm prompt.
 
 ```bash
 brix init --yes --app-type frontend-backend --frontend nextjs --backend fastapi --agent cursor

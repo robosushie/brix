@@ -15,6 +15,11 @@
       "skills": "cursor",
       "codegraph": "cursor",
       "graphify": "cursor"
+    },
+    "antigravity": {
+      "skills": "antigravity",
+      "codegraph": "antigravity",
+      "graphify": ""
     }
   },
   "presets": [],
@@ -856,6 +861,12 @@
           "label": "Cursor",
           "status": "proven",
           "description": "Install skills into .agents/skills for Cursor."
+        },
+        {
+          "id": "antigravity",
+          "label": "Antigravity",
+          "status": "proven",
+          "description": "Install skills into .agents/skills for Antigravity."
         }
       ]
     },

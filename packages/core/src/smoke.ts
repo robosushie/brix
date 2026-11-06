@@ -3,10 +3,12 @@ import {
   emptySelection,
   encodeConfig,
   evaluate,
+  expandArgv,
   initCommand,
   registry,
   selectOption,
   selectionFromFlags,
+  skillRoots,
   suggestedLayout,
   type Selection,
 } from "./index";
@@ -85,6 +87,31 @@ function pick(start: Selection, pairs: Array<[string, string]>): Selection {
 const empty = evaluate(emptySelection());
 if (!empty.valid) throw new Error(`empty selection should be valid, got ${empty.errors.join("; ")}`);
 if (empty.selection.agents.length !== 0) throw new Error("empty selection should not pick an agent");
+for (const id of ["brix-architect", "brix-security", "brix-verify", "solid", "folder-structure", "api-design"]) {
+  if (!empty.skills.some((skill) => skill.id === id && skill.kind === "local")) {
+    throw new Error(`empty selection missing local skill ${id}`);
+  }
+}
+if (skillRoots([]).join(",") !== ".agents/skills,.claude/skills") {
+  throw new Error(`empty agents should install both skill folders: ${skillRoots([]).join(",")}`);
+}
+if (skillRoots(["cursor"]).join(",") !== ".agents/skills") throw new Error("cursor should use .agents/skills");
+if (skillRoots(["codex"]).join(",") !== ".agents/skills") throw new Error("codex should use .agents/skills");
+if (skillRoots(["antigravity"]).join(",") !== ".agents/skills") throw new Error("antigravity should use .agents/skills");
+if (skillRoots(["claude-code"]).join(",") !== ".claude/skills") throw new Error("claude code should use .claude/skills");
+const defaultAgents = expandArgv(["npx", "skills", "add", "example", "-a", "{agents}"], []);
+if (defaultAgents.length !== 1) throw new Error("empty agents should be one skills command");
+for (const agent of ["claude-code", "codex", "cursor", "antigravity"]) {
+  if (!defaultAgents[0]?.includes(agent)) throw new Error(`empty agents should pass -a ${agent}`);
+}
+const defaultCodegraph = expandArgv(["codegraph", "install", "--target={codegraphTargets}"], [])[0]?.join(" ");
+if (defaultCodegraph !== "codegraph install --target=claude,codex,cursor,antigravity") {
+  throw new Error(`empty agents should target every codegraph agent: ${defaultCodegraph}`);
+}
+const defaultGraphify = expandArgv(["graphify", "install", "--platform", "{graphifyPlatform}"], []).map((argv) => argv.at(-1));
+if (defaultGraphify.join(",") !== "claude,codex,cursor") {
+  throw new Error(`graphify should skip antigravity: ${defaultGraphify.join(",")}`);
+}
 if (empty.selection.choices.appType !== "frontend-backend") {
   throw new Error("empty selection should default to frontend + backend");
 }

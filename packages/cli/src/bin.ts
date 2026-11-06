@@ -2,7 +2,7 @@ import { access, readFile, writeFile } from "node:fs/promises";
 import { createInterface } from "node:readline/promises";
 import { resolve } from "node:path";
 import { stdin as input, stdout as output } from "node:process";
-import { evaluate, selectionFromFlags, suggestedLayout, type Selection } from "@brix/core";
+import { evaluate, selectionFromFlags, skillRoots, suggestedLayout, type Selection } from "@brix/core";
 import { parseArgs, type Flags } from "./args.ts";
 import { renderAgents, renderClaude, renderPrompt } from "./documents.ts";
 import { installSkills } from "./install.ts";
@@ -14,7 +14,7 @@ function help() {
   brix init [--yes] [--app-type <id>] [--frontend <id>] [--agent <id>] [--code-index <id>] ...
   brix init --config <stack.json>
 
-Repeat --agent once per coding agent. A missing flag, or None, adds nothing.
+Repeat --agent once per coding agent (claude-code, codex, cursor, antigravity). With no --agent, skills install for all four. A missing flag, or None, adds nothing.
 Inside this repo, pnpm brix runs the local build. From an empty folder: npx usebrix@latest init
 `);
 }
@@ -83,11 +83,7 @@ async function init(flags: Flags) {
     }
   }
 
-  const targets = new Set<string>();
-  if (result.selection.agents.includes("claude-code")) targets.add(".claude/skills");
-  if (result.selection.agents.some((agent) => agent === "codex" || agent === "cursor")) {
-    targets.add(".agents/skills");
-  }
+  const targets = new Set(skillRoots(result.selection.agents));
 
   const stack = {
     registryVersion: result.selection.registryVersion,

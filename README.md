@@ -42,10 +42,10 @@ brix init --help
 | `AGENTS.md` | Build instructions for the agent |
 | `CLAUDE.md` | Pointer at `AGENTS.md` |
 | `PROMPT.md` | Starter for the agent. Your own prompt carries the app details. |
-| `.agents/skills/` | Skills for Cursor and Codex |
+| `.agents/skills/` | Skills for Cursor, Codex, and Antigravity |
 | `.claude/skills/` | Skills for Claude Code |
 
-With no `--agent` flag, no agent folder is written. Repeat `--agent` once per agent to install for more than one.
+With no `--agent` flag, skills are installed for Claude Code, Codex, Cursor, and Antigravity. That writes `.agents/skills/` and `.claude/skills/`. Repeat `--agent` once per agent to install for a smaller set.
 
 Each skill runs three phases from the registry: `preinstall` (a tool binary, when one is required), `install` (a local `SKILL.md`, an upstream skill via `npx skills add --copy`, or project wiring), and `postinstall` (for example `codegraph init`). A failed step is recorded and the next skill still runs. The command exits non-zero if any required step failed. If `uv` is missing, Graphify is skipped.
 
@@ -90,7 +90,7 @@ Frontend + Backend is a browser app and a separate API. Backend Only turns off t
 | `--database` | `postgres`, `mysql`, `sqlite`, `mongo` |
 | `--db-provider` | `neon`, `supabase`, `railway`, `render`, `rds`, `postgres-docker` |
 | `--orm` | `drizzle`, `prisma`, `sqlalchemy`, `django`, `mongoose` |
-| `--agent` | `claude-code`, `codex`, `cursor` |
+| `--agent` | `claude-code`, `codex`, `cursor`, `antigravity` |
 
 DB provider and ORM apply after a real database is chosen. Frontend and backend runtimes come before the package manager. A FastAPI, Flask, or Django backend omits `--backend-runtime`. A Frontend + Backend app keeps a JavaScript package manager beside a Python API. uv is only for a Python-only backend. `--turbo` is a bare flag.
 

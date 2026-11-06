@@ -83,6 +83,18 @@ body {
   }
 }
 
+@keyframes brix-star {
+  0%,
+  100% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 0 #ffe56a);
+  }
+  50% {
+    transform: scale(1.45);
+    filter: drop-shadow(0 0 6px #ffe56a);
+  }
+}
+
 @keyframes brix-rise {
   from {
     opacity: 0;
@@ -94,7 +106,17 @@ body {
   }
 }
 
+.brix-star {
+  color: #ffe56a;
+  fill: #ffe56a;
+  transform-origin: center;
+}
+
 @media (prefers-reduced-motion: no-preference) {
+  .brix-star {
+    animation: brix-star 1.2s ease-in-out infinite;
+  }
+
   .brix-blob {
     animation: brix-blob 14s ease-in-out infinite;
   }

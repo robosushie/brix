@@ -1,10 +1,10 @@
 import Link from "next/link";
-import { Star } from "lucide-react";
 import { DemoVideoSection } from "@/components/landing/demo-video-section";
 import { DownloadsSection } from "@/components/landing/downloads-section";
 import { StackDemo } from "@/components/landing/stack-demo";
 import { SiteFooter } from "@/components/site/site-footer";
 import { SiteHeader } from "@/components/site/site-header";
+import { StarBanner } from "@/components/site/star-banner";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -60,16 +60,7 @@ export function LandingPage() {
         <span className="brix-blob absolute bottom-24 left-1/3 size-64 rounded-full bg-violet-spark/15 blur-3xl" />
       </div>
       <div className="relative">
-      <p className="flex items-center justify-center gap-2 bg-ink px-8 py-2.5 text-center text-sm text-eggshell">
-        <Star className="size-3.5 fill-eggshell" aria-hidden />
-        <span>
-          If you like the project, please{" "}
-          <a href="https://github.com/robosushie/brix" className="underline underline-offset-2">
-            give it a star
-          </a>
-          .
-        </span>
-      </p>
+      <StarBanner />
       <SiteHeader />
       <main>
         <section className="mx-auto grid max-w-[1280px] items-center gap-10 px-8 pt-24 md:grid-cols-2">

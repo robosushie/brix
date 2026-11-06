@@ -21,6 +21,7 @@ export { disableReason, optionRelations } from "./rules.ts";
 export { emptySelection, normalizeSelection, selectionFromPreset, selectOption } from "./selection.ts";
 export { resolveSkills } from "./skills.ts";
 export { expandArgv } from "./expand.ts";
+export { installAgents, skillRoots } from "./skill-roots.ts";
 export { evaluate } from "./evaluate.ts";
 export { decodeConfig, encodeConfig } from "./codec.ts";
 export { choiceLabel, flagName, initCommand, sectionIdForFlag, selectionFromFlags } from "./command.ts";

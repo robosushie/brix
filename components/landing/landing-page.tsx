@@ -15,7 +15,7 @@ const run = [
   },
   {
     title: "The line is the whole selection",
-    body: "Each answer becomes one flag. Repeat --agent once for Cursor, Claude Code, or Codex. Pass --yes to skip the confirm prompt, or --config to read a stack.json you already have.",
+    body: "Each answer becomes one flag. Repeat --agent once for Cursor, Claude Code, Codex, or Antigravity. With no --agent, skills install for all four. Pass --yes to skip the confirm prompt, or --config to read a stack.json you already have.",
   },
   {
     title: "Nothing is written if the pair is illegal",

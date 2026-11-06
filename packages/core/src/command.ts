@@ -25,7 +25,12 @@ export function initCommand(sel: Selection): string {
   for (const section of registry.sections) {
     const flag = `--${flagName(section.id)}`;
     if (section.multi) {
-      for (const value of multiValues(normalized, section.id)) {
+      const values = multiValues(normalized, section.id);
+      if (section.id === "agents" && values.length === 0) {
+        parts.push(flag, "all");
+        continue;
+      }
+      for (const value of values) {
         if (!value || value === "none") continue;
         parts.push(flag, value);
       }
@@ -61,6 +66,7 @@ export function selectionFromFlags(pairs: Array<[string, string]>): { selection:
     }
     requested.push([sectionId, optionId]);
     if (section.multi) {
+      if (sectionId === "agents" && optionId === "all") continue;
       if (sectionId === "agents" && isAgent(optionId) && !agents.includes(optionId)) agents.push(optionId);
       continue;
     }
@@ -77,9 +83,12 @@ export function selectionFromFlags(pairs: Array<[string, string]>): { selection:
 
   for (const [sectionId, optionId] of requested) {
     const section = sectionById(sectionId);
-    const kept = section?.multi
-      ? multiValues(selection, sectionId).includes(optionId)
-      : selection.choices[sectionId] === optionId;
+    const kept =
+      sectionId === "agents" && optionId === "all"
+        ? true
+        : section?.multi
+          ? multiValues(selection, sectionId).includes(optionId)
+          : selection.choices[sectionId] === optionId;
     if (kept) continue;
     const draft = cloneSelection(selection);
     if (section?.multi) {

@@ -1,4 +1,4 @@
-export const AGENTS = ["claude-code", "codex", "cursor"] as const;
+export const AGENTS = ["claude-code", "codex", "cursor", "antigravity"] as const;
 export type AgentId = (typeof AGENTS)[number];
 
 /** One-way. Ids must be from an earlier section. Selecting one of them turns this option off. */

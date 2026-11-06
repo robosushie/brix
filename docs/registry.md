@@ -7,7 +7,7 @@ Shared by the site and the CLI via `packages/core`.
 ```ts
 {
   version: string;            // e.g. "2026.10.5"
-  agents: Record<"claude-code" | "codex" | "cursor", {
+  agents: Record<"claude-code" | "codex" | "cursor" | "antigravity", {
     skills: string;
     codegraph: string;
     graphify: string;
@@ -16,7 +16,7 @@ Shared by the site and the CLI via `packages/core`.
     id: string;
     label: string;
     choices: Record<string, string>;
-    agents: ("claude-code" | "codex" | "cursor")[];
+    agents: ("claude-code" | "codex" | "cursor" | "antigravity")[];
   }[];
   groups: { id: string; label: string }[];
   rules: { id: string; reason: string; disable: string[] }[];

@@ -1,4 +1,4 @@
-import { expandArgv, registry, type AgentId, type SkillRef } from "@brix/core";
+import { expandArgv, registry, skillRoots, type AgentId, type SkillRef } from "@brix/core";
 
 export type SkillPlatform = "windows" | "linux" | "darwin";
 
@@ -51,11 +51,7 @@ export function groupSkills(skills: SkillRef[]): Array<{ id: string; label: stri
 
 export function skillFilePaths(id: string, agents: AgentId[]): string[] {
   const folder = id.startsWith("brix-") ? `brix/${id.slice("brix-".length)}` : id;
-  const roots: string[] = [];
-  if (agents.includes("claude-code")) roots.push(".claude/skills");
-  if (agents.some((agent) => agent === "codex" || agent === "cursor")) roots.push(".agents/skills");
-  if (roots.length === 0) roots.push(".agents/skills");
-  return roots.map((root) => `${root}/${folder}/SKILL.md`);
+  return skillRoots(agents).map((root) => `${root}/${folder}/SKILL.md`);
 }
 
 export function commandPreview(skill: SkillRef, agents: AgentId[], platform: SkillPlatform): string {

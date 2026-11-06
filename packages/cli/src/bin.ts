@@ -104,7 +104,10 @@ async function init(flags: Flags) {
     frontend: result.selection.choices.frontend,
     backend: result.selection.choices.backend,
   });
-  if (failures.length === 0) return;
+  if (failures.length === 0) {
+    console.log("Thank you for using Brix. It would be great if you could give us a star: https://github.com/robosushie/brix");
+    return;
+  }
   console.error("\nRequired skill steps failed:");
   for (const failure of failures) console.error(`- ${failure}`);
   process.exit(1);

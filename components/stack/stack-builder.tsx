@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Check, ChevronDown, Copy, Eye } from "lucide-react";
 import {
   choiceLabel,
@@ -17,6 +17,7 @@ import { Separator } from "@/components/ui/separator";
 import { LayoutPicker } from "@/components/stack/layout-picker";
 import { chosenValues, Question } from "@/components/stack/question";
 import { SkillsModal } from "@/components/stack/skills-modal";
+import { StarToast } from "@/components/site/star-banner";
 
 function sectionUnused(section: StackSection, disabled: Record<string, string>): boolean {
   const reasons = section.options.map((option) => disabled[`${section.id}.${option.id}`]);
@@ -26,6 +27,8 @@ function sectionUnused(section: StackSection, disabled: Record<string, string>):
 export function StackBuilder() {
   const [selection, setSelection] = useState<Selection>(emptySelection);
   const [copied, setCopied] = useState(false);
+  const [starToast, setStarToast] = useState(false);
+  const starTimer = useRef<number | null>(null);
   const [skillsOpen, setSkillsOpen] = useState(false);
   const [open, setOpen] = useState<Record<string, boolean>>({});
 
@@ -278,6 +281,9 @@ export function StackBuilder() {
                       await navigator.clipboard.writeText(command);
                       setCopied(true);
                       window.setTimeout(() => setCopied(false), 1500);
+                      setStarToast(true);
+                      if (starTimer.current) window.clearTimeout(starTimer.current);
+                      starTimer.current = window.setTimeout(() => setStarToast(false), 6000);
                     }}
                   >
                     {copied ? (
@@ -313,6 +319,7 @@ export function StackBuilder() {
           />
         ) : null}
       </aside>
+      {starToast ? <StarToast /> : null}
     </div>
   );
 }

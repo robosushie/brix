@@ -87,7 +87,7 @@ export function selectOption(sel: Selection, sectionId: string, optionId: string
   next.preset = null;
   const section = sectionById(sectionId);
   if (section?.multi) {
-    if (optionId === "none") {
+    if (optionId === "none" || optionId === "all") {
       if (sectionId === "agents") next.agents = [];
       return normalizeSelection(next);
     }

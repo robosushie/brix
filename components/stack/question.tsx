@@ -11,6 +11,7 @@ export function chosenValues(section: StackSection, selection: Selection): strin
 function isSelected(section: StackSection, optionId: string, selection: Selection): boolean {
   if (section.multi) {
     const values = chosenValues(section, selection);
+    if (section.id === "agents" && optionId === "all") return values.length === 0;
     if (optionId === "none") return values.length === 0;
     return values.includes(optionId);
   }

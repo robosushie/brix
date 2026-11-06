@@ -2,7 +2,7 @@ import { access, readFile, writeFile } from "node:fs/promises";
 import { createInterface } from "node:readline/promises";
 import { resolve } from "node:path";
 import { stdin as input, stdout as output } from "node:process";
-import { evaluate, selectionFromFlags, skillRoots, suggestedLayout, type Selection } from "@brix/core";
+import { evaluate, selectionFromFlags, skillRoots, type Selection } from "@brix/core";
 import { parseArgs, type Flags } from "./args.ts";
 import { renderAgents, renderClaude, renderPrompt } from "./documents.ts";
 import { installSkills } from "./install.ts";
@@ -98,7 +98,8 @@ async function init(flags: Flags) {
   await writeFile("PROMPT.md", renderPrompt(result.selection));
 
   console.log(`Wrote stack.json, AGENTS.md, CLAUDE.md, PROMPT.md`);
-  const layoutId = result.selection.choices.layout ?? suggestedLayout(result.selection) ?? null;
+  const chosenLayout = result.selection.choices.layout;
+  const layoutId = chosenLayout && chosenLayout !== "none" ? chosenLayout : null;
   const failures = await installSkills(result.skills, result.selection.agents, targets, layoutId, {
     frontend: result.selection.choices.frontend,
     backend: result.selection.choices.backend,

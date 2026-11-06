@@ -87,10 +87,13 @@ function pick(start: Selection, pairs: Array<[string, string]>): Selection {
 const empty = evaluate(emptySelection());
 if (!empty.valid) throw new Error(`empty selection should be valid, got ${empty.errors.join("; ")}`);
 if (empty.selection.agents.length !== 0) throw new Error("empty selection should not pick an agent");
-for (const id of ["brix-architect", "brix-security", "brix-verify", "solid", "folder-structure", "api-design"]) {
+for (const id of ["brix-architect", "brix-security", "brix-verify", "solid", "api-design"]) {
   if (!empty.skills.some((skill) => skill.id === id && skill.kind === "local")) {
     throw new Error(`empty selection missing local skill ${id}`);
   }
+}
+if (empty.skills.some((skill) => skill.id === "folder-structure")) {
+  throw new Error("an unanswered layout should not install folder structure");
 }
 if (skillRoots([]).join(",") !== ".agents/skills,.claude/skills") {
   throw new Error(`empty agents should install both skill folders: ${skillRoots([]).join(",")}`);
@@ -112,11 +115,22 @@ const defaultGraphify = expandArgv(["graphify", "install", "--platform", "{graph
 if (defaultGraphify.join(",") !== "claude,codex,cursor") {
   throw new Error(`graphify should skip antigravity: ${defaultGraphify.join(",")}`);
 }
+const noLayout = selectOption(empty.selection, "layout", "none");
+if (noLayout.choices.layout !== "none") throw new Error("layout none should stay selected");
+if (evaluate(noLayout).skills.some((skill) => skill.id === "folder-structure")) {
+  throw new Error("layout none should not install folder structure");
+}
+if (initCommand(noLayout).includes("--layout")) throw new Error("layout none should stay off the command");
+const fromAll = selectionFromFlags([["agents", "all"]]);
+if (fromAll.errors.length !== 0 || fromAll.selection.agents.length !== 0) {
+  throw new Error(`--agent all should mean every agent: ${fromAll.errors.join("; ")}`);
+}
+if (!initCommand(fromAll.selection).includes("--agent all")) throw new Error("parsed all should emit --agent all");
 if (empty.selection.choices.appType !== "frontend-backend") {
   throw new Error("empty selection should default to frontend + backend");
 }
-if (initCommand(empty.selection) !== "npx usebrix@latest init --app-type frontend-backend") {
-  throw new Error(`empty command should only set app type: ${initCommand(empty.selection)}`);
+if (initCommand(empty.selection) !== "npx usebrix@latest init --app-type frontend-backend --agent all") {
+  throw new Error(`empty command should set app type and all agents: ${initCommand(empty.selection)}`);
 }
 for (const id of ["frontend-backend", "backend-only", "frontend-only"]) {
   if (empty.disabled[`appType.${id}`]) throw new Error(`${id} should stay enabled`);
@@ -244,9 +258,10 @@ const stack = pick(empty.selection, [
 const done = evaluate(stack);
 if (!done.valid) throw new Error(done.errors.join("\n"));
 const ids = done.skills.map((skill) => skill.id);
-for (const id of ["security-audit", "shadcn", "solid", "api-design", "node-layout", "nextjs", "hono", "drizzle", "folder-structure"]) {
+for (const id of ["security-audit", "shadcn", "solid", "api-design", "node-layout", "nextjs", "hono", "drizzle"]) {
   if (!ids.includes(id)) throw new Error(`custom stack missing ${id}`);
 }
+if (ids.includes("folder-structure")) throw new Error("an unpicked layout should not install folder structure");
 if (ids.includes("python-layout")) throw new Error("a node API should not install the python layout");
 for (const id of ["codegraph", "graphify", "gitnexus", "caveman"]) {
   if (ids.includes(id)) throw new Error(`${id} should wait for a tool selection`);
@@ -273,6 +288,9 @@ if (suggestedLayout(pick(empty.selection, [["frontend", "nextjs"]])) !== "next-a
 const withLayout = selectOption(done.selection, "layout", "split");
 if (withLayout.choices.layout !== "split" || !initCommand(withLayout).includes("--layout split")) {
   throw new Error("a chosen layout should be a flag");
+}
+if (!evaluate(withLayout).skills.some((skill) => skill.id === "folder-structure")) {
+  throw new Error("a chosen layout should install folder structure");
 }
 const splitInstalled = renderSkill("folder-structure", withLayout.choices.layout);
 if (!splitInstalled.includes("frontend/") || splitInstalled.includes("packages/web")) {
@@ -363,9 +381,10 @@ if (byId.has("graphify")) throw new Error("graphify should wait for its own sele
 if (!byId.has("security-audit")) throw new Error("security audit should stay on");
 const fastApi = evaluate(pick(emptySelection(), [["appType", "backend-only"], ["backend", "fastapi"]]));
 const fastApiIds = fastApi.skills.map((skill) => skill.id);
-for (const id of ["fastapi", "python-layout", "api-design", "brix-architect", "brix-security", "brix-verify", "security-audit", "folder-structure"]) {
+for (const id of ["fastapi", "python-layout", "api-design", "brix-architect", "brix-security", "brix-verify", "security-audit"]) {
   if (!fastApiIds.includes(id)) throw new Error(`fastapi selection missing ${id}`);
 }
+if (fastApiIds.includes("folder-structure")) throw new Error("fastapi without a layout should not install folder structure");
 if (fastApiIds.includes("node-layout")) throw new Error("fastapi should not install the node layout");
 if (fastApiIds.includes("mastra") || !fastApi.disabled["aiFramework.mastra"]) {
   throw new Error("fastapi should disable Mastra");
@@ -460,7 +479,7 @@ const partial = selectionFromFlags([
 if (partial.errors.length !== 0 || partial.selection.choices.auth !== "clerk" || partial.selection.choices.cache) {
   throw new Error(`partial flags failed: ${partial.errors.join("; ")}`);
 }
-if (initCommand(partial.selection) !== "npx usebrix@latest init --auth clerk") throw new Error(initCommand(partial.selection));
+if (initCommand(partial.selection) !== "npx usebrix@latest init --agent all --auth clerk") throw new Error(initCommand(partial.selection));
 
 const conflict = selectionFromFlags([
   ["appType", "backend-only"],

@@ -39,10 +39,20 @@ export function StackBuilder() {
   const command = initCommand(result.selection);
   const showCommand = Boolean(result.selection.choices.appType);
   const appType = registry.sections.find((section) => section.id === "appType");
+  const agents = registry.sections.find((section) => section.id === "agents");
   const layout = registry.sections.find((section) => section.id === "layout");
   const summary = registry.sections.flatMap((section) => {
     if (section.multi) {
       const values = chosenValues(section, result.selection);
+      if (section.id === "agents" && values.length === 0) {
+        return [
+          {
+            id: section.id,
+            label: section.label,
+            value: choiceLabel(section.id, "all"),
+          },
+        ];
+      }
       if (values.length === 0) return [];
       return [
         {
@@ -53,7 +63,7 @@ export function StackBuilder() {
       ];
     }
     const value = result.selection.choices[section.id];
-    if (!value || value === "none") return [];
+    if (!value || (value === "none" && section.id !== "layout")) return [];
     return [
       { id: section.id, label: section.label, value: choiceLabel(section.id, value) },
     ];
@@ -73,9 +83,9 @@ export function StackBuilder() {
           <p className="mono-label text-muted-foreground">Stack</p>
           <h1 className="display mt-3 text-[48px] text-ink">Build a stack</h1>
           <p className="mt-3 max-w-xl text-base text-smoke">
-            App type sets which sides exist, then you pick the frontend and backend.
-            Layout is the folder tree, and those choices decide which trees you can open.
-            Core is the UI, package manager, Turborepo, database, and coding agents.
+            App type sets which sides exist, then you pick the coding agents, frontend, and backend.
+            Layout is the folder tree. None installs no folder structure skill.
+            Core is the UI, package manager, Turborepo, and database.
             Services adds auth, payments, files, email, workflows, AI, and testing.
             Cloud adds delivery and containers. Tools adds a code index, how the agent
             writes, memory, and a skill pack.
@@ -97,6 +107,19 @@ export function StackBuilder() {
                 hideLabel
               />
             </div>
+            {agents ? (
+              <div>
+                <Separator />
+                <div className="px-8 py-6">
+                  <Question
+                    section={agents}
+                    selection={selection}
+                    disabled={result.disabled}
+                    onSelect={choose}
+                  />
+                </div>
+              </div>
+            ) : null}
             {["frontend", "backend"].map((id) => {
               const section = registry.sections.find((item) => item.id === id);
               if (!section || sectionUnused(section, result.disabled)) return null;
@@ -166,7 +189,8 @@ export function StackBuilder() {
               !section.hidden &&
               !section.nestUnder &&
               section.id !== "frontend" &&
-              section.id !== "backend",
+              section.id !== "backend" &&
+              section.id !== "agents",
           );
           const expanded = open[group.id] ?? false;
           return (

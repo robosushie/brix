@@ -29,10 +29,10 @@ brix init --config <stack.json>
    - `preinstall` installs a tool binary when the skill needs one.
    - `install` writes a local `SKILL.md`, or copies an upstream skill with `npx skills add --copy`, or wires a tool into the project.
    - `postinstall` runs in the project after those files exist. Codegraph runs `codegraph init` here.
-   Local Brix skills are written to `brix/<name>/SKILL.md` (`architect`, `security`, `verify`) under `.agents/skills` for Codex, Cursor, and Antigravity, and under `.claude/skills` for Claude Code. Other local skills use `<name>/SKILL.md` in the same directories. With no `--agent`, both directories are written.
+   Local Brix skills are written from `--agent`. `all`, or no `--agent`, writes both `.agents/skills` (Codex, Cursor, and Antigravity) and `.claude/skills` (Claude Code). A specific agent writes only the directory that agent reads. Local Brix skills use `brix/<name>/SKILL.md` for `architect`, `security`, and `verify`, and `<name>/SKILL.md` for the others. The folder structure skill installs only when `--layout` is a real tree. None and a missing `--layout` leave it out.
 7. A failed step is recorded and the next skill still runs. If `uv` is missing, Graphify is skipped. The command exits non-zero when any required step failed.
 
-`--agent` chooses where skills are installed: Claude Code (`.claude/skills`), or Codex, Cursor, and Antigravity (`.agents/skills`). Repeat it for more than one. With no agent flag, skills install for all four, which writes both directories.
+`--agent` is `all`, `claude-code`, `codex`, `cursor`, or `antigravity`. Repeat a specific agent for more than one. `all` and a missing `--agent` install for Claude Code, Codex, Cursor, and Antigravity.
 
 ## Outputs
 

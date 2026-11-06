@@ -1,34 +1,26 @@
 # Stack sections
 
-App type stays above the accordions. Frontend and Backend are asked there, then Layout, then Core. Core has no None. Every other question has None, and None stays off the `npx usebrix@latest init` command.
+App type stays above the accordions. Coding agents sit in that card, above Frontend and Backend, then Layout, then Core. Core has no None. Layout None does not install the folder structure skill and stays off the `npx usebrix@latest init` command, like every other None.
 
 ## App type
 
 `frontend-backend`, `backend-only`, `frontend-only`, `none`.
 
+Coding agents sit above Frontend and Backend. The default is All (`--agent all`), which installs skills for Claude Code, Codex, Cursor, and Antigravity. Choosing one or more of `claude-code`, `codex`, `cursor`, or `antigravity` turns All off. Clicking the last specific agent returns to All. Local skills are written from that flag: All writes `.agents/skills/` and `.claude/skills/`. Claude Code writes `.claude/skills/`. Codex, Cursor, and Antigravity write `.agents/skills/`.
+
 Frontend and its runtime sit in this card when the app has a UI. Backend and its runtime sit here when the app has an API. Frontend Only hides the backend questions. Backend Only hides the frontend questions. Frontend Only also turns off the database, cache, storage, and email. Backend Only turns off the UI.
 
 ## Layout
 
-Seven trees, with no None pill: UI apps, API at root (`apps-src`), Monorepo (`apps-packages`), Flat workspace (`packages`), Fullstack app (`next-app`), Split folders (`split`), Single app (`single-src`), and Feature modules (`feature-modules`). The Layout section collapses like Core. A card starts closed. Opening it shows that tree and stores `choices.layout`, which adds `--layout`. Opening a card shows the tree on the left and the description on the right as bullet points.
+Seven trees, plus None: UI apps, API at root (`apps-src`), Monorepo (`apps-packages`), Flat workspace (`packages`), Fullstack app (`next-app`), Split folders (`split`), Single app (`single-src`), Feature modules (`feature-modules`), and None (`none`). The Layout section collapses like Core. A card starts closed. Opening a tree stores `choices.layout` and adds `--layout`. None stores `layout: none` and adds no `--layout` flag. Opening a tree card shows the tree on the left and the description on the right as bullet points. None has no tree.
 
-A disabled card stays closed. The `folder-structure` skill installs only the chosen layout, plus the shared rules and `infra/`. With no layout and no suggestion, it installs the rules and `infra/` and leaves the seven trees out. `brix init` without `--layout` still picks a tree from the stack:
-
-- JavaScript UI plus a JavaScript API, with Turborepo: Monorepo
-- JavaScript UI plus a JavaScript API: Flat workspace
-- JavaScript UI plus FastAPI, Flask, or Django: UI apps, API at root
-- Next.js with no separate API: Fullstack app
-- Frontend only, or backend only: Single app
-- None of those matches: Split folders
-- A JavaScript API grouped by feature, when the routes-and-services shape is the wrong fit: Feature modules
+A disabled card stays closed. The `folder-structure` skill installs only when a tree is chosen. None and a missing `--layout` both leave that skill out. Node layout and Python layout still follow the frontend and backend.
 
 Fullstack app stays available until a backend is chosen, or until the frontend is not Next.js. Single app stays off when both a UI and an API are selected. Flat workspace and Monorepo stay off a Python API. UI apps, API at root stays off unless both a UI and an API are selected. Feature modules stay off a frontend-only app and off a Python API. Split folders stays available.
 
 ## Core
 
-UI, package manager, Turborepo, database, DB provider, ORM, and coding agents. Frontend and Backend are asked in App type. None of these questions has a None pill. Leaving one unset adds no flag. Runtime sits under Frontend and under Backend, with no separator: Node or Bun for the JavaScript side. A FastAPI, Flask, or Django backend disables the backend runtime pills. The package manager is npm workspaces, pnpm workspaces, bun workspaces, or uv. uv is only for a Python-only backend. Turborepo is Turborepo or Workspaces only. Turborepo adds `--turbo`. Workspaces only adds no flag. The Turborepo question is hidden when the package manager is uv.
-
-Coding agents (`claude-code`, `codex`, `cursor`, `antigravity`) are multi-select. Repeat `--agent` once per agent. Clicking the last agent clears it. With none selected, `brix init` still installs skills for all four: `.agents/skills` for Codex, Cursor, and Antigravity, and `.claude/skills` for Claude Code.
+UI, package manager, Turborepo, database, DB provider, and ORM. Frontend, Backend, and coding agents are asked in App type. None of these questions has a None pill. Leaving one unset adds no flag. Runtime sits under Frontend and under Backend, with no separator: Node or Bun for the JavaScript side. A FastAPI, Flask, or Django backend disables the backend runtime pills. The package manager is npm workspaces, pnpm workspaces, bun workspaces, or uv. uv is only for a Python-only backend. Turborepo is Turborepo or Workspaces only. Turborepo adds `--turbo`. Workspaces only adds no flag. The Turborepo question is hidden when the package manager is uv.
 
 DB provider and ORM apply after a real database is chosen.
 

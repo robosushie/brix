@@ -251,6 +251,43 @@
       ]
     },
     {
+      "id": "agents",
+      "label": "Coding agents",
+      "multi": true,
+      "options": [
+        {
+          "id": "all",
+          "label": "All",
+          "status": "proven",
+          "description": "Install skills for Claude Code, Codex, Cursor, and Antigravity."
+        },
+        {
+          "id": "claude-code",
+          "label": "Claude Code",
+          "status": "proven",
+          "description": "Install skills into .claude/skills."
+        },
+        {
+          "id": "codex",
+          "label": "Codex",
+          "status": "proven",
+          "description": "Install skills into .agents/skills for Codex."
+        },
+        {
+          "id": "cursor",
+          "label": "Cursor",
+          "status": "proven",
+          "description": "Install skills into .agents/skills for Cursor."
+        },
+        {
+          "id": "antigravity",
+          "label": "Antigravity",
+          "status": "proven",
+          "description": "Install skills into .agents/skills for Antigravity."
+        }
+      ]
+    },
+    {
       "id": "frontend",
       "label": "Frontend",
       "group": "core",
@@ -619,6 +656,12 @@
             "    dto/",
             "test/"
           ]
+        },
+        {
+          "id": "none",
+          "label": "None",
+          "status": "proven",
+          "description": "Do not install a folder structure skill."
         }
       ]
     },
@@ -835,38 +878,6 @@
               "backend.flask"
             ]
           }
-        }
-      ]
-    },
-    {
-      "id": "agents",
-      "label": "Coding agents",
-      "group": "core",
-      "multi": true,
-      "options": [
-        {
-          "id": "claude-code",
-          "label": "Claude Code",
-          "status": "proven",
-          "description": "Install skills into .claude/skills."
-        },
-        {
-          "id": "codex",
-          "label": "Codex",
-          "status": "proven",
-          "description": "Install skills into .agents/skills for Codex."
-        },
-        {
-          "id": "cursor",
-          "label": "Cursor",
-          "status": "proven",
-          "description": "Install skills into .agents/skills for Cursor."
-        },
-        {
-          "id": "antigravity",
-          "label": "Antigravity",
-          "status": "proven",
-          "description": "Install skills into .agents/skills for Antigravity."
         }
       ]
     },

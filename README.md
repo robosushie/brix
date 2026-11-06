@@ -45,7 +45,7 @@ brix init --help
 | `.agents/skills/` | Skills for Cursor, Codex, and Antigravity |
 | `.claude/skills/` | Skills for Claude Code |
 
-With no `--agent` flag, skills are installed for Claude Code, Codex, Cursor, and Antigravity. That writes `.agents/skills/` and `.claude/skills/`. Repeat `--agent` once per agent to install for a smaller set.
+The form starts with `--agent all`, which installs skills for Claude Code, Codex, Cursor, and Antigravity. That writes `.agents/skills/` and `.claude/skills/`. Repeat `--agent` with `claude-code`, `codex`, `cursor`, or `antigravity` to install for a smaller set. Passing no `--agent` on the CLI is the same as `--agent all`. Layout None stays off the command and does not install the folder structure skill. A missing `--layout` does the same. Other `none` answers stay off the command.
 
 Each skill runs three phases from the registry: `preinstall` (a tool binary, when one is required), `install` (a local `SKILL.md`, an upstream skill via `npx skills add --copy`, or project wiring), and `postinstall` (for example `codegraph init`). A failed step is recorded and the next skill still runs. The command exits non-zero if any required step failed. If `uv` is missing, Graphify is skipped.
 
@@ -64,7 +64,7 @@ To change a stack, run `init` again with the new selection.
 
 ## Options
 
-Flag names are the section ids in kebab case. `--agent` is the one exception, and it can be repeated. `--turbo` is the other: it takes no value. A missing answer and `none` both omit the flag. An unknown id, or a pair the rules reject, exits before any file is written.
+Flag names are the section ids in kebab case. `--agent` is the one exception, and it can be repeated. `--turbo` is the other: it takes no value. A missing answer and `none` both omit the flag. A missing `--layout` does not install the folder structure skill. `--agent` defaults to `all`. An unknown id, or a pair the rules reject, exits before any file is written.
 
 App type sits above the other groups. Core has no None. Every other question does.
 
@@ -90,7 +90,7 @@ Frontend + Backend is a browser app and a separate API. Backend Only turns off t
 | `--database` | `postgres`, `mysql`, `sqlite`, `mongo` |
 | `--db-provider` | `neon`, `supabase`, `railway`, `render`, `rds`, `postgres-docker` |
 | `--orm` | `drizzle`, `prisma`, `sqlalchemy`, `django`, `mongoose` |
-| `--agent` | `claude-code`, `codex`, `cursor`, `antigravity` |
+| `--agent` | `all`, `claude-code`, `codex`, `cursor`, `antigravity` |
 
 DB provider and ORM apply after a real database is chosen. Frontend and backend runtimes come before the package manager. A FastAPI, Flask, or Django backend omits `--backend-runtime`. A Frontend + Backend app keeps a JavaScript package manager beside a Python API. uv is only for a Python-only backend. `--turbo` is a bare flag.
 

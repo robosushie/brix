@@ -6,6 +6,7 @@ export function resolveSkills(sel: Selection): SkillRef[] {
   const out: SkillRef[] = [];
   const seen = new Set<string>();
   for (const entry of skillCatalog) {
+    if (entry.id === "folder-structure" && (!sel.choices.layout || sel.choices.layout === "none")) continue;
     const matched = entry.when.always === true || (entry.when.any ?? []).some((id) => selected.has(id));
     if (!matched || seen.has(entry.id)) continue;
     seen.add(entry.id);

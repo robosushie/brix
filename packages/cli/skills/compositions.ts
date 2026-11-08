@@ -60,6 +60,11 @@ export const compositions: Record<string, SkillComposition> = {
     description: "Scaffolds a Next.js app with the official create-next-app flow. Use when stack.json frontend is nextjs.",
     parts: ["nextjs/body", "common/folder-placement"],
   },
+  "vite-react": {
+    name: "vite-react",
+    description: "Scaffolds a Vite + React app with the official Vite flow. Use when stack.json frontend is vite-react.",
+    parts: ["vite-react/body", "common/folder-placement"],
+  },
   hono: {
     name: "hono",
     description: "Adds a Hono API beside the frontend. Use when stack.json backend is hono.",

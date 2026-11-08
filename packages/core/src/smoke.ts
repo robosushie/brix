@@ -455,6 +455,10 @@ const withHono = pick(empty.selection, [
   ["backendRuntime", "node"],
   ["package", "pnpm"],
 ]);
+const viteReact = evaluate(withHono).skills.find((skill) => skill.id === "vite-react");
+if (!viteReact) {
+  throw new Error("vite-react should be selected for a Vite + React frontend");
+}
 const withPrisma = pick(empty.selection, [
   ["appType", "frontend-backend"],
   ["frontend", "vite-react"],

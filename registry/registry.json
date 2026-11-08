@@ -3068,6 +3068,33 @@
       "description": "Scaffold and structure a Next.js app."
     },
     {
+      "id": "vite-react",
+      "kind": "local",
+      "license": "MIT",
+      "when": {
+        "any": [
+          "frontend.vite-react"
+        ]
+      },
+      "preinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "install": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "postinstall": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "name": "Vite + React",
+      "description": "Scaffold and structure a Vite + React app."
+    },
+    {
       "id": "hono",
       "kind": "local",
       "license": "MIT",

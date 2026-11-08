@@ -57,7 +57,7 @@ function versionRows(versions: string[], downloads: Record<string, number>) {
 async function usageCheck() {
   const [points, versionResponse, registryResponse, lifetimeResponse] = await Promise.all([
     loadWeeklyPoints(),
-    fetch("https://api.npmjs.org/versions/usebrix/last-week"),
+    fetch("https://api.npmjs.org/versions/usebrix/last-week"),// gives last week downloads
     fetch("https://registry.npmjs.org/usebrix"),
     fetch(`https://api.npmjs.org/downloads/point/${lifetimePeriod()}/usebrix`),
   ]);
@@ -79,7 +79,7 @@ async function usageCheck() {
   console.log();
   printRows(weeks);
   console.log();
-  console.log("Version downloads");
+  console.log("Version downloads (Last Week)");
   console.log();
   printRows(versionRows(published, downloads));
   console.log();

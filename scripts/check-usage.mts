@@ -66,7 +66,6 @@ async function usageCheck() {
   const registry = (await registryResponse.json()) as { name?: string; versions?: Record<string, unknown> };
   const lifetime = (await lifetimeResponse.json()) as { start?: string; end?: string; downloads?: number };
   const downloads = versionsBody.downloads ?? {};
-  console.log(downloads);//
   const published = Object.keys(registry.versions ?? {});
 
   const weeks = withCurrentWeek(points).map((point) => ({
